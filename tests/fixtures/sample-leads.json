@@ -1,0 +1,182 @@
+[
+  {
+    "id": "DE001",
+    "firstName": "Hans",
+    "lastName": "Müller",
+    "street": "Hauptstraße 42",
+    "postalCode": "80331",
+    "city": "München",
+    "phone": "+49 89 1234567",
+    "email": "hans.mueller@email.de",
+    "pvInterest": {
+      "roofType": "Satteldach",
+      "roofArea": "65",
+      "electricityConsumption": "4500",
+      "interestLevel": "hoch",
+      "preferredContactTime": "Abends"
+    },
+    "createdAt": "2024-01-15"
+  },
+  {
+    "id": "DE002",
+    "firstName": "Maria",
+    "lastName": "Schmidt",
+    "street": "Bahnhofstraße 15",
+    "postalCode": "10115",
+    "city": "Berlin",
+    "phone": "+49 30 2345678",
+    "email": "maria.schmidt@email.de",
+    "pvInterest": {
+      "roofType": "Walmdach",
+      "roofArea": "85",
+      "electricityConsumption": "5200",
+      "interestLevel": "sehr hoch",
+      "preferredContactTime": "Vormittags"
+    },
+    "createdAt": "2024-01-18"
+  },
+  {
+    "id": "DE003",
+    "firstName": "Peter",
+    "lastName": "Weber",
+    "street": "Schlossallee 8",
+    "postalCode": "60311",
+    "city": "Frankfurt am Main",
+    "phone": "+49 69 3456789",
+    "email": "peter.weber@email.de",
+    "pvInterest": {
+      "roofType": "Flachdach",
+      "roofArea": "120",
+      "electricityConsumption": "6800",
+      "interestLevel": "hoch",
+      "preferredContactTime": "Nachmittags"
+    },
+    "createdAt": "2024-01-20"
+  },
+  {
+    "id": "DE004",
+    "firstName": "Anna",
+    "lastName": "Fischer",
+    "street": "Marktplatz 23",
+    "postalCode": "90403",
+    "city": "Nürnberg",
+    "phone": "+49 911 4567890",
+    "email": "anna.fischer@email.de",
+    "pvInterest": {
+      "roofType": "Satteldach",
+      "roofArea": "55",
+      "electricityConsumption": "3800",
+      "interestLevel": "mittel",
+      "preferredContactTime": "Abends"
+    },
+    "createdAt": "2024-01-22"
+  },
+  {
+    "id": "DE005",
+    "firstName": "Klaus",
+    "lastName": "Schneider",
+    "street": "Industriestraße 7",
+    "postalCode": "40210",
+    "city": "Düsseldorf",
+    "phone": "+49 211 5678901",
+    "email": "klaus.schneider@email.de",
+    "pvInterest": {
+      "roofType": "Pultdach",
+      "roofArea": "95",
+      "electricityConsumption": "5900",
+      "interestLevel": "sehr hoch",
+      "preferredContactTime": "Vormittags"
+    },
+    "createdAt": "2024-01-25"
+  },
+  {
+    "id": "DE006",
+    "firstName": "Gabriele",
+    "lastName": "Becker",
+    "street": "Seestraße 56",
+    "postalCode": "20095",
+    "city": "Hamburg",
+    "phone": "+49 40 6789012",
+    "email": "gabriele.becker@email.de",
+    "pvInterest": {
+      "roofType": "Walmdach",
+      "roofArea": "70",
+      "electricityConsumption": "4800",
+      "interestLevel": "hoch",
+      "preferredContactTime": "Nachmittags"
+    },
+    "createdAt": "2024-01-28"
+  },
+  {
+    "id": "DE007",
+    "firstName": "Thomas",
+    "lastName": "Hoffmann",
+    "street": "Am Ring 12",
+    "postalCode": "50667",
+    "city": "Köln",
+    "phone": "+49 221 7890123",
+    "email": "thomas.hoffmann@email.de",
+    "pvInterest": {
+      "roofType": "Satteldach",
+      "roofArea": "80",
+      "electricityConsumption": "5100",
+      "interestLevel": "mittel",
+      "preferredContactTime": "Abends"
+    },
+    "createdAt": "2024-02-01"
+  },
+  {
+    "id": "DE008",
+    "firstName": "Renate",
+    "lastName": "Wagner",
+    "street": "Schillerweg 34",
+    "postalCode": "70173",
+    "city": "Stuttgart",
+    "phone": "+49 711 8901234",
+    "email": "renate.wagner@email.de",
+    "pvInterest": {
+      "roofType": "Kreuzdach",
+      "roofArea": "75",
+      "electricityConsumption": "4600",
+      "interestLevel": "hoch",
+      "preferredContactTime": "Vormittags"
+    },
+    "createdAt": "2024-02-05"
+  },
+  {
+    "id": "DE009",
+    "firstName": "Michael",
+    "lastName": "Lange",
+    "street": "Friedrichstraße 89",
+    "postalCode": "04109",
+    "city": "Leipzig",
+    "phone": "+49 341 9012345",
+    "email": "michael.lange@email.de",
+    "pvInterest": {
+      "roofType": "Flachdach",
+      "roofArea": "150",
+      "electricityConsumption": "7500",
+      "interestLevel": "sehr hoch",
+      "preferredContactTime": "Nachmittags"
+    },
+    "createdAt": "2024-02-10"
+  },
+  {
+    "id": "DE010",
+    "firstName": "Ursula",
+    "lastName": "Brenner",
+    "street": "Waldweg 27",
+    "postalCode":  "01067",
+    "city": "Dresden",
+    "phone": "+49 351 0123456",
+    "email": "ursula.brenner@email.de",
+    "pvInterest": {
+      "roofType": "Satteldach",
+      "roofArea": "62",
+      "electricityConsumption": "4200",
+      "interestLevel": "mittel",
+      "preferredContactTime": "Abends"
+    },
+    "createdAt": "2024-02-14"
+  }
+]

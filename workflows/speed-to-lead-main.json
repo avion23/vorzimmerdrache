@@ -1,0 +1,633 @@
+{
+  "name": "German PV Speed-to-Lead Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pv-lead",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook - Lead Ingestion",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "pv-lead-webhook-001",
+      "notes": "POST endpoint receiving: name, phone, address, email"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normalize German phone numbers to E.164 format\nconst phone = $input.first().json.phone;\nconst name = $input.first().json.name;\nconst address = $input.first().json.address;\nconst email = $input.first().json.email;\n\n// Remove all non-digit characters\nlet cleanPhone = phone.replace(/[^\\d]/g, '');\n\n// Handle German number formats\nif (cleanPhone.startsWith('0')) {\n  // Replace leading 0 with +49\n  cleanPhone = '+49' + cleanPhone.substring(1);\n} else if (!cleanPhone.startsWith('+')) {\n  // Assume German number, prepend +49\n  cleanPhone = '+49' + cleanPhone;\n}\n\n// Validate E.164 format (12-15 digits including +)\nconst isValid = /^\\+\\d{11,14}$/.test(cleanPhone);\n\nreturn {\n  json: {\n    name,\n    email,\n    address,\n    phone: cleanPhone,\n    phoneValid: isValid,\n    originalPhone: phone,\n    timestamp: new Date().toISOString(),\n    status: 'New',\n    notes: ''\n  }\n};"
+      },
+      "id": "normalize-phone",
+      "name": "Code - Phone Normalization",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300],
+      "notes": "Convert German phone to E.164 format (+49)"
+    },
+    {
+      "parameters": {
+        "authentication": "oauth2",
+        "resource": "sheet",
+        "operation": "append",
+        "sheetId": "{{ $env.GOOGLE_SHEET_ID }}",
+        "range": "A:G",
+        "valueInputMode": "userEntered",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ $json.timestamp }}",
+            "name": "={{ $json.name }}",
+            "phone": "={{ $json.phone }}",
+            "email": "={{ $json.email }}",
+            "address": "={{ $json.address }}",
+            "status": "={{ $json.status }}",
+            "notes": "={{ $json.notes }}"
+          }
+        },
+        "options": {
+          "valueRenderMode": "unformatted"
+        }
+      },
+      "id": "google-sheets-store",
+      "name": "Google Sheets - Store Lead",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [650, 300],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "google-sheets-oauth2",
+          "name": "Google Sheets OAuth2"
+        }
+      },
+      "notes": "Columns: timestamp, name, phone, email, address, status, notes"
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "resource": "chat",
+        "operation": "message",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Du bist ein höflicher deutscher Solarinstallateur. Erstelle eine persönliche, informelle SMS (max 140 Zeichen) im 'Du'-Format für einen neuen Interessenten. Verwende moderne, freundliche Sprache ohne Emojis."
+            },
+            {
+              "role": "user",
+              "content": "Name: {{ $json.name }}\nInteresse: PV-Anlage\nErstelle eine kurze Begrüßungs-SMS."
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 50
+        }
+      },
+      "id": "openai-generate-sms",
+      "name": "OpenAI - Generate German SMS",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.2,
+      "position": [850, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "openai-api-key",
+          "name": "OpenAI API"
+        }
+      },
+      "notes": "Generate personalized German SMS (140 chars max, 'Du' form)"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "append"
+      },
+      "id": "merge-lead-sms",
+      "name": "Merge - Lead + SMS",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [1050, 300],
+      "notes": "Combine lead data with generated SMS"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "sms-content",
+              "name": "smsContent",
+              "value": "={{ $json.choices[0].message.content }}",
+              "type": "string"
+            },
+            {
+              "id": "installer-phone",
+              "name": "installerPhone",
+              "value": "+4915112345678",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "set-sms-data",
+      "name": "Set - SMS Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "split": "independent"
+      },
+      "id": "split-branches",
+      "name": "Split - Parallel Processing",
+      "type": "n8n-nodes-base.split",
+      "typeVersion": 1,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "twilioApi",
+        "operation": "sendMessage",
+        "from": "+4915112345678",
+        "to": "={{ $json.phone }}",
+        "body": "={{ $json.smsContent }}",
+        "options": {}
+      },
+      "id": "twilio-sms-customer",
+      "name": "Branch A: Twilio SMS Customer",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [1650, 200],
+      "credentials": {
+        "twilioApi": {
+          "id": "twilio-api-credentials",
+          "name": "Twilio API"
+        }
+      },
+      "notes": "Send immediate SMS to potential customer"
+    },
+    {
+      "parameters": {
+        "url": "https://maps.googleapis.com/maps/api/geocode/json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": false,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "address",
+              "value": "={{ $json.address }}"
+            },
+            {
+              "name": "key",
+              "value": "{{ $env.GOOGLE_MAPS_API_KEY }}"
+            },
+            {
+              "name": "language",
+              "value": "de"
+            },
+            {
+              "name": "region",
+              "value": "de"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "google-maps-geocode",
+      "name": "Branch B: Google Maps Geocoding",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1650, 400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "google-maps-auth",
+          "name": "Google Maps API"
+        }
+      },
+      "notes": "Validate and geocode customer address"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex"
+      },
+      "id": "merge-branches",
+      "name": "Merge - Branch Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [1850, 300]
+    },
+    {
+      "parameters": {
+        "unit": "seconds",
+        "amount": 60
+      },
+      "id": "wait-60s",
+      "name": "Wait - 60 Seconds",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [2050, 300],
+      "notes": "Delay before installer call to allow customer response"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "twiml",
+              "name": "twiml",
+              "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Response>\n  <Gather timeout=\"10\" numDigits=\"1\" action=\"\">\n    <Say voice=\"alice\" language=\"de-DE\">Neuer PV-Lead: {{ $json.name }} aus {{ $json.address }}. Telefon: {{ $json.phone }}. Drücken Sie 1 um den Kunden anzurufen, oder 2 für weitere Details.</Say>\n  </Gather>\n</Response>",
+              "type": "string"
+            },
+            {
+              "id": "caller-id",
+              "name": "callerId",
+              "value": "+4915112345678",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "set-call-data",
+      "name": "Set - Call Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [2250, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "twilioApi",
+        "operation": "makeCall",
+        "from": "={{ $json.callerId }}",
+        "to": "={{ $json.installerPhone }}",
+        "url": "={{ $env.TWILIO_WEBHOOK_URL }}/twiml",
+        "options": {}
+      },
+      "id": "twilio-call-installer",
+      "name": "Twilio - Call Installer",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [2450, 300],
+      "credentials": {
+        "twilioApi": {
+          "id": "twilio-api-credentials",
+          "name": "Twilio API"
+        }
+      },
+      "notes": "Voice call to installer with IVR options"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Lead processed successfully', leadId: $json.id, smsSent: true, callInitiated: true } }}"
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2650, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "phone-valid",
+              "leftValue": "={{ $json.phoneValid }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-phone-valid",
+      "name": "IF - Phone Validation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [450, 500],
+      "notes": "Check if phone number is valid"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: false, error: 'Ungültige Telefonnummer', message: 'Bitte geben Sie eine gültige deutsche Telefonnummer ein' } }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "respond-invalid-phone",
+      "name": "Error - Invalid Phone",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [650, 600]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "geocode-success",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "OK",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "if-geocode-valid",
+      "name": "IF - Geocode Valid",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1850, 500]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fallback-sms",
+              "name": "smsContent",
+              "value": "Hallo {{ $json.name }}! Danke für dein Interesse an Solar. Wir melden uns in Kürze bei dir.",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "set-fallback-sms",
+      "name": "Set - Fallback SMS",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [1450, 600],
+      "notes": "Default SMS template when AI generation fails"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "sms-generated",
+              "leftValue": "={{ $json.choices }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "if-sms-generated",
+      "name": "IF - SMS Generated",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [850, 450]
+    }
+  ],
+  "connections": {
+    "Webhook - Lead Ingestion": {
+      "main": [
+        [
+          {
+            "node": "Code - Phone Normalization",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Phone Normalization": {
+      "main": [
+        [
+          {
+            "node": "IF - Phone Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Phone Validation": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets - Store Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error - Invalid Phone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets - Store Lead": {
+      "main": [
+        [
+          {
+            "node": "OpenAI - Generate German SMS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI - Generate German SMS": {
+      "main": [
+        [
+          {
+            "node": "IF - SMS Generated",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - SMS Generated": {
+      "main": [
+        [
+          {
+            "node": "Merge - Lead + SMS",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set - Fallback SMS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge - Lead + SMS": {
+      "main": [
+        [
+          {
+            "node": "Set - SMS Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set - Fallback SMS": {
+      "main": [
+        [
+          {
+            "node": "Set - SMS Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set - SMS Data": {
+      "main": [
+        [
+          {
+            "node": "Split - Parallel Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split - Parallel Processing": {
+      "main": [
+        [
+          {
+            "node": "Branch A: Twilio SMS Customer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Branch B: Google Maps Geocoding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Branch A: Twilio SMS Customer": {
+      "main": [
+        [
+          {
+            "node": "Merge - Branch Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Branch B: Google Maps Geocoding": {
+      "main": [
+        [
+          {
+            "node": "Merge - Branch Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge - Branch Results": {
+      "main": [
+        [
+          {
+            "node": "Wait - 60 Seconds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait - 60 Seconds": {
+      "main": [
+        [
+          {
+            "node": "Set - Call Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set - Call Data": {
+      "main": [
+        [
+          {
+            "node": "Twilio - Call Installer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twilio - Call Installer": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-01-24T16:00:00.000Z",
+      "updatedAt": "2024-01-24T16:00:00.000Z",
+      "id": "pv-speed-to-lead",
+      "name": "PV Speed-to-Lead"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2024-01-24T16:00:00.000Z",
+  "versionId": "1"
+}

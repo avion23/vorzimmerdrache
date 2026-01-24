@@ -1,0 +1,284 @@
+{
+  "name": "Solar Lead Enrichment",
+  "nodes": [
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "e1a2b3c4-d5e6-7890-abcd-ef1234567890",
+      "name": "Enrichment Trigger",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [240, 300],
+      "webhookId": ""
+    },
+    {
+      "parameters": {
+        "jsCode": "const lead = $input.all()[0];\n\nif (!lead.address) {\n  return [{\n    json: {\n      ...lead,\n      error: 'No address provided',\n      success: false\n    }\n  }];\n}\n\nreturn [{ json: lead }];"
+      },
+      "id": "f2b3c4d5-e6f7-8901-bcde-f12345678901",
+      "name": "Validate Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://maps.googleapis.com/maps/api/geocode/json?address={{ encodeURIComponent($json.address) }}&language=de&key={{ $env.GOOGLE_MAPS_API_KEY }}",
+        "options": {}
+      },
+      "id": "a3c4d5e6-f7g8-9012-cdef-123456789012",
+      "name": "Geocode Address",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "c4d5e6f7-g8h9-0123-def1-234567890123",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "OK",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d4e5f6g7-h8i9-1234-ef12-345678901234",
+      "name": "Check Geocode Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const lead = $input.first().json;\nconst geocodeResult = $node['Geocode Address'].first().json;\n\nconst geocodeData = {\n  success: geocodeResult.status === 'OK',\n  address: geocodeResult.results?.[0]?.formatted_address || null,\n  components: {},\n  coordinates: geocodeResult.results?.[0]?.geometry?.location || null,\n  locationType: geocodeResult.results?.[0]?.geometry?.location_type || null,\n  placeId: geocodeResult.results?.[0]?.place_id || null\n};\n\nif (geocodeResult.results?.[0]?.address_components) {\n  for (const comp of geocodeResult.results[0].address_components) {\n    for (const type of comp.types) {\n      switch(type) {\n        case 'street_number': geocodeData.components.streetNumber = comp.long_name; break;\n        case 'route': geocodeData.components.street = comp.long_name; break;\n        case 'postal_code': geocodeData.components.postalCode = comp.long_name; break;\n        case 'locality': geocodeData.components.city = comp.long_name; break;\n        case 'administrative_area_level_1': geocodeData.components.state = comp.long_name; break;\n        case 'country': geocodeData.components.countryCode = comp.short_name; break;\n      }\n    }\n  }\n}\n\nreturn [{ json: { ...lead, geocode: geocodeData } }];"
+      },
+      "id": "e5f6g7h8-i9j0-2345-f123-456789012345",
+      "name": "Parse Geocode Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 200]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://solar.googleapis.com/v1/buildingInsights:findClosest?location.latitude={{ $json.geocode.coordinates.lat }}&location.longitude={{ $json.geocode.coordinates.lng }}&requiredQuality=HIGH&key={{ $env.GOOGLE_SOLAR_API_KEY }}",
+        "options": {}
+      },
+      "id": "f6g7h8i9-j0k1-3456-1234-567890123456",
+      "name": "Get Solar Potential",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 200],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst solarResponse = $node['Get Solar Potential'].first().json;\n\nconst solarData = {\n  source: solarResponse.buildingInsights ? 'google-solar-api' : 'osm-heuristic',\n  roofArea: solarResponse.buildingInsights?.solarPotential?.roofSegmentStats?.reduce((s, x) => s + x.areaMeters2, 0) || 80,\n  maxSunlitRoofArea: Math.max(...(solarResponse.buildingInsights?.solarPotential?.roofSegmentStats?.map(x => x.areaMeters2) || [48])),\n  maxArrayPanelsCount: solarResponse.buildingInsights?.solarPotential?.maxArrayPanelsCount || 16,\n  maxArrayAreaMeters2: solarResponse.buildingInsights?.solarPotential?.maxArrayAreaMeters2 || 40,\n  maxArrayCapacityWatts: solarResponse.buildingInsights?.solarPotential?.maxArrayCapacityWatts || 6400,\n  maxArrayEnergyProductionKwh: solarResponse.buildingInsights?.solarPotential?.maxArrayEnergyProductionKwh || 5760,\n  panelOrientation: 'south',\n  roofType: 'flat',\n  confidence: solarResponse.buildingInsights ? 'high' : 'medium'\n};\n\nreturn [{ json: { ...data, solar: solarData } }];"
+      },
+      "id": "g7h8i9j0-k1l2-4567-2345-678901234567",
+      "name": "Parse Solar Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst regionalData = {\n  'Baden-Württemberg': { suitabilityScore: 9, solarIrradiance: 1150, regionalBonus: 1.2 },\n  'Bayern': { suitabilityScore: 9, solarIrradiance: 1120, regionalBonus: 1.2 },\n  'Berlin': { suitabilityScore: 6, solarIrradiance: 1020, regionalBonus: 1.0 },\n  'Brandenburg': { suitabilityScore: 7, solarIrradiance: 1050, regionalBonus: 1.05 },\n  'Bremen': { suitabilityScore: 5, solarIrradiance: 980, regionalBonus: 0.95 },\n  'Hamburg': { suitabilityScore: 5, solarIrradiance: 990, regionalBonus: 0.95 },\n  'Hessen': { suitabilityScore: 7, solarIrradiance: 1070, regionalBonus: 1.05 },\n  'Mecklenburg-Vorpommern': { suitabilityScore: 6, solarIrradiance: 1040, regionalBonus: 1.0 },\n  'Niedersachsen': { suitabilityScore: 6, solarIrradiance: 1000, regionalBonus: 1.0 },\n  'Nordrhein-Westfalen': { suitabilityScore: 6, solarIrradiance: 1010, regionalBonus: 1.0 },\n  'Rheinland-Pfalz': { suitabilityScore: 8, solarIrradiance: 1090, regionalBonus: 1.1 },\n  'Saarland': { suitabilityScore: 7, solarIrradiance: 1070, regionalBonus: 1.05 },\n  'Sachsen': { suitabilityScore: 6, solarIrradiance: 1030, regionalBonus: 1.0 },\n  'Sachsen-Anhalt': { suitabilityScore: 6, solarIrradiance: 1030, regionalBonus: 1.0 },\n  'Schleswig-Holstein': { suitabilityScore: 5, solarIrradiance: 990, regionalBonus: 0.95 },\n  'Thüringen': { suitabilityScore: 6, solarIrradiance: 1040, regionalBonus: 1.0 }\n};\n\nconst state = data.geocode?.components?.state || '';\nconst region = regionalData[state] || { suitabilityScore: 5, solarIrradiance: 1000, regionalBonus: 1.0 };\n\nconst scores = {\n  addressValid: data.geocode?.locationType === 'ROOFTOP' ? 10 : 5,\n  roofSize: data.solar?.roofArea >= 60 ? 10 : Math.round((data.solar?.roofArea / 60) * 10),\n  regionalFactor: region.suitabilityScore,\n  orientation: data.solar?.panelOrientation === 'south' ? 10 : 7,\n  roofType: data.solar?.roofType === 'flat' ? 10 : 7\n};\n\nconst totalScore = Math.round((scores.addressValid * 3 + scores.roofSize * 2.5 + scores.regionalFactor * 2 + scores.orientation * 1.5 + scores.roofType) / 10);\n\nconst qualification = {\n  score: totalScore,\n  category: totalScore >= 8 ? 'excellent' : totalScore >= 6 ? 'good' : totalScore >= 4 ? 'moderate' : 'poor',\n  priority: totalScore >= 8 ? 'P0 - Critical' : totalScore >= 6 ? 'P1 - High' : totalScore >= 4 ? 'P2 - Medium' : 'P3 - Low',\n  breakdown: scores\n};\n\nconst enrichedLead = {\n  ...data,\n  qualification: qualification,\n  regional: region,\n  system: {\n    estimatedCostEUR: Math.round(data.solar.maxArrayCapacityWatts * 1.4 * region.regionalBonus),\n    costPerKwh: Math.round((data.solar.maxArrayCapacityWatts * 1.4 * region.regionalBonus) / data.solar.maxArrayEnergyProductionKwh * 100) / 100\n  },\n  enrichedAt: new Date().toISOString()\n};\n\ndelete enrichedLead.geocode;\ndelete enrichedLead.solar;\n\nreturn [{ json: enrichedLead }];"
+      },
+      "id": "h8i9j0k1-l2m3-5678-3456-789012345678",
+      "name": "Calculate Qualification Score",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1780, 200]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "resource": "sheet",
+        "operation": "appendOrUpdate",
+        "sheetId": "{{ $env.GOOGLE_SHEET_ID }}",
+        "range": "Enriched!A:Z",
+        "options": {
+          "valueInputMode": "userEntered"
+        }
+      },
+      "id": "i9j0k1l2-m3n4-6789-4567-890123456789",
+      "name": "Update Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [2000, 200],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: {\n  originalAddress: $json.address,\n  validatedAddress: $json.address?.validated,\n  score: $json.qualification?.score,\n  category: $json.qualification?.category,\n  roofArea: $json.solar?.roofArea || $json.address?.roofArea || 0,\n  estimatedKwh: $json.solar?.estimatedKwhPerYear || 0,\n  costEUR: $json.system?.estimatedCostEUR || 0,\n  state: $json.regional?.state || $json.address?.components?.state || '',\n  priority: $json.qualification?.priority,\n  enrichedAt: $json.enrichedAt\n}}];"
+      },
+      "id": "j0k1l2m3-n4o5-7890-5678-901234567890",
+      "name": "Format Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2220, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "const lead = $input.first().json;\nreturn [{\n  json: {\n    ...lead,\n    address: {\n      original: lead.address,\n      validated: null,\n      valid: false,\n      error: 'Geocoding failed'\n    },\n    qualification: {\n      score: 0,\n      category: 'invalid',\n      priority: 'P3 - Low'\n    },\n    success: false\n  }\n}];"
+      },
+      "id": "k1l2m3n4-o5p6-8901-6789-012345678901",
+      "name": "Handle Geocode Failure",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 400]
+    }
+  ],
+  "connections": {
+    "Enrichment Trigger": {
+      "main": [
+        [
+          {
+            "node": "Validate Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Input": {
+      "main": [
+        [
+          {
+            "node": "Geocode Address",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Geocode Address": {
+      "main": [
+        [
+          {
+            "node": "Check Geocode Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Geocode Success": {
+      "main": [
+        [
+          {
+            "node": "Parse Geocode Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Geocode Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Geocode Result": {
+      "main": [
+        [
+          {
+            "node": "Get Solar Potential",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Solar Potential": {
+      "main": [
+        [
+          {
+            "node": "Parse Solar Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Solar Data": {
+      "main": [
+        [
+          {
+            "node": "Calculate Qualification Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Qualification Score": {
+      "main": [
+        [
+          {
+            "node": "Update Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Format Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Geocode Failure": {
+      "main": [
+        [
+          {
+            "node": "Format Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-01-24T16:00:00.000Z",
+  "versionId": "1.0.0"
+}

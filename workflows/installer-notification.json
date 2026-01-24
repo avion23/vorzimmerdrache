@@ -1,0 +1,223 @@
+{
+  "name": "Installer Notification Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [250, 300],
+      "webhookId": "installer-notification-trigger",
+      "httpMethod": "POST",
+      "path": "twilio/callback",
+      "responseMode": "responseNode",
+      "options": {}
+    },
+    {
+      "parameters": {
+        "functionCode": "const callData = $input.item.json.body;\nconst callSid = callData.CallSid;\nconst callStatus = callData.CallStatus;\n\nlet outcome = 'unknown';\nif (callStatus === 'completed') outcome = 'answered';\nelse if (callStatus === 'no-answer') outcome = 'missed';\nelse if (callStatus === 'busy') outcome = 'busy';\nelse if (callStatus === 'failed') outcome = 'failed';\n\nreturn {\n  json: {\n    callSid,\n    callStatus,\n    outcome,\n    from: callData.From,\n    to: callData.To,\n    duration: callData.CallDuration || 0,\n    timestamp: new Date().toISOString(),\n    customerName: callData.customerName || 'Unknown',\n    address: callData.address || 'Unknown',\n    leadType: callData.leadType || 'Unknown'\n  }\n};"
+      },
+      "id": "parse-call-data",
+      "name": "Parse Call Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "sheetId": { "__rl": true, "value": "CallLogs", "mode": "name" },
+        "range": "A:G",
+        "options": {}
+      },
+      "id": "google-sheets",
+      "name": "Google Sheets - Log Call",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [650, 300],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "google-sheets-credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "missed-check",
+              "leftValue": "={{ $json.outcome }}",
+              "rightValue": "missed",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-missed",
+      "name": "If Call Missed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "to": "={{ $json.from }}",
+        "from": "+49123456789",
+        "content": "=Missed call from customer: {{$json.customerName}} at {{$json.address}}. Lead type: {{$json.leadType}}. Call SID: {{$json.callSid}}. Please call back."
+      },
+      "id": "sms-fallback",
+      "name": "SMS Fallback to Installer",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 2,
+      "position": [1050, 200],
+      "credentials": {
+        "twilioApi": {
+          "id": "twilio-credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "to": "={{ $item(0).$json.body.customerNumber }}",
+        "from": "+49123456789",
+        "content": "=Your installer was busy but received your contact details. They will call you back shortly."
+      },
+      "id": "customer-sms",
+      "name": "SMS to Customer",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 2,
+      "position": [1250, 200],
+      "credentials": {
+        "twilioApi": {
+          "id": "twilio-credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "voicemail-check",
+              "leftValue": "={{ $json.callStatus }}",
+              "rightValue": "voicemail",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-voicemail",
+      "name": "If Voicemail",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1050, 400]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "to": "={{ $json.from }}",
+        "from": "+49123456789",
+        "content": "=Voicemail left for: {{$json.customerName}}. Recording URL: {{$item(0).$json.body.RecordingUrl}}. Transcription: {{$item(0).$json.body.TranscriptionText || 'Pending'}}"
+      },
+      "id": "voicemail-notify",
+      "name": "Voicemail Notification",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 2,
+      "position": [1250, 400],
+      "credentials": {
+        "twilioApi": {
+          "id": "twilio-credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, callSid: $json.callSid, status: $json.callStatus, outcome: $json.outcome } }}"
+      },
+      "id": "response-node",
+      "name": "Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1450, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [[
+        { "node": "Parse Call Data", "type": "main", "index": 0 }
+      ]]
+    },
+    "Parse Call Data": {
+      "main": [[
+        { "node": "Google Sheets - Log Call", "type": "main", "index": 0 }
+      ]]
+    },
+    "Google Sheets - Log Call": {
+      "main": [[
+        { "node": "If Call Missed", "type": "main", "index": 0 }
+      ]]
+    },
+    "If Call Missed": {
+      "main": [[
+        { "node": "SMS Fallback to Installer", "type": "main", "index": 0 }
+      ], [
+        { "node": "If Voicemail", "type": "main", "index": 0 }
+      ]]
+    },
+    "SMS Fallback to Installer": {
+      "main": [[
+        { "node": "SMS to Customer", "type": "main", "index": 0 }
+      ]]
+    },
+    "SMS to Customer": {
+      "main": [[
+        { "node": "Response", "type": "main", "index": 0 }
+      ]]
+    },
+    "If Voicemail": {
+      "main": [[
+        { "node": "Voicemail Notification", "type": "main", "index": 0 }
+      ], [
+        { "node": "Response", "type": "main", "index": 0 }
+      ]]
+    },
+    "Voicemail Notification": {
+      "main": [[
+        { "node": "Response", "type": "main", "index": 0 }
+      ]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-24T16:00:00.000Z",
+  "versionId": "1"
+}

@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2025-01-24",
+    "source": "Bundesnetzagentur solar irradiance data",
+    "currency": "EUR"
+  },
+  "states": {
+    "Baden-Württemberg": {
+      "code": "BW",
+      "solarIrradiance": 1150,
+      "suitabilityScore": 9,
+      "regionalBonus": 1.2,
+      "avgAnnualkWh": 1050
+    },
+    "Bayern": {
+      "code": "BY",
+      "solarIrradiance": 1120,
+      "suitabilityScore": 9,
+      "regionalBonus": 1.2,
+      "avgAnnualkWh": 1020
+    },
+    "Berlin": {
+      "code": "BE",
+      "solarIrradiance": 1020,
+      "suitabilityScore": 6,
+      "regionalBonus": 1.0,
+      "avgAnnualkWh": 930
+    },
+    "Brandenburg": {
+      "code": "BB",
+      "solarIrradiance": 1050,
+      "suitabilityScore": 7,
+      "regionalBonus": 1.05,
+      "avgAnnualkWh": 960
+    },
+    "Bremen": {
+      "code": "HB",
+      "solarIrradiance": 980,
+      "suitabilityScore": 5,
+      "regionalBonus": 0.95,
+      "avgAnnualkWh": 890
+    },
+    "Hamburg": {
+      "code": "HH",
+      "solarIrradiance": 990,
+      "suitabilityScore": 5,
+      "regionalBonus": 0.95,
+      "avgAnnualkWh": 900
+    },
+    "Hessen": {
+      "code": "HE",
+      "solarIrradiance": 1070,
+      "suitabilityScore": 7,
+      "regionalBonus": 1.05,
+      "avgAnnualkWh": 980
+    },
+    "Mecklenburg-Vorpommern": {
+      "code": "MV",
+      "solarIrradiance": 1040,
+      "suitabilityScore": 6,
+      "regionalBonus": 1.0,
+      "avgAnnualkWh": 950
+    },
+    "Niedersachsen": {
+      "code": "NI",
+      "solarIrradiance": 1000,
+      "suitabilityScore": 6,
+      "regionalBonus": 1.0,
+      "avgAnnualkWh": 910
+    },
+    "Nordrhein-Westfalen": {
+      "code": "NRW",
+      "solarIrradiance": 1010,
+      "suitabilityScore": 6,
+      "regionalBonus": 1.0,
+      "avgAnnualkWh": 920
+    },
+    "Rheinland-Pfalz": {
+      "code": "RP",
+      "solarIrradiance": 1090,
+      "suitabilityScore": 8,
+      "regionalBonus": 1.1,
+      "avgAnnualkWh": 1000
+    },
+    "Saarland": {
+      "code": "SL",
+      "solarIrradiance": 1070,
+      "suitabilityScore": 7,
+      "regionalBonus": 1.05,
+      "avgAnnualkWh": 980
+    },
+    "Sachsen": {
+      "code": "SN",
+      "solarIrradiance": 1030,
+      "suitabilityScore": 6,
+      "regionalBonus": 1.0,
+      "avgAnnualkWh": 940
+    },
+    "Sachsen-Anhalt": {
+      "code": "ST",
+      "solarIrradiance": 1030,
+      "suitabilityScore": 6,
+      "regionalBonus": 1.0,
+      "avgAnnualkWh": 940
+    },
+    "Schleswig-Holstein": {
+      "code": "SH",
+      "solarIrradiance": 990,
+      "suitabilityScore": 5,
+      "regionalBonus": 0.95,
+      "avgAnnualkWh": 900
+    },
+    "Thüringen": {
+      "code": "TH",
+      "solarIrradiance": 1040,
+      "suitabilityScore": 6,
+      "regionalBonus": 1.0,
+      "avgAnnualkWh": 950
+    }
+  },
+  "roofTypeFactors": {
+    "flat": 1.0,
+    "pitched": 0.85,
+    "unknown": 0.9
+  },
+  "orientationFactors": {
+    "south": 1.0,
+    "southwest": 0.95,
+    "southeast": 0.95,
+    "west": 0.75,
+    "east": 0.75,
+    "north": 0.45,
+    "unknown": 0.7
+  },
+  "minimumRoofArea": 20,
+  "optimalRoofArea": 60
+}

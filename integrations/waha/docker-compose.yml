@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  waha:
+    image: devlikeapro/waha:latest
+    container_name: waha-whatsapp
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - WHATSAPP_HOOKS_URL=http://waha:3000/hooks
+      - WHATSAPP_HOOKS_EVENTS=messages,session.status
+      - WHATSAPP_RESTART_ALL_SESSIONS=true
+      - WHATSAPP_START_SESSION=true
+      - WHATSAPP_CONFIG_SESSIONS_DATA_DIR=/app/.sessions
+    volumes:
+      - waha_sessions:/app/.sessions
+    networks:
+      - waha_network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  waha_sessions:
+    driver: local
+
+networks:
+  waha_network:
+    driver: bridge
