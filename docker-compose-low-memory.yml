@@ -1,0 +1,182 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    restart: on-failure
+    restart_policy:
+      max_attempts: 5
+    mem_limit: 150m
+    mem_reservation: 50m
+    cpus: '0.25'
+    pids_limit: 100
+    oom_score_adj: -500
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-n8n}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-n8n}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./config/postgresql-low-memory.conf:/etc/postgresql/postgresql.conf:ro
+    command:
+      - "postgres"
+      - "-c"
+      - "config_file=/etc/postgresql/postgresql.conf"
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-n8n}"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: on-failure
+    restart_policy:
+      max_attempts: 5
+    mem_limit: 50m
+    mem_reservation: 20m
+    cpus: '0.25'
+    pids_limit: 100
+    oom_score_adj: -500
+    command: >
+      redis-server
+      --appendonly yes
+      --requirepass ${REDIS_PASSWORD}
+      --maxmemory 32mb
+      --maxmemory-policy allkeys-lru
+      --save 900 1
+      --save 300 10
+      --save 60 10000
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: on-failure
+    restart_policy:
+      max_attempts: 5
+    mem_limit: 400m
+    mem_reservation: 150m
+    cpus: '0.5'
+    pids_limit: 200
+    oom_score_adj: -100
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      N8N_HOST: ${N8N_HOST}
+      N8N_PORT: ${N8N_PORT:-5678}
+      N8N_PROTOCOL: ${N8N_PROTOCOL:-http}
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+      N8N_BASIC_AUTH_ACTIVE: ${N8N_BASIC_AUTH_ACTIVE:-true}
+      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD}
+      WEBHOOK_URL: ${WEBHOOK_URL}
+      EXECUTIONS_MODE: ${N8N_EXECUTIONS_MODE:-regular}
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${POSTGRES_DB:-n8n}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER:-n8n}
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
+      NODE_ENV: production
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-warn}
+      N8N_LOG_OUTPUT: console
+      N8N_METRICS: false
+      DB_POSTGRESDB_POOL_SIZE: 5
+      N8N_PAYLOAD_SIZE_MAX: 8
+      N8N_CONCURRENCY_PRODUCTION_LIMIT: 5
+      WORKFLOW_CALLER_POLICY_DEFAULT_OPTION: worklfowOwner
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN}
+      TWILIO_PHONE_NUMBER: ${TWILIO_PHONE_NUMBER}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      GOOGLE_SHEETS_ID: ${GOOGLE_SHEETS_ID}
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${GOOGLE_SERVICE_ACCOUNT_JSON}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
+      INSTALLER_PHONE_NUMBER: ${INSTALLER_PHONE_NUMBER}
+      WAHA_API_URL: ${WAHA_API_URL}
+      WAHA_API_TOKEN: ${WAHA_API_TOKEN}
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./workflows:/workflows:ro
+    networks:
+      - backend
+      - frontend
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5678/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  waha:
+    image: devlikeapro/waha-plus:latest
+    container_name: waha
+    restart: on-failure
+    restart_policy:
+      max_attempts: 5
+    mem_limit: 200m
+    mem_reservation: 80m
+    cpus: '0.25'
+    pids_limit: 100
+    oom_score_adj: -100
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      WHATSAPP_HOOK_URL: ${N8N_HOST:-http://n8n:5678}/webhook/whatsapp
+      WHATSAPP_HOOK_EVENTS: ${WAHA_HOOK_EVENTS:-message,session.status}
+      WHATSAPP_REDIS_ENABLED: true
+      WHATSAPP_REDIS_HOST: redis
+      WHATSAPP_REDIS_PORT: 6379
+      WHATSAPP_REDIS_PASSWORD: ${REDIS_PASSWORD}
+      WHATSAPP_API_KEY: ${WAHA_API_TOKEN}
+      WAHA_REDIS_ENABLED: true
+      WAHA_REDIS_HOST: redis
+      WAHA_REDIS_PORT: 6379
+      WAHA_REDIS_PASSWORD: ${REDIS_PASSWORD}
+      WHATSAPP_HEADLESS: true
+      WHATSAPP_DISABLE_MEDIA_DOWNLOAD: true
+      WAHA_BROWSER_ARGS: "--disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --no-sandbox --disable-setuid-sandbox --disable-accelerated-2d-canvas --disable-accelerated-video-decode --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-breakpad --disable-component-extensions-with-background-pages --disable-extensions --disable-features=TranslateUI,BlinkGenPropertyTrees --disable-ipc-flooding-protection --disable-renderer-backgrounding --enable-features=NetworkService,NetworkServiceInProcess --force-color-profile=srgb --hide-scrollbars --metrics-recording-only --mute-audio --no-first-run --enable-automation --password-store=basic --use-mock-keychain --disable-web-security --disable-features=IsolateOrigins,site-per-process --single-process"
+    volumes:
+      - waha_data:/app/.sessions
+      - waha_sessions:/app/sessions
+    networks:
+      - backend
+      - frontend
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  postgres_data:
+  redis_data:
+  n8n_data:
+  waha_data:
+  waha_sessions:
+
+networks:
+  backend:
+    internal: true
+  frontend:

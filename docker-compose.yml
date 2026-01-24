@@ -153,19 +153,36 @@ services:
       - "traefik.http.middlewares.authtraefik.basicauth.users=${TRAEFIK_AUTH}"
 
   uptime-kuma:
-    image: louislam/uptime-kuma:1
-    container_name: uptime-kuma
-    restart: unless-stopped
-    volumes:
-      - uptime_kuma_data:/app/data
-    networks:
-      - frontend
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.uptime.rule=Host(`uptime.${DOMAIN}`)"
-      - "traefik.http.routers.uptime.entrypoints=websecure"
-      - "traefik.http.routers.uptime.tls=true"
-      - "traefik.http.routers.uptime.tls.certresolver=letsencrypt"
+     image: louislam/uptime-kuma:1
+     container_name: uptime-kuma
+     restart: unless-stopped
+     volumes:
+       - uptime_kuma_data:/app/data
+     networks:
+       - frontend
+     labels:
+       - "traefik.enable=true"
+       - "traefik.http.routers.uptime.rule=Host(`uptime.${DOMAIN}`)"
+       - "traefik.http.routers.uptime.entrypoints=websecure"
+       - "traefik.http.routers.uptime.tls=true"
+       - "traefik.http.routers.uptime.tls.certresolver=letsencrypt"
+
+  telegram-bot:
+      build:
+        context: ./integrations/telegram
+        dockerfile: Dockerfile
+      container_name: telegram-bot
+      restart: unless-stopped
+      environment:
+        TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+        INSTALLER_TELEGRAM_CHAT_ID: ${INSTALLER_TELEGRAM_CHAT_ID}
+        N8N_WEBHOOK_URL: ${WEBHOOK_URL}/webhook/telegram
+        WAHA_API_URL: ${WAHA_API_URL}
+        WAHA_API_TOKEN: ${WAHA_API_TOKEN}
+      volumes:
+        - telegram_bot_data:/app/data
+      networks:
+        - backend
 
   backup:
     image: prodrigestivill/postgres-backup-local:15
@@ -196,6 +213,7 @@ volumes:
   waha_sessions:
   traefik_letsencrypt:
   uptime_kuma_data:
+  telegram_bot_data:
 
 networks:
   backend:

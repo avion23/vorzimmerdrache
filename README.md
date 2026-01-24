@@ -12,7 +12,10 @@ Automatisiertes Speed-to-Lead System für deutsche PV-Installateure.
 - 📞 **Instant Call-Bridge:** Twilio Voice verbindet Installateur mit Lead per "Drücke 1"
 - 🏠 **Automatische Qualifizierung:** Adresse validieren, Solar-Potenzial schätzen
 - 🔄 **Status-Automatisierung:** Kunden automatisch über jeden Schritt informieren
+- 🏗️ **Dach-Modus (Inbound Calls):** Automatische Anrufannahme während Dachmontage
+- 🤖 **Telegram Bot:** Installateur-Benachrichtigungen ohne WhatsApp-Verschmutzung
 - 🇩🇪 **Deutsch optimiert:** GDPR-konform, WhatsApp Integration, lokale APIs
+- 💾 **1GB VPS Support:** Swap-optimiert für Low-Budget-Deployment
 
 ## 🏗️ Architektur
 
@@ -67,11 +70,15 @@ GOOGLE_SHEET_ID=your_sheet_id
 GOOGLE_MAPS_API_KEY=your_key
 GOOGLE_SERVICE_ACCOUNT_JSON='{"type":"service_account",...}'
 
-# Installateur
-INSTALLER_PHONE_NUMBER=+491701234567
-INSTALLER_NAME=Max Mustermann
-COMPANY_NAME=Solar GmbH
-```
+ # Installateur
+ INSTALLER_PHONE_NUMBER=+491701234567
+ INSTALLER_NAME=Max Mustermann
+ COMPANY_NAME=Solar GmbH
+
+ # Telegram Bot (Dach-Modus)
+ TELEGRAM_BOT_TOKEN=your-telegram-bot-token
+ INSTALLER_TELEGRAM_CHAT_ID=123456789
+ ```
 
 ### 3. Docker Services starten
 
@@ -126,21 +133,27 @@ Erwartetes Ergebnis:
 ## 📁 Projektstruktur
 
 ```
-vorzimmerdrache/
-├── workflows/              # n8n Workflows
-│   ├── speed-to-lead-main.json
-│   ├── status-loop.json
-│   └── installer-notification.json
-├── integrations/
-│   ├── waha/              # WhatsApp Integration
-│   ├── twilio/            # Voice Call System
-│   └── enrichment/        # Address & Solar API
+ vorzimmerdrache/
+ ├── workflows/              # n8n Workflows
+ │   ├── speed-to-lead-main.json
+ │   ├── status-loop.json
+ │   ├── installer-notification.json
+ │   ├── inbound-handler.json
+ │   └── enrichment-subflow.json
+ ├── integrations/
+ │   ├── waha/              # WhatsApp Integration
+ │   ├── twilio/            # Voice Call System
+ │   ├── telegram/          # Telegram Bot
+ │   └── enrichment/        # Address & Solar API
 ├── config/
 │   ├── status-templates.json
 │   └── regional-solar-data.json
-├── scripts/
-│   ├── deploy-hetzner.sh
-│   └── deploy-railway.sh
+ ├── scripts/
+ │   ├── deploy-hetzner.sh
+ │   ├── deploy-railway.sh
+ │   ├── deploy-1gb-vps.sh
+ │   ├── monitor.sh
+ │   └── logs-clean.sh
 ├── docs/
 │   ├── infrastructure.md
 │   └── gdpr-compliance.md
@@ -171,6 +184,21 @@ vorzimmerdrache/
 - `Installation` → "Installation geplant"
 - `Abgeschlossen` → "Danke & Bewertung"
 
+### Dach-Modus (Inbound Call Handler)
+
+Wenn Kunden anrufen, während der Installateur auf dem Dach ist:
+
+1. **Twilio nimmt sofort ab:** Kein Besetztzeichen
+2. **Voice-Bot antwortet:** "Hallo, hier ist Solar [Company]. Wir sind gerade auf dem Dach bei einer Montage. Ich habe deine Nummer gesehen und schicke dir sofort eine WhatsApp."
+3. **Automatische WhatsApp:** Kunde erhält sofort Nachricht
+4. **Telegram-Alarm:** Installateur wird über verpassten Anruf benachrichtigt
+
+**Telegram Bot Befehle:**
+- `/status` - Aktuelle Leads anzeigen
+- `/today` - Heute's Übersicht
+- `/help` - Alle Befehle
+- `/register <name>` - Installateur registrieren
+
 ## 🌐 Deployment
 
 ### Hetzner VPS (Empfohlen)
@@ -193,6 +221,23 @@ Kosten: ~$20-50/Monat
 
 - n8n: Managed Cloud ($20/Monat)
 - Waha: Hetzner CX22 (~€5/Monat)
+
+### 1GB VPS (Low Budget)
+
+Für extrem günstige Instanzen (Hetzner CX11 - ~€4/Monat):
+
+```bash
+./scripts/deploy-1gb-vps.sh
+```
+
+**Wichtig:**
+- 4GB Swap wird automatisch eingerichtet
+- Docker Compose mit Low-Memory-Profil nutzen:
+  ```bash
+  docker compose -f docker-compose-low-memory.yml up -d
+  ```
+- Memory Limits: n8n=400MB, Waha=200MB, PostgreSQL=150MB, Redis=50MB
+- Empfohlen für Test-Deployment oder Ein-Person-Betrieb
 
 ## ⚠️ Wichtige Hinweise
 
@@ -273,6 +318,9 @@ MIT License - siehe LICENSE Datei
 
 ## 🎯 Roadmap
 
+- [x] Dach-Modus (Inbound Call Handler)
+- [x] Telegram Bot für Installateur-Benachrichtigungen
+- [x] 1GB VPS Optimierung mit Swap
 - [ ] Offizielle WhatsApp Business API Integration
 - [ ] PostgreSQL als primäre Datenbank
 - [ ] KfW/BAFA Förder-API Integration
@@ -285,12 +333,16 @@ MIT License - siehe LICENSE Datei
 | Komponente | Monat | Bemerkung |
 |-----------|-------|-----------|
 | Hetzner VPS (CX21) | ~€8 | n8n + Waha + DB |
+| Hetzner VPS (CX11) | ~€4 | 1GB Version (mit Swap) |
 | Twilio SMS | €0.05/SMS | ~€50/Monat @ 1000 SMS |
-| Twilio Voice | €0.09/Min | ~€27/Monat @ 300 Min |
+| Twilio Voice (Inbound) | €0.05/Min | ~€15/Monat @ 300 Min |
+| Twilio Voice (Outbound) | €0.09/Min | ~€27/Monat @ 300 Min |
+| Telegram Bot | €0 | Kostenlos |
 | OpenAI GPT-4o-mini | ~€10 | @ 100k requests |
 | Google Maps | €5 | 1000 Geocoding Requests |
 | WhatsApp Business API | €5-15 | Optional |
-| **Gesamt** | **~€80-120/Monat** | @ 1000 Leads |
+| **Gesamt (CX21)** | **~€80-120/Monat** | @ 1000 Leads |
+| **Gesamt (CX11)** | **~€60-90/Monat** | @ 1000 Leads |
 
 Mit Google Sheets (kein PostgreSQL) und Waha (kein WhatsApp API): ~€40-60/Monat.
 
