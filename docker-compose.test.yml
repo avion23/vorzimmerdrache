@@ -74,68 +74,10 @@ services:
       timeout: 3s
       retries: 3
 
-  test-runner:
-    build:
-      context: .
-      dockerfile: Dockerfile.test
-      target: test
-    container_name: test-runner
-    restart: "no"
-    depends_on:
-      postgres-test:
-        condition: service_healthy
-      redis-test:
-        condition: service_healthy
-      waha-mock:
-        condition: service_healthy
-      twilio-mock:
-        condition: service_healthy
-    environment:
-      NODE_ENV: test
-      N8N_HOST: ${N8N_HOST:-localhost}
-      N8N_PORT: ${N8N_PORT:-5678}
-      N8N_PROTOCOL: http
-      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-test_encryption_key_32_chars}
-      N8N_BASIC_AUTH_ACTIVE: false
-      WEBHOOK_URL: ${WEBHOOK_URL:-http://localhost:5678}
-      EXECUTIONS_MODE: direct
-      DB_TYPE: postgresdb
-      DB_POSTGRESDB_HOST: postgres-test
-      DB_POSTGRESDB_PORT: 5432
-      DB_POSTGRESDB_DATABASE: ${POSTGRES_DB:-test_db}
-      DB_POSTGRESDB_USER: ${POSTGRES_USER:-test_user}
-      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD:-test_password}
-      QUEUE_BULL_REDIS_HOST: redis-test
-      QUEUE_BULL_REDIS_PORT: 6379
-      QUEUE_BULL_REDIS_PASSWORD: ${REDIS_PASSWORD:-test_redis_password}
-      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-debug}
-      N8N_METRICS: true
-      N8N_METRICS_PREFIX: ${N8N_METRICS_PREFIX:-test_n8n_}
-      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID:-AC_TEST_ACCOUNT_SID}
-      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN:-test_auth_token}
-      TWILIO_PHONE_NUMBER: ${TWILIO_PHONE_NUMBER:-+1234567890}
-      WAHA_API_URL: http://waha-mock
-      WAHA_API_TOKEN: ${WAHA_API_TOKEN:-test_waha_token}
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-sk-test-key-for-mocking}
-      GEMINI_API_KEY: ${GEMINI_API_KEY:-test_gemini_key}
-      GOOGLE_SHEETS_ID: ${GOOGLE_SHEETS_ID:-test_sheets_id}
-      GOOGLE_SERVICE_ACCOUNT_JSON: ${GOOGLE_SERVICE_ACCOUNT_JSON:-'{"type":"service_account"}'}
-      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY:-test_maps_key}
-      INSTALLER_PHONE_NUMBER: ${INSTALLER_PHONE_NUMBER:-+49123456789}
-      TEST_MODE: true
-    volumes:
-      - ./workflows:/workflows:ro
-      - ./tests:/tests:ro
-      - test_results:/test-results
-    networks:
-      - test_network
-
 volumes:
   postgres_test_data:
     driver: local
   redis_test_data:
-    driver: local
-  test_results:
     driver: local
 
 networks:
