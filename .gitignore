@@ -39,7 +39,17 @@ tmp/
 temp/
 *.tmp
 
+# Backups
+backups/*.sql
+backups/*.csv
+backups/*-backup-*
+
 # API keys and secrets
 integrations/twilio/config.json
 integrations/**/*.key
 integrations/**/*.cert
+
+# Monitoring alerts and state
+.alerts/
+scripts/monitor.conf
+scripts/monitor.conf.local

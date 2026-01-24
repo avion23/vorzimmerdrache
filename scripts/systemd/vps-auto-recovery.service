@@ -1,0 +1,13 @@
+[Unit]
+Description=VPS Auto Recovery
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/opt/vorzimmerdrache/scripts
+ExecStart=/opt/vorzimmerdrache/scripts/auto-recovery.sh run-all
+
+[Install]
+WantedBy=multi-user.target

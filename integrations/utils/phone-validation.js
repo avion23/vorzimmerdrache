@@ -44,11 +44,11 @@ const PhoneValidation = (() => {
 
     if (!cleaned) return null;
 
-    if (cleaned.startsWith('+49')) return cleaned;
-    if (cleaned.startsWith('0049')) return '+49' + cleaned.substring(4);
-    if (cleaned.startsWith('0')) return '+49' + cleaned.substring(1);
+    if (cleaned.startsWith('+49')) return cleaned.replace(/[\s-]/g, '');
+    if (cleaned.startsWith('0049')) return '+49' + cleaned.substring(4).replace(/[\s-]/g, '');
+    if (cleaned.startsWith('0')) return '+49' + cleaned.substring(1).replace(/[\s-]/g, '');
 
-    return cleaned;
+    return cleaned.replace(/[\s-]/g, '');
   }
 
   function validateGermanPhone(phone) {

@@ -1,0 +1,24 @@
+{
+  "german": {
+    "whatsapp": "✅ Du wurdest abgemeldet. Wir kontaktieren dich nicht mehr.",
+    "sms": "Abgemeldet. Keine weiteren Nachrichten."
+  },
+  "english": {
+    "whatsapp": "✅ You have been unsubscribed. We won't contact you anymore.",
+    "sms": "Unsubscribed. No more messages."
+  },
+  "keywords": [
+    "stop",
+    "stopp",
+    "halt",
+    "abmelden",
+    "abbestellen",
+    "löschen",
+    "delete",
+    "remove",
+    "kein interesse",
+    "no thanks",
+    "nicht mehr",
+    "nicht kontaktieren"
+  ]
+}

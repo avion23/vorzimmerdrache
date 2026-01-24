@@ -1,0 +1,72 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2025-01-24",
+    "description": "Regional scoring weights for German solar PV leads"
+  },
+  "subsidy_regions": {
+    "Bayern": {
+      "weight": 1.2,
+      "avg_project_value": 18000,
+      "subsidy_programs": ["KfW 270", "BAFA"],
+      "bonus_pct": 0.05
+    },
+    "Baden-Württemberg": {
+      "weight": 1.15,
+      "avg_project_value": 17000,
+      "subsidy_programs": ["KfW 270", "BAFA"],
+      "bonus_pct": 0.03
+    },
+    "Nordrhein-Westfalen": {
+      "weight": 1.1,
+      "avg_project_value": 16000,
+      "subsidy_programs": ["KfW 270"],
+      "bonus_pct": 0.02
+    },
+    "Rheinland-Pfalz": {
+      "weight": 1.1,
+      "avg_project_value": 15500,
+      "subsidy_programs": ["KfW 270"],
+      "bonus_pct": 0.02
+    },
+    "Hessen": {
+      "weight": 1.05,
+      "avg_project_value": 15000,
+      "subsidy_programs": ["KfW 270"],
+      "bonus_pct": 0.01
+    }
+  },
+  "urgent_keywords": [
+    "sofort",
+    "dringend",
+    "schnell",
+    "diese woche",
+    "jetzt",
+    "eilig",
+    "möglichst zeitnah",
+    "am wochenende",
+    "übermorgen"
+  ],
+  "budget_signals": [
+    "finanzierung geklärt",
+    "barzahlung möglich",
+    "selbstfinanzierung",
+    "finanzierung bereit",
+    "budget vorhanden",
+    "finanziert",
+    "kauf",
+    "kein kredit"
+  ],
+  "freemail_domains": [
+    "gmail.com",
+    "gmx.de",
+    "web.de",
+    "yahoo.de",
+    "outlook.com",
+    "hotmail.de",
+    "aol.com",
+    "mail.de",
+    "freenet.de",
+    "t-online.de"
+  ]
+}

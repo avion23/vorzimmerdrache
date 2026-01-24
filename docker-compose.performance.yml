@@ -1,0 +1,275 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    restart: unless-stopped
+    command:
+      - postgres
+      - -c
+      - config_file=/etc/postgresql/postgresql.conf
+      - -c
+      - max_connections=100
+      - -c
+      - shared_buffers=512MB
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-n8n}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-n8n}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./config/postgres-performance.conf:/etc/postgresql/postgresql.conf:ro
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-n8n}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgbouncer:
+    image: edoburu/pgbouncer:latest
+    container_name: pgbouncer
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER:-n8n}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: ${POSTGRES_DB:-n8n}
+      POOL_MODE: transaction
+      MAX_CLIENT_CONN: 200
+      DEFAULT_POOL_SIZE: 25
+      MIN_POOL_SIZE: 5
+      RESERVE_POOL_SIZE: 5
+      RESERVE_POOL_TIMEOUT: 3
+      SERVER_LIFETIME: 3600
+      SERVER_IDLE_TIMEOUT: 600
+      QUERY_TIMEOUT: 30
+      CLIENT_IDLE_TIMEOUT: 0
+      ADMIN_USERS: ${POSTGRES_USER:-n8n}
+      AUTH_TYPE: plain
+    volumes:
+      - pgbouncer_data:/etc/pgbouncer
+    networks:
+      - backend
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD", "pgbouncer", "--show-config"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD} --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    depends_on:
+      pgbouncer:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      N8N_HOST: ${N8N_HOST}
+      N8N_PORT: ${N8N_PORT:-5678}
+      N8N_PROTOCOL: ${N8N_PROTOCOL:-http}
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+      N8N_BASIC_AUTH_ACTIVE: ${N8N_BASIC_AUTH_ACTIVE:-true}
+      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD}
+      WEBHOOK_URL: ${WEBHOOK_URL}
+      EXECUTIONS_MODE: ${N8N_EXECUTIONS_MODE:-queue}
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_PASSWORD: ${REDIS_PASSWORD}
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: pgbouncer
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${POSTGRES_DB:-n8n}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER:-n8n}
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_POSTGRESDB_POOL_SIZE: ${DB_POOL_SIZE:-20}
+      NODE_ENV: production
+      N8N_METRICS: true
+      N8N_METRICS_PREFIX: ${N8N_METRICS_PREFIX:-n8n_}
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL:-info}
+      N8N_LOG_OUTPUT: console
+      N8N_PAYLOAD_SIZE_MAX: 16
+      EXECUTIONS_TIMEOUT: 300
+      EXECUTIONS_TIMEOUT_MAX: 3600
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN}
+      TWILIO_PHONE_NUMBER: ${TWILIO_PHONE_NUMBER}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      GOOGLE_SHEETS_ID: ${GOOGLE_SHEETS_ID}
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${GOOGLE_SERVICE_ACCOUNT_JSON}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
+      INSTALLER_PHONE_NUMBER: ${INSTALLER_PHONE_NUMBER}
+      WAHA_API_URL: ${WAHA_API_URL}
+      WAHA_API_TOKEN: ${WAHA_API_TOKEN}
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./workflows:/workflows:ro
+    networks:
+      - backend
+      - frontend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.n8n.rule=Host(`${N8N_HOST}`)"
+      - "traefik.http.routers.n8n.entrypoints=websecure"
+      - "traefik.http.routers.n8n.tls=true"
+      - "traefik.http.routers.n8n.tls.certresolver=letsencrypt"
+
+  waha:
+    image: devlikeapro/waha:latest
+    container_name: waha
+    restart: unless-stopped
+    depends_on:
+      - redis
+    environment:
+      WHATSAPP_HOOK_URL: ${N8N_HOST:-http://n8n:5678}/webhook/whatsapp
+      WHATSAPP_HOOK_EVENTS: ${WAHA_HOOK_EVENTS:-message,session.status}
+      WHATSAPP_REDIS_ENABLED: true
+      WHATSAPP_REDIS_HOST: redis
+      WHATSAPP_REDIS_PORT: 6379
+      WHATSAPP_REDIS_PASSWORD: ${REDIS_PASSWORD}
+      WHATSAPP_API_KEY: ${WAHA_API_TOKEN}
+      WAHA_REDIS_ENABLED: true
+      WAHA_REDIS_HOST: redis
+      WAHA_REDIS_PORT: 6379
+      WAHA_REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - waha_data:/app/.sessions
+      - waha_sessions:/app/sessions
+    networks:
+      - backend
+      - frontend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.waha.rule=Host(`${WAHA_HOST}`)"
+      - "traefik.http.routers.waha.entrypoints=websecure"
+      - "traefik.http.routers.waha.tls=true"
+      - "traefik.http.routers.waha.tls.certresolver=letsencrypt"
+
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik
+    restart: unless-stopped
+    command:
+      - "--api.insecure=false"
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.email=${LETSENCRYPT_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik_letsencrypt:/letsencrypt
+    networks:
+      - frontend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=authtraefik"
+      - "traefik.http.middlewares.authtraefik.basicauth.users=${TRAEFIK_AUTH}"
+
+  uptime-kuma:
+     image: louislam/uptime-kuma:1
+     container_name: uptime-kuma
+     restart: unless-stopped
+     volumes:
+       - uptime_kuma_data:/app/data
+     networks:
+       - frontend
+     labels:
+       - "traefik.enable=true"
+       - "traefik.http.routers.uptime.rule=Host(`uptime.${DOMAIN}`)"
+       - "traefik.http.routers.uptime.entrypoints=websecure"
+       - "traefik.http.routers.uptime.tls=true"
+       - "traefik.http.routers.uptime.tls.certresolver=letsencrypt"
+
+  telegram-bot:
+      build:
+        context: ./integrations/telegram
+        dockerfile: Dockerfile
+      container_name: telegram-bot
+      restart: unless-stopped
+      environment:
+        TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+        INSTALLER_TELEGRAM_CHAT_ID: ${INSTALLER_TELEGRAM_CHAT_ID}
+        N8N_WEBHOOK_URL: ${WEBHOOK_URL}/webhook/telegram
+        WAHA_API_URL: ${WAHA_API_URL}
+        WAHA_API_TOKEN: ${WAHA_API_TOKEN}
+        REDIS_HOST: redis
+        REDIS_PORT: 6379
+        REDIS_PASSWORD: ${REDIS_PASSWORD}
+      volumes:
+        - telegram_bot_data:/app/data
+      networks:
+        - backend
+
+  backup:
+    image: prodrigestivill/postgres-backup-local:15
+    container_name: postgres-backup
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: ${POSTGRES_DB:-n8n}
+      POSTGRES_USER: ${POSTGRES_USER:-n8n}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      SCHEDULE: ${BACKUP_SCHEDULE:-@daily}
+      BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS:-7}
+      BACKUP_KEEP_WEEKS: ${BACKUP_KEEP_WEEKS:-4}
+      BACKUP_KEEP_MONTHS: ${BACKUP_KEEP_MONTHS:-6}
+      POSTGRES_EXTRA_OPTS: '-Z 9 --schema=public --blobs'
+    volumes:
+      - ./backups:/backups
+    networks:
+      - backend
+
+volumes:
+  postgres_data:
+  redis_data:
+  n8n_data:
+  waha_data:
+  waha_sessions:
+  traefik_letsencrypt:
+  uptime_kuma_data:
+  telegram_bot_data:
+  pgbouncer_data:
+
+networks:
+  backend:
+    internal: true
+  frontend:

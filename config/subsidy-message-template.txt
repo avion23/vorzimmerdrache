@@ -1,0 +1,11 @@
+👋 Moin {{name}}!
+
+Gute Nachrichten: Dein Dach eignet sich für ~{{kwp}} kWp Solaranlage!
+
+💶 Förderung möglich:
+• KfW 270 Kredit: bis €{{kfw_amount}} zu 1.5% Zinsen
+{{#if bafa_eligible}}
+• BAFA Zuschuss: bis €{{bafa_amount}}
+{{/if}}
+
+Interesse? Ich ruf dich an sobald ich vom Dach runter bin! ☀️

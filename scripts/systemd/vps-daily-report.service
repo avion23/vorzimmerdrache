@@ -1,0 +1,13 @@
+[Unit]
+Description=VPS Daily Health Report
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/opt/vorzimmerdrache/scripts
+ExecStart=/opt/vorzimmerdrache/scripts/daily-report.sh telegram
+
+[Install]
+WantedBy=multi-user.target

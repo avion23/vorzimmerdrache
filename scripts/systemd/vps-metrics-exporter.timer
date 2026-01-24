@@ -1,0 +1,9 @@
+[Unit]
+Description=Run VPS Metrics Exporter every 60 seconds
+
+[Timer]
+OnCalendar=*:0/1
+Persistent=true
+
+[Install]
+WantedBy=timers.target

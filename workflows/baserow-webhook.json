@@ -1,0 +1,427 @@
+{
+  "name": "Baserow Webhook Handler",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "baserow",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [250, 300],
+      "webhookId": "baserow-webhook-trigger"
+    },
+    {
+      "parameters": {
+        "functionCode": "const data = $input.item.json.body;\nconst eventType = data.event_type;\nconst rowData = data.row || {};\nconst tableName = data.table_name;\n\nconst validEvents = ['rows.created', 'rows.updated', 'rows.deleted'];\n\nif (!validEvents.includes(eventType)) {\n  return {\n    json: {\n      success: false,\n      error: 'Invalid event type',\n      eventType\n    }\n  };\n}\n\nif (tableName !== 'Leads') {\n  return {\n    json: {\n      success: false,\n      error: 'Invalid table name',\n      tableName\n    }\n  };\n}\n\nreturn {\n  json: {\n    success: true,\n    eventType,\n    rowId: rowData.id,\n    rowData,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "validate-webhook",
+      "name": "Validate Webhook",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true
+          },
+          "conditions": [
+            {
+              "id": "deleted-check",
+              "leftValue": "={{ $json.eventType }}",
+              "rightValue": "rows.deleted",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "check-deleted",
+      "name": "Check if Deleted",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM leads WHERE id = $1;",
+        "options": {}
+      },
+      "id": "delete-from-postgres",
+      "name": "Delete from PostgreSQL",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [850, 200],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "const rowData = $input.item.json.rowData;\nconst mapping = {\n  'ID': 'id',\n  'Created At': 'created_at',\n  'Name': 'name',\n  'Phone': 'phone',\n  'Email': 'email',\n  'Address': 'address_raw',\n  'City': 'address_city',\n  'Postal Code': 'address_postal_code',\n  'State': 'address_state',\n  'Latitude': 'latitude',\n  'Longitude': 'longitude',\n  'Status': 'status',\n  'Priority': 'priority',\n  'Opted In': 'opted_in',\n  'Opted Out': 'opted_out',\n  'Roof Area (sqm)': 'roof_area_sqm',\n  'Estimated kWp': 'estimated_kwp',\n  'Estimated Annual kWh': 'estimated_annual_kwh',\n  'Subsidy Eligible': 'subsidy_eligible',\n  'Source': 'source',\n  'Notes': 'notes',\n  'Assigned To': 'assigned_to',\n  'Meeting Date': 'meeting_date'\n};\n\nconst lead = {};\n\nfor (const [baserowField, pgField] of Object.entries(mapping)) {\n  let value = rowData[baserowField];\n  \n  if (value === null || value === undefined || value === '') {\n    continue;\n  }\n  \n  if (pgField === 'created_at' || pgField === 'meeting_date') {\n    if (typeof value === 'string') {\n      value = new Date(value);\n    }\n  }\n  \n  if (['opted_in', 'opted_out', 'subsidy_eligible'].includes(pgField)) {\n    value = value === 'true' || value === true;\n  }\n  \n  if (['latitude', 'longitude', 'estimated_kwp'].includes(pgField)) {\n    if (typeof value === 'string') {\n      value = parseFloat(value);\n    }\n  }\n  \n  if (['roof_area_sqm', 'estimated_annual_kwh', 'priority'].includes(pgField)) {\n    if (typeof value === 'string') {\n      value = parseInt(value, 10);\n    }\n  }\n  \n  lead[pgField] = value;\n}\n\nconst eventType = $input.item.json.eventType;\n\nreturn {\n  json: {\n    eventType,\n    lead,\n    id: lead.id\n  }\n};"
+      },
+      "id": "transform-lead-data",
+      "name": "Transform Lead Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [850, 400]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, updated_at FROM leads WHERE id = $1;",
+        "options": {}
+      },
+      "id": "check-lead-exists",
+      "name": "Check Lead Exists",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1050, 400],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true
+          },
+          "conditions": [
+            {
+              "id": "exists-check",
+              "leftValue": "={{ $json.length }}",
+              "rightValue": "0",
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "check-existing",
+      "name": "Check Existing",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1250, 400]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "leads",
+        "columns": "id,created_at,name,phone,email,address_raw,address_city,address_postal_code,address_state,latitude,longitude,status,priority,opted_in,opted_out,roof_area_sqm,estimated_kwp,estimated_annual_kwh,subsidy_eligible,source,notes,assigned_to",
+        "additionalFields": {}
+      },
+      "id": "insert-lead",
+      "name": "Insert Lead",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1450, 300],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "const lead = $input.item.json.lead;\nconst fields = Object.keys(lead).filter(k => k !== 'id');\nconst setClause = fields.map((f, i) => `${f} = $${i + 2}`).join(', ');\nconst values = fields.map(f => lead[f]);\n\nreturn {\n  json: {\n    query: `UPDATE leads SET ${setClause}, updated_at = NOW() WHERE id = $1`,\n    values: [lead.id, ...values]\n  }\n};"
+      },
+      "id": "build-update-query",
+      "name": "Build Update Query",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1450, 500]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{ $json.query }}",
+        "options": {}
+      },
+      "id": "update-lead",
+      "name": "Update Lead",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1650, 500],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true
+          },
+          "conditions": [
+            {
+              "id": "status-change-check",
+              "leftValue": "={{ $item(0).$json.eventType }}",
+              "rightValue": "rows.updated",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "check-status-change",
+      "name": "Check Status Change",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1850, 500]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT status FROM leads WHERE id = $1;",
+        "options": {}
+      },
+      "id": "get-previous-status",
+      "name": "Get Previous Status",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [2050, 400],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "const currentStatus = $input.item.json.lead.status;\nconst previousStatus = $('Get Previous Status').item.json.status;\n\nif (currentStatus !== previousStatus) {\n  return {\n    json: {\n      id: $input.item.json.id,\n      name: $input.item.json.lead.name,\n      phone: $input.item.json.lead.phone,\n      previousStatus,\n      currentStatus,\n      timestamp: new Date().toISOString()\n    }\n  };\n}\n\nreturn null;"
+      },
+      "id": "check-status-diff",
+      "name": "Check Status Diff",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [2250, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true
+          },
+          "conditions": [
+            {
+              "id": "status-changed",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "if-status-changed",
+      "name": "If Status Changed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2450, 400]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "to": "={{ $env.INSTALLER_PHONE_NUMBER }}",
+        "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
+        "content": "=Status changed for lead {{$json.name}} ({{$json.phone}}):\n{{$json.previousStatus}} → {{$json.currentStatus}}\n\nLead ID: {{$json.id}}"
+      },
+      "id": "notify-installer",
+      "name": "Notify Installer",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 2,
+      "position": [2650, 300],
+      "credentials": {
+        "twilioApi": {
+          "id": "twilio-credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true
+          },
+          "conditions": [
+            {
+              "id": "won-check",
+              "leftValue": "={{ $json.currentStatus }}",
+              "rightValue": "won",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "check-won-status",
+      "name": "Check Won Status",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2850, 300]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "channel": "={{ $env.TWILIO_PHONE_NUMBER }}",
+        "content": "Congratulations! 🎉\n\nYour solar project has been approved. We'll be in touch shortly to schedule the installation.",
+        "waId": "={{ $json.phone }}",
+        "options": {}
+      },
+      "id": "send-whatsapp-congratulations",
+      "name": "Send WhatsApp Congratulations",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 2.3,
+      "position": [3050, 200],
+      "credentials": {
+        "twilioApi": {
+          "id": "twilio-credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Baserow webhook processed', eventType: $json.eventType, timestamp: $json.timestamp } }}"
+      },
+      "id": "response-node",
+      "name": "Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [3050, 400]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [[
+        { "node": "Validate Webhook", "type": "main", "index": 0 }
+      ]]
+    },
+    "Validate Webhook": {
+      "main": [[
+        { "node": "Check if Deleted", "type": "main", "index": 0 }
+      ]]
+    },
+    "Check if Deleted": {
+      "main": [[
+        { "node": "Delete from PostgreSQL", "type": "main", "index": 0 }
+      ], [
+        { "node": "Transform Lead Data", "type": "main", "index": 0 }
+      ]]
+    },
+    "Delete from PostgreSQL": {
+      "main": [[
+        { "node": "Response", "type": "main", "index": 0 }
+      ]]
+    },
+    "Transform Lead Data": {
+      "main": [[
+        { "node": "Check Lead Exists", "type": "main", "index": 0 }
+      ]]
+    },
+    "Check Lead Exists": {
+      "main": [[
+        { "node": "Check Existing", "type": "main", "index": 0 }
+      ]]
+    },
+    "Check Existing": {
+      "main": [[
+        { "node": "Insert Lead", "type": "main", "index": 0 }
+      ], [
+        { "node": "Build Update Query", "type": "main", "index": 0 }
+      ]]
+    },
+    "Insert Lead": {
+      "main": [[
+        { "node": "Check Status Change", "type": "main", "index": 0 }
+      ]]
+    },
+    "Build Update Query": {
+      "main": [[
+        { "node": "Update Lead", "type": "main", "index": 0 }
+      ]]
+    },
+    "Update Lead": {
+      "main": [[
+        { "node": "Check Status Change", "type": "main", "index": 0 }
+      ]]
+    },
+    "Check Status Change": {
+      "main": [[
+        { "node": "Get Previous Status", "type": "main", "index": 0 }
+      ], [
+        { "node": "Response", "type": "main", "index": 0 }
+      ]]
+    },
+    "Get Previous Status": {
+      "main": [[
+        { "node": "Check Status Diff", "type": "main", "index": 0 }
+      ]]
+    },
+    "Check Status Diff": {
+      "main": [[
+        { "node": "If Status Changed", "type": "main", "index": 0 }
+      ]]
+    },
+    "If Status Changed": {
+      "main": [[
+        { "node": "Notify Installer", "type": "main", "index": 0 }
+      ], [
+        { "node": "Response", "type": "main", "index": 0 }
+      ]]
+    },
+    "Notify Installer": {
+      "main": [[
+        { "node": "Check Won Status", "type": "main", "index": 0 }
+      ]]
+    },
+    "Check Won Status": {
+      "main": [[
+        { "node": "Send WhatsApp Congratulations", "type": "main", "index": 0 }
+      ], [
+        { "node": "Response", "type": "main", "index": 0 }
+      ]]
+    },
+    "Send WhatsApp Congratulations": {
+      "main": [[
+        { "node": "Response", "type": "main", "index": 0 }
+      ]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-25T00:00:00.000Z",
+  "versionId": "1"
+}

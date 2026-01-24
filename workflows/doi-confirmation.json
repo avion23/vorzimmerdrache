@@ -1,0 +1,499 @@
+{
+  "name": "German DOI - Double Opt-In Confirmation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pv-lead",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-initial",
+      "name": "Webhook - Initial Lead",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "doi-initial-webhook",
+      "notes": "Receives: name, phone, email, address, consent_text, ip_address, user_agent"
+    },
+    {
+      "parameters": {
+        "jsCode": "const leadData = $input.first().json;\n\nconst consentText = `Ich stimme zu, dass ${$env.COMPANY_NAME || 'das Unternehmen'} mich per WhatsApp über die gewünschten Dienstleistungen kontaktiert. Meine Einwilligung kann ich jederzeit widerrufen.`;\n\nreturn {\n  json: {\n    name: leadData.name,\n    phone: leadData.phone,\n    email: leadData.email,\n    address: leadData.address,\n    ip_address: leadData.ip_address || $json.$execution?.metadata?.context?.userIp || 'unknown',\n    user_agent: leadData.user_agent || $json.$execution?.metadata?.context?.userAgent || 'unknown',\n    consent_text: leadData.consent_text || consentText,\n    source: leadData.source || 'website_form',\n    timestamp: new Date().toISOString(),\n    token: require('crypto').randomUUID(),\n    expires_at: new Date(Date.now() + ($env.DOI_EXPIRY_HOURS || 48) * 60 * 60 * 1000).toISOString()\n  }\n};"
+      },
+      "id": "extract-lead-data",
+      "name": "Code - Extract & Generate Token",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300],
+      "notes": "Generate UUID token and prepare consent data"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO leads (name, phone, email, address_raw, source, opted_in) VALUES ($1, $2, $3, $4, $5, FALSE) RETURNING id",
+        "options": {}
+      },
+      "id": "create-lead-record",
+      "name": "Postgres - Create Lead",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [650, 300],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-credentials",
+          "name": "PostgreSQL"
+        }
+      },
+      "notes": "Create lead record with opted_in=FALSE"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO consent_logs (id, lead_id, ip_address, user_agent, consent_text, confirmed, source) VALUES ($1, $2, $3, $4, $5, FALSE, $6)",
+        "options": {}
+      },
+      "id": "create-consent-log",
+      "name": "Postgres - Log Initial Consent",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [850, 300],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-credentials",
+          "name": "PostgreSQL"
+        }
+      },
+      "notes": "Log IP, timestamp, and exact consent text"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "append"
+      },
+      "id": "merge-data",
+      "name": "Merge - Lead + Consent",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "confirmation-url",
+              "name": "confirmationUrl",
+              "value": "={{ $env.WEBHOOK_URL }}/webhook/doi-confirm?token={{ $json.token }}",
+              "type": "string"
+            },
+            {
+              "id": "company-name",
+              "name": "companyName",
+              "value": "={{ $env.COMPANY_NAME || 'Ihr Unternehmen' }}",
+              "type": "string"
+            },
+            {
+              "id": "expiry-hours",
+              "name": "expiryHours",
+              "value": "={{ $env.DOI_EXPIRY_HOURS || 48 }}",
+              "type": "number"
+            }
+          ]
+        }
+      },
+      "id": "set-email-data",
+      "name": "Set - Email Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "resource": "email",
+        "operation": "send",
+        "fromEmail": "={{ $env.SMTP_FROM_EMAIL }}",
+        "toEmail": "={{ $json.email }}",
+        "subject": "Bitte bestätigen Sie Ihre WhatsApp-Anmeldung",
+        "emailType": "html",
+        "text": "",
+        "options": {}
+      },
+      "id": "send-confirmation-email",
+      "name": "SendGrid/Send - Confirmation Email",
+      "type": "n8n-nodes-base.sendGrid",
+      "typeVersion": 2.2,
+      "position": [1450, 300],
+      "credentials": {
+        "sendGridApi": {
+          "id": "sendgrid-credentials",
+          "name": "SendGrid"
+        }
+      },
+      "notes": "Send DOI confirmation email with link"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Bestätigungs-E-Mail wurde gesendet. Bitte überprüfen Sie Ihren Posteingang.', leadId: $json.id, requiresConfirmation: true } }}"
+      },
+      "id": "respond-success",
+      "name": "Respond - Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1650, 300]
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "doi-confirm",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-confirm",
+      "name": "Webhook - Confirmation Click",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 600],
+      "webhookId": "doi-confirm-webhook",
+      "notes": "GET /webhook/doi-confirm?token=UUID"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT cl.*, l.email, l.name FROM consent_logs cl JOIN leads l ON cl.lead_id = l.id WHERE cl.id = $1 AND NOT cl.confirmed AND cl.timestamp > NOW() - INTERVAL '1 day' * $2",
+        "options": {}
+      },
+      "id": "verify-token",
+      "name": "Postgres - Verify Token",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [450, 600],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-credentials",
+          "name": "PostgreSQL"
+        }
+      },
+      "notes": "Check if token exists, not expired, not already confirmed"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "token-valid",
+              "leftValue": "={{ $json.length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-token-valid",
+      "name": "IF - Token Valid",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [650, 600]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "lead-id",
+              "name": "leadId",
+              "value": "={{ $first().json.lead_id }}",
+              "type": "string"
+            },
+            {
+              "id": "token",
+              "name": "token",
+              "value": "={{ $first().json.id }}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "extract-ids",
+      "name": "Set - Extract IDs",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [850, 450]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE consent_logs SET confirmed = TRUE, confirmed_at = NOW() WHERE id = $1",
+        "options": {}
+      },
+      "id": "mark-consent-confirmed",
+      "name": "Postgres - Mark Confirmed",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1050, 450],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-credentials",
+          "name": "PostgreSQL"
+        }
+      },
+      "notes": "Update consent_logs with confirmation timestamp"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE leads SET opted_in = TRUE, status = 'new' WHERE id = $1 AND NOT opted_in RETURNING *",
+        "options": {}
+      },
+      "id": "activate-lead",
+      "name": "Postgres - Activate Lead",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1250, 450],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-credentials",
+          "name": "PostgreSQL"
+        }
+      },
+      "notes": "Enable WhatsApp marketing for confirmed lead"
+    },
+    {
+      "parameters": {
+        "url": "{{ $env.WEBHOOK_URL }}/webhook/speed-to-lead-main",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { name: $json.name, phone: $json.phone, email: $json.email, address: $json.address_raw, source: 'doi_confirmed' } }}",
+        "options": {}
+      },
+      "id": "trigger-whatsapp-workflow",
+      "name": "HTTP - Trigger Speed-to-Lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1450, 450],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "n8n-webhook-auth",
+          "name": "N8N Webhook Auth"
+        }
+      },
+      "notes": "Initiate WhatsApp contact AFTER confirmation"
+    },
+    {
+      "parameters": {
+        "respondWith": "html",
+        "responseBody": "<!DOCTYPE html>\n<html lang=\"de\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Erfolgreich bestätigt</title>\n    <style>\n        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; text-align: center; }\n        .success { color: #28a745; }\n        .icon { font-size: 64px; }\n    </style>\n</head>\n<body>\n    <div class=\"icon\">✓</div>\n    <h1 class=\"success\">Vielen Dank!</h1>\n    <p>Sie haben erfolgreich Ihre WhatsApp-Anmeldung bestätigt.</p>\n    <p>Wir werden uns in Kürze bei Ihnen melden.</p>\n</body>\n</html>"
+      },
+      "id": "respond-confirmed",
+      "name": "Respond - Confirmed",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1650, 450]
+    },
+    {
+      "parameters": {
+        "respondWith": "html",
+        "responseBody": "<!DOCTYPE html>\n<html lang=\"de\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Bestätigung abgelaufen</title>\n    <style>\n        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; text-align: center; }\n        .error { color: #dc3545; }\n    </style>\n</head>\n<body>\n    <h1 class=\"error\">Bestätigungslink abgelaufen</h1>\n    <p>Der Bestätigungslink ist ungültig oder bereits abgelaufen.</p>\n    <p>Bitte füllen Sie das Formular erneut aus.</p>\n</body>\n</html>",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "respond-invalid",
+      "name": "Respond - Invalid Token",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [850, 750]
+    }
+  ],
+  "connections": {
+    "Webhook - Initial Lead": {
+      "main": [
+        [
+          {
+            "node": "Code - Extract & Generate Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Extract & Generate Token": {
+      "main": [
+        [
+          {
+            "node": "Postgres - Create Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Create Lead": {
+      "main": [
+        [
+          {
+            "node": "Postgres - Log Initial Consent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Log Initial Consent": {
+      "main": [
+        [
+          {
+            "node": "Merge - Lead + Consent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge - Lead + Consent": {
+      "main": [
+        [
+          {
+            "node": "Set - Email Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set - Email Data": {
+      "main": [
+        [
+          {
+            "node": "SendGrid/Send - Confirmation Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SendGrid/Send - Confirmation Email": {
+      "main": [
+        [
+          {
+            "node": "Respond - Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook - Confirmation Click": {
+      "main": [
+        [
+          {
+            "node": "Postgres - Verify Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Verify Token": {
+      "main": [
+        [
+          {
+            "node": "IF - Token Valid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Token Valid": {
+      "main": [
+        [
+          {
+            "node": "Set - Extract IDs",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond - Invalid Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set - Extract IDs": {
+      "main": [
+        [
+          {
+            "node": "Postgres - Mark Confirmed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Mark Confirmed": {
+      "main": [
+        [
+          {
+            "node": "Postgres - Activate Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Activate Lead": {
+      "main": [
+        [
+          {
+            "node": "HTTP - Trigger Speed-to-Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Trigger Speed-to-Lead": {
+      "main": [
+        [
+          {
+            "node": "Respond - Confirmed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-01-24T16:00:00.000Z",
+      "updatedAt": "2024-01-24T16:00:00.000Z",
+      "id": "doi-confirmation",
+      "name": "DOI - GDPR Compliance"
+    }
+  ],
+  "triggerCount": 2,
+  "updatedAt": "2024-01-24T16:00:00.000Z",
+  "versionId": "1"
+}

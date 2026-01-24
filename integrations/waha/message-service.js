@@ -7,6 +7,7 @@ class MessageService {
     this.sessionId = config.sessionId || 'default';
     this.rateLimit = config.rateLimit || { max: 5, window: 3600000 };
     this.messageHistory = [];
+    this.pgPool = config.pgPool || null;
   }
 
   async checkRateLimit() {
@@ -21,6 +22,36 @@ class MessageService {
     }
     
     this.messageHistory.push(now);
+  }
+
+  async checkOptOutStatus(phone) {
+    if (!this.pgPool) {
+      return { optedOut: false };
+    }
+
+    const normalizedPhone = phone.replace(/[^+\d]/g, '');
+    
+    try {
+      const result = await this.pgPool.query(
+        'SELECT opted_out FROM leads WHERE phone = $1',
+        [normalizedPhone]
+      );
+      
+      if (result.rows.length === 0) {
+        return { optedOut: false, leadExists: false };
+      }
+      
+      const optedOut = result.rows[0].opted_out === true;
+      
+      if (optedOut) {
+        console.warn(`Attempt to message opted-out lead: ${normalizedPhone}`);
+      }
+      
+      return { optedOut, leadExists: true };
+    } catch (error) {
+      console.error('Failed to check opt-out status:', error.message);
+      return { optedOut: false, error: error.message };
+    }
   }
 
   async healthCheck() {
@@ -61,6 +92,11 @@ class MessageService {
   async sendWhatsApp(phone, message, mediaUrl = null) {
     await this.checkRateLimit();
     
+    const optOutStatus = await this.checkOptOutStatus(phone);
+    if (optOutStatus.optedOut) {
+      throw new Error(`Cannot send WhatsApp: lead ${phone} has opted out`);
+    }
+    
     const payload = {
       chatId: phone,
       text: message,
@@ -88,6 +124,11 @@ class MessageService {
       throw new Error('Twilio credentials not configured');
     }
 
+    const optOutStatus = await this.checkOptOutStatus(phone);
+    if (optOutStatus.optedOut) {
+      throw new Error(`Cannot send SMS: lead ${phone} has opted out`);
+    }
+
     try {
       const response = await axios.post(
         `https://api.twilio.com/2010-04-01/Accounts/${this.twilio.accountSid}/Messages.json`,
@@ -110,6 +151,11 @@ class MessageService {
   }
 
   async sendMessage(phone, templateKey, variables = {}, mediaUrl = null) {
+    const optOutStatus = await this.checkOptOutStatus(phone);
+    if (optOutStatus.optedOut) {
+      throw new Error(`Cannot send message: lead ${phone} has opted out`);
+    }
+
     const templates = require('./templates.json');
     const template = templates.de[templateKey];
 

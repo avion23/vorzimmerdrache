@@ -1,0 +1,17 @@
+[Unit]
+Description=VPS Memory Monitor
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/vorzimmerdrache/scripts
+ExecStart=/opt/vorzimmerdrache/scripts/monitor.sh
+Restart=always
+RestartSec=30
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

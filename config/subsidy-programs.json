@@ -1,0 +1,16 @@
+{
+  "kfw_270": {
+    "name": "KfW 270 - Erneuerbare Energien - Standard",
+    "url": "https://www.kfw.de/inlandsfoerderung/Privatpersonen/Bestehende-Immobilie/F%C3%B6rderprodukte/Erneuerbare-Energien-Standard-(270)/",
+    "max_loan_per_kwp": 10000,
+    "interest_rate_range": [0.01, 0.025],
+    "eligible_systems": ["pv", "battery", "heat_pump"],
+    "default_interest_rate": 0.015
+  },
+  "bafa_solar": {
+    "name": "BAFA - Bundesförderung für effiziente Gebäude",
+    "url": "https://www.bafa.de/DE/Energie/Effiziente_Gebaeude/effiziente_gebaeude_node.html",
+    "subsidy_per_kw": 300,
+    "max_subsidy": 30000
+  }
+}

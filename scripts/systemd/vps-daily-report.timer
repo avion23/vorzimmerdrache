@@ -1,0 +1,9 @@
+[Unit]
+Description=Run VPS Daily Health Report at 8:00 AM daily
+
+[Timer]
+OnCalendar=*-*-* 08:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

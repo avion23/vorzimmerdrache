@@ -1,0 +1,287 @@
+{
+  "name": "Lead Scoring Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-score",
+        "responseMode": "responseNode"
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook - Lead Update",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "notes": "Triggered on new lead or lead update"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM leads WHERE id = '{{ $json.lead_id }}'"
+      },
+      "id": "fetch-lead",
+      "name": "Postgres - Fetch Lead",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.3,
+      "position": [450, 300],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-db",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM enrichment_data WHERE lead_id = '{{ $json.lead_id }}'"
+      },
+      "id": "fetch-enrichment",
+      "name": "Postgres - Fetch Enrichment",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.3,
+      "position": [450, 450],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-db",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const LeadScoringService = require('/app/integrations/enrichment/lead-scoring.js');\n\nconst scorer = new LeadScoringService();\nconst lead = $input.first().json;\nconst enrichment = $('Postgres - Fetch Enrichment').first().json;\n\nconst combinedLead = {\n  ...lead,\n  roof_area_sqm: enrichment?.roof_area_sqm || lead.roof_area_sqm,\n  address_state: enrichment?.address_state || lead.address_state,\n  response_time_seconds: lead.response_time_seconds || 0,\n  notes: enrichment?.notes || lead.notes || ''\n};\n\nconst result = scorer.calculateLeadScore(combinedLead);\n\nreturn {\n  json: {\n    lead_id: lead.id,\n    lead_score: result.score,\n    priority: result.priority,\n    score_category: result.category,\n    breakdown: result.breakdown,\n    should_alert: result.shouldAlert,\n    auto_low_priority: result.autoLowPriority,\n    estimated_value: scorer.getEstimatedProjectValue(combinedLead)\n  }\n};"
+      },
+      "id": "calculate-score",
+      "name": "Code - Calculate Score",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO lead_scores (lead_id, lead_score, priority, score_category, breakdown, calculated_at) VALUES ('{{ $json.lead_id }}', {{ $json.lead_score }}, '{{ $json.priority }}', '{{ $json.score_category }}', '{{ $json.breakdown }}'::jsonb, NOW()) ON CONFLICT (lead_id) DO UPDATE SET lead_score = EXCLUDED.lead_score, priority = EXCLUDED.priority, score_category = EXCLUDED.score_category, breakdown = EXCLUDED.breakdown, calculated_at = EXCLUDED.calculated_at"
+      },
+      "id": "update-score",
+      "name": "Postgres - Update Score",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.3,
+      "position": [850, 300],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-db",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.should_alert }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "check-urgent",
+      "name": "IF - Score > 80",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "channelId": "{{ $env.TELEGRAM_CHANNEL_ID }}",
+        "text": "🔥 HOT LEAD ALERT!\n\nName: {{ $('Postgres - Fetch Lead').first().json.name }}\nScore: {{ $json.lead_score }}/100\nPriority: {{ $json.priority }}\nLocation: {{ $('Postgres - Fetch Lead').first().json.address_city }}, {{ $('Postgres - Fetch Lead').first().json.address_state }}\nRoof: {{ $('Postgres - Fetch Lead').first().json.roof_area_sqm }} m²\nEst. Value: €{{ $json.estimated_value }}\n\nCheck CRM: {{ $env.CRM_BASE_URL }}/leads/{{ $('Postgres - Fetch Lead').first().json.id }}"
+      },
+      "id": "telegram-alert",
+      "name": "Telegram - Send Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1250, 200],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE leads SET priority = 3 WHERE id = '{{ $('Postgres - Fetch Lead').first().json.id }}'"
+      },
+      "id": "mark-low-priority",
+      "name": "Postgres - Mark Low Priority",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.3,
+      "position": [850, 450],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-db",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.auto_low_priority }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "check-low-priority",
+      "name": "IF - Score < 30",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1050, 450]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
+      },
+      "id": "response",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1450, 300]
+    }
+  ],
+  "connections": {
+    "Webhook - Lead Update": {
+      "main": [
+        [
+          {
+            "node": "Postgres - Fetch Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Fetch Lead": {
+      "main": [
+        [
+          {
+            "node": "Postgres - Fetch Enrichment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Fetch Enrichment": {
+      "main": [
+        [
+          {
+            "node": "Code - Calculate Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Calculate Score": {
+      "main": [
+        [
+          {
+            "node": "Postgres - Update Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Update Score": {
+      "main": [
+        [
+          {
+            "node": "IF - Score > 80",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF - Score < 30",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Score > 80": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Send Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Score < 30": {
+      "main": [
+        [
+          {
+            "node": "Postgres - Mark Low Priority",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram - Send Alert": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Mark Low Priority": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "pinData": {},
+  "triggerCount": 1,
+  "updatedAt": "2025-01-24T00:00:00.000Z",
+  "versionId": "1"
+}
