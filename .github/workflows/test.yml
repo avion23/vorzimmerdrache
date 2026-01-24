@@ -28,11 +28,11 @@ jobs:
         run: npm ci
 
       - name: Start test containers
-        run: docker-compose -f docker-compose.test.yml up -d
+        run: docker compose -f docker-compose.test.yml up -d
 
       - name: Wait for containers to be healthy
         run: |
-          timeout 60 bash -c 'until docker-compose -f docker-compose.test.yml ps | grep -q "healthy"; do sleep 2; done'
+          timeout 60 bash -c 'until docker compose -f docker-compose.test.yml ps | grep -q "healthy"; do sleep 2; done'
 
       - name: Run tests with coverage
         run: npm run test:ci
@@ -50,4 +50,4 @@ jobs:
 
       - name: Teardown test containers
         if: always()
-        run: docker-compose -f docker-compose.test.yml down -v
+        run: docker compose -f docker-compose.test.yml down -v
