@@ -1,10 +1,15 @@
 # Vorzimmerdrache 🐉
+```
+     _   _
+   _(.)_/.)___
+   /___ o_.___/ 
+  [______\____]   Speed-to-Lead für deutsche Solarteure
+     | | / /      Nie wieder verlorene Leads!
+    (__\/_)
+```
 
-Automatisiertes Speed-to-Lead System für deutsche PV-Installateure.
-
-**Problem:** Installateure verlieren Leads, weil sie nicht sofort erreichbar sind. Kunden rufen sofort den Nächsten an.
-
-**Lösung:** Digitaler Vorzimmer-Drache der Leads annimmt, qualifiziert und den Installateur blitzschnell verbindet.
+**Das Problem:** Installateure verlieren €30.000+ pro Jahr an Leads, weil sie auf dem Dach stehen und nicht ran können. 
+**Die Lösung:** Digitaler Vorzimmer-Drache fängt JEDEN Anruf ab, schickt sofort WhatsApp und benachrichtigt dich per Telegram.
 
 ## ✨ Features
 
@@ -20,115 +25,96 @@ Automatisiertes Speed-to-Lead System für deutsche PV-Installateure.
 ## 🏗️ Architektur
 
 ```
-Lead Form → Webhook → n8n
-                      │
-          ┌───────────┼───────────┐
-          ▼           ▼           ▼
-    WhatsApp/SMS   Voice       Enrichment
-    (Waha/Twilio) (Twilio)  (Maps/AI)
-          │           │           │
-          └───────────┴───────────┘
-                      ▼
-              Google Sheets CRM
+   ╔══════════════════════════════════════════════════════╗
+   ║  Kunde ruft an (während du auf dem Dach bist)       ║
+   ╚═══════════════════╦══════════════════════════════════╝
+                       ▼
+            ┌──────────────────────┐
+            │  Twilio Voice (DE)   │ "Moin! Bin auf dem Dach,
+            │   TwiML Response     │  WhatsApp kommt sofort!"
+            └──────────┬───────────┘
+                       ▼
+         ╔═════════════════════════════╗
+         ║      n8n Workflow Hub       ║
+         ║   (Dach-Modus Orchestrator) ║
+         ╚══╦═══════╦════════╦═════════╝
+            ▼       ▼        ▼
+    ┌───────────┐ ┌─────┐ ┌──────────┐
+    │  Waha     │ │ CRM │ │ Telegram │
+    │ WhatsApp  │ │ DB  │ │   Bot    │
+    └───────────┘ └─────┘ └──────────┘
+         │           │         │
+         └───────────┴─────────┘
+                ▼
+    Kunde erhält Antwort + Du wirst informiert
 ```
 
-## 📋 Voraussetzungen
+## 📋 Einkaufsliste (Ralf's Checkliste)
 
-- Node.js 18+
-- Docker & Docker Compose
-- Hetzner VPS (min 4GB RAM) oder Railway
-- Twilio Account (SMS + Voice)
-- Google Cloud Project (Sheets, Maps, optional Solar API)
-- OpenAI API Key (optional)
+- [ ] **Hetzner CX21** (~€6/Monat) - [hetzner.cloud](https://hetzner.cloud)
+- [ ] **Twilio Account** (~€10 Startguthaben) - [twilio.com/try-twilio](https://twilio.com/try-twilio)
+- [ ] **Domain** (optional, z.B. `solar-meier.de`) - [namecheap.com](https://namecheap.com)
+- [ ] **Telegram Account** (Kostenlos) - BotFather für Bot Token
+- [ ] **WhatsApp Nummer** (Prepaid SIM für Waha - €10 einmalig)
+- [ ] **Google Cloud** (Kostenlos: Sheets API, Maps 28.000 requests/Monat)
 
-## 🚀 Quick Start
+**Gesamt Startkosten:** ~€30 einmalig + ~€10/Monat laufend
 
-### 1. Repository clonen und installieren
+## 🚀 Installation (10 Minuten)
+
+### Ein-Zeilen-Installation
 
 ```bash
-git clone <repo-url>
+curl -fsSL https://raw.githubusercontent.com/avion23/vorzimmerdrache/main/scripts/deploy-hetzner.sh | bash
+```
+
+**Das war's.** Der Script macht alles: Docker, Swap, SSL-Zertifikate, n8n Import.
+
+---
+
+### Manuelle Installation (falls du's genau wissen willst)
+
+**1. VPS aufsetzen**
+```bash
+ssh root@deine-server-ip
+apt update && apt install -y docker.io docker-compose git
+```
+
+**2. Repo klonen**
+```bash
+git clone https://github.com/avion23/vorzimmerdrache.git
 cd vorzimmerdrache
-npm install
 ```
 
-### 2. Environment konfigurieren
-
+**3. Environment validieren & generieren**
 ```bash
-cp .env.example .env
-nano .env
+./scripts/validate-env.sh --fix
+# Folge den Prompts für Twilio, Telegram, Domain
 ```
 
-Wichtigste Variablen:
-```env
-# Twilio
-TWILIO_ACCOUNT_SID=your_sid
-TWILIO_AUTH_TOKEN=your_token
-TWILIO_PHONE_NUMBER=+491234567890
-
-# Google
-GOOGLE_SHEET_ID=your_sheet_id
-GOOGLE_MAPS_API_KEY=your_key
-GOOGLE_SERVICE_ACCOUNT_JSON='{"type":"service_account",...}'
-
- # Installateur
- INSTALLER_PHONE_NUMBER=+491701234567
- INSTALLER_NAME=Max Mustermann
- COMPANY_NAME=Solar GmbH
-
- # Telegram Bot (Dach-Modus)
- TELEGRAM_BOT_TOKEN=your-telegram-bot-token
- INSTALLER_TELEGRAM_CHAT_ID=123456789
- ```
-
-### 3. Docker Services starten
-
+**4. Deployment starten**
 ```bash
-docker-compose up -d
+# Hetzner CX21 (2GB RAM - empfohlen)
+./scripts/deploy-hetzner.sh
+
+# Oder: 1GB Low-Budget (nur für Tests!)
+./scripts/deploy-1gb-vps.sh
 ```
 
-Services:
-- `n8n` - Workflow Automation
-- `waha` - WhatsApp HTTP API
-- `redis` - Rate Limiting & Caching
-- `postgres` - Datenbank (optional, empfohlen)
-
-### 4. Waha (WhatsApp) einrichten
-
+**5. Waha (WhatsApp) pairen**
 ```bash
-# QR Code generieren
-curl http://localhost:3000/api/sessions/default/qr
-
-# Mit WhatsApp Handy scannen (WhatsApp Web)
+curl http://your-domain.com:3000/api/sessions/default/qr
+# QR Code scannen mit deinem WhatsApp Business Handy
 ```
 
-### 5. n8n Workflows importieren
-
-1. Öffne `http://localhost:5678`
-2. Workflows → Import → Ausgewählte JSON Dateien importieren:
-   - `workflows/speed-to-lead-main.json`
-   - `workflows/status-loop.json`
-   - `workflows/installer-notification.json`
-3. Aktiviere alle Workflows
-
-### 6. Testen
-
+**6. Testen (Dach-Modus)**
 ```bash
-# Lead simulieren
-curl -X POST http://localhost:5678/webhook/pv-lead \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Max Mustermann",
-    "phone": "017012345678",
-    "email": "max@beispiel.de",
-    "address": "Musterstraße 1, 80331 München"
-  }'
+# Ruf deine Twilio-Nummer an
+# Erwartung:
+#  → Voice-Bot antwortet sofort
+#  → WhatsApp kommt in 3 Sekunden
+#  → Telegram-Benachrichtigung bei dir
 ```
-
-Erwartetes Ergebnis:
-1. Kunde erhält SMS/WhatsApp
-2. Installateur wird nach 60 Sekunden angerufen
-3. Lead wird in Google Sheets gespeichert
-4. Adresse wird validiert und bereichert
 
 ## 📁 Projektstruktur
 
@@ -161,117 +147,128 @@ Erwartetes Ergebnis:
 └── .env.example
 ```
 
-## 🔄 Workflow Details
+## 🔄 Die 3 Hauptworkflows
 
-### Speed-to-Lead Main Flow
+### 1. Dach-Modus (Inbound Call Handler) ⭐
 
-1. **Webhook Trigger:** Empängt Lead-Daten
-2. **Daten-Bereinigung:** Telefonnummer zu E.164 formatieren
-3. **CRM Speicherung:** Google Sheets Zeile anlegen
-4. **Kunden-Benachrichtigung:** WhatsApp/SMS senden
-5. **Adress-Validierung:** Google Maps Geocoding
-6. **Installer-Alarm:** Twilio Voice Call mit "Drücke 1"
-7. **Call Bridging:** Verbinde mit Lead
+**Szenario:** Du bist auf dem Dach. Kunde ruft an.
 
-### Status Loop Workflow
-
-Überwacht Google Sheets auf Status-Änderungen:
-- `Received` → "Anfrage empfangen"
-- `Qualified` → "Wir melden uns bald"
-- `Termin` → "Termin bestätigt am [date]"
-- `Angebot` → "Dein Angebot ist da"
-- `Bestellt` → "Material bestellt"
-- `Installation` → "Installation geplant"
-- `Abgeschlossen` → "Danke & Bewertung"
-
-### Dach-Modus (Inbound Call Handler)
-
-Wenn Kunden anrufen, während der Installateur auf dem Dach ist:
-
-1. **Twilio nimmt sofort ab:** Kein Besetztzeichen
-2. **Voice-Bot antwortet:** "Hallo, hier ist Solar [Company]. Wir sind gerade auf dem Dach bei einer Montage. Ich habe deine Nummer gesehen und schicke dir sofort eine WhatsApp."
-3. **Automatische WhatsApp:** Kunde erhält sofort Nachricht
-4. **Telegram-Alarm:** Installateur wird über verpassten Anruf benachrichtigt
+```
+Kunde             Twilio          n8n         Waha        Telegram
+  │                 │              │           │             │
+  ├──Anruf─────────►│              │           │             │
+  │                 ├──Webhook────►│           │             │
+  │                 │              ├─CRM Lookup│             │
+  ◄──"Bin auf Dach"─┤◄─TwiML──────┤           │             │
+  │ (Voice Bot)     │              ├──────────►│             │
+  ◄──WhatsApp─────────────────────────────────┤             │
+  │ "Schreib mir!"  │              ├──────────────────────►  │
+                                   │          "Verpasst: +49..."
+```
 
 **Telegram Bot Befehle:**
-- `/status` - Aktuelle Leads anzeigen
-- `/today` - Heute's Übersicht
-- `/help` - Alle Befehle
-- `/register <name>` - Installateur registrieren
+- `/status` - Offene Leads
+- `/today` - Tagesübersicht
+- `/register Ralf` - Dich registrieren
 
-## 🌐 Deployment
+### 2. Speed-to-Lead (Outbound)
 
-### Hetzner VPS (Empfohlen)
+Für neue Leads von deiner Website:
+1. Webhook empfängt Lead-Daten
+2. Sofortige WhatsApp an Kunden (<30 Sek)
+3. Adresse validieren (Google Maps)
+4. Dich anrufen: "Drücke 1 um zu verbinden"
+5. Call-Bridging zum Kunden
+
+### 3. Status-Loop (Automatisierung)
+
+Schickt automatisch WhatsApp bei Statusänderung in deinem CRM:
+- `Received` → "Danke für deine Anfrage!"
+- `Termin` → "Termin bestätigt: [Datum]"
+- `Angebot` → "Dein Angebot ist fertig"
+- `Installation` → "Wir kommen am [Datum]"
+
+## 🌐 Deployment-Optionen
+
+| Option | RAM | CPU | Kosten/Monat | Empfehlung |
+|--------|-----|-----|--------------|------------|
+| **Hetzner CX21** | 2GB | 2 | €5.82 | ✅ **Beste Wahl** |
+| Hetzner CX11 | 1GB | 1 | €4.15 | ⚠️ Nur für Tests (OOM-Risiko) |
+| Railway | 8GB | 4 | $20-50 | 🚫 Zu teuer |
+| n8n Cloud + VPS | - | - | $25+ | 🚫 Overkill |
+
+### Hetzner CX21 Setup (Empfohlen)
 
 ```bash
-./scripts/deploy-hetzner.sh
+# 1. VPS bestellen bei hetzner.cloud (CX21)
+# 2. SSH Key hinzufügen
+# 3. Ein-Zeilen-Deployment:
+
+ssh root@your-server-ip
+curl -fsSL https://raw.githubusercontent.com/avion23/vorzimmerdrache/main/scripts/deploy-hetzner.sh | bash
 ```
 
-Server: CX21 (4GB RAM, 2 vCPU, 80GB SSD) - ~€8/Monat
+**Der Script macht:**
+- Docker installieren
+- SSL-Zertifikate (Let's Encrypt)
+- n8n, Waha, PostgreSQL, Redis aufsetzen
+- Workflows importieren
+- Health Monitoring aktivieren
 
-### Railway (Alternative)
+**Nach 5 Minuten:** System läuft auf `https://n8n.deine-domain.de`
 
+### 1GB VPS (⚠️ Nicht empfohlen)
+
+**LLM Review Ergebnis (DeepSeek-V3.2):**
+> "This architecture will fail within 48 hours of production traffic."
+
+**Kritische Probleme:**
+- PostgreSQL mit 150MB = Queries auf Disk → 1000ms+ Latenz
+- WAHA Chrome braucht 300-500MB minimum (nicht 200MB)
+- 3 parallele Anrufe = OOM Kill garantiert
+
+**Nutze 1GB nur für:**
+- Entwicklung/Tests
+- Max 10 Leads/Tag
+- Kein Produktiveinsatz
+
+## ⚠️ WICHTIG: Rechtliche Compliance (Deutschland)
+
+### WhatsApp: Waha = Rechtliche Zeitbombe 💣
+
+**LLM Review Ergebnis (Gemini-3-Flash):**
+> "At 500 messages/day, a standard WhatsApp Business account will be flagged and banned within 72 hours."
+
+**TKG & UWG Compliance:**
+- § 7 UWG verlangt **Double Opt-In (DOI)** für WhatsApp-Marketing
+- Ohne DOI-Nachweis (IP, Timestamp, Consent-Text) = €5.000+ Abmahnung
+- "Transaktional" ist KEIN Freifahrtschein wenn kein Vertrag existiert
+
+**Sofortmaßnahmen:**
+1. **Max 20 msgs/Tag** mit Waha (unter Radar bleiben)
+2. **DOI einbauen:** Lead muss Email-Link klicken bevor WhatsApp
+3. **Abmelde-Funktion:** Keyword "STOP" MUSS funktionieren
+4. **Meta Account Ban = Business-Stillstand** (keine Appeal-Möglichkeit)
+
+**Produktiv-Alternative (PFLICHT ab 100 Leads/Monat):**
 ```bash
-./scripts/deploy-railway.sh
+# Twilio WhatsApp Business API
+# Kosten: €0.008/message = €0.80 @ 100 msgs
+# Legal: ✅ TKG-konform, Meta-zertifiziert
+# Setup: 2 Wochen (Business-Verifizierung)
+
+# Migration Path:
+1. Twilio Account → WhatsApp Sender beantragen
+2. Business-Nachweis (Handelsregister/Gewerbeschein)
+3. n8n Waha-Node durch Twilio-Node ersetzen
 ```
 
-Kosten: ~$20-50/Monat
+### CRM: Google Sheets = GDPR-Problem
 
-### n8n Cloud + Hetzner Waha
-
-- n8n: Managed Cloud ($20/Monat)
-- Waha: Hetzner CX22 (~€5/Monat)
-
-### 1GB VPS (Low Budget)
-
-Für extrem günstige Instanzen (Hetzner CX11 - ~€4/Monat):
-
-```bash
-./scripts/deploy-1gb-vps.sh
-```
-
-**Wichtig:**
-- 4GB Swap wird automatisch eingerichtet
-- Docker Compose mit Low-Memory-Profil nutzen:
-  ```bash
-  docker compose -f docker-compose-low-memory.yml up -d
-  ```
-- Memory Limits: n8n=400MB, Waha=200MB, PostgreSQL=150MB, Redis=50MB
-- Empfohlen für Test-Deployment oder Ein-Person-Betrieb
-
-## ⚠️ Wichtige Hinweise
-
-### Waha (WhatsApp) vs. Official API
-
-**Waha** (aktuelle Implementierung):
-- ✅ Kostenlos
-- ✅ Einfach einzurichten
-- ⚠️ "Grey Area" - Meta könnte Account sperren
-- ⚠️ Nicht TKG-konform für kommerzielle Nutzung
-- 💡 Max 5 Nachrichten/Stunde zur Sicherheit
-
-**WhatsApp Business API** (Empfohlen für Produktion):
-- ✅ Offiziell & legal
-- ✅ TKG-konform
-- ✅ Skaliert unbegrenzt
-- ❌ Kostenpflichtig (~€5-15/Monat via 360dialog)
-- ❌ Setup dauert Tage/Wochen (Verifizierung)
-
-### Google Sheets vs. PostgreSQL
-
-**Google Sheets** (aktuelle Implementierung):
-- ✅ Einfach für Installateur zu sehen
-- ✅ Kostenlos
-- ⚠️ Keine echte Datenbank
-- ⚠️ Rate Limits & Race Conditions
-- ⚠️ Datenschutzbedenken (US Server)
-
-**PostgreSQL** (Empfohlen für Produktion):
-- ✅ Skaliert zu 1M+ Leads
-- ✅ ACID Transactions
-- ✅ GDPR-konform (DE Server)
-- ✅ Bessere Performance
-- ⚠️ Braucht zusätzliches UI (Retool/Baserow)
+**US Server = Datenschutz-Albtraum:**
+- Kundendaten (Name, Tel, Adresse) auf Google US = DSGVO Art. 44 Verstoß
+- **Lösung:** PostgreSQL auf DE-Server (Hetzner Nürnberg)
+- **UI-Alternative:** [Baserow](https://baserow.io) (Self-hosted Airtable)
 
 ## 🛡️ Sicherheit & GDPR
 
@@ -318,33 +315,67 @@ MIT License - siehe LICENSE Datei
 
 ## 🎯 Roadmap
 
+**✅ Phase 1: MVP (Fertig)**
 - [x] Dach-Modus (Inbound Call Handler)
 - [x] Telegram Bot für Installateur-Benachrichtigungen
-- [x] 1GB VPS Optimierung mit Swap
-- [ ] Offizielle WhatsApp Business API Integration
-- [ ] PostgreSQL als primäre Datenbank
-- [ ] KfW/BAFA Förder-API Integration
-- [ ] Multi-Tenancy für mehrere Installateure
-- [ ] Dashboard für Installateur (Retool)
-- [ ] PDF Angebot-Generierung
+- [x] Phone Normalization (DE, AT, CH)
+- [x] TwiML Voice Templates (3 Varianten A/B/C)
+- [x] Environment Validation Script
 
-## 💸 Kostenrechnung
+**🚧 Phase 2: Legal & Compliance (In Arbeit)**
+- [ ] Double Opt-In (DOI) Workflow
+- [ ] Twilio WhatsApp Business API Migration
+- [ ] DSGVO-konforme PostgreSQL Migration
+- [ ] "STOP" Keyword Handler (§ 7 UWG)
+- [ ] Consent Logging (IP, Timestamp, Text)
 
-| Komponente | Monat | Bemerkung |
-|-----------|-------|-----------|
-| Hetzner VPS (CX21) | ~€8 | n8n + Waha + DB |
-| Hetzner VPS (CX11) | ~€4 | 1GB Version (mit Swap) |
-| Twilio SMS | €0.05/SMS | ~€50/Monat @ 1000 SMS |
-| Twilio Voice (Inbound) | €0.05/Min | ~€15/Monat @ 300 Min |
-| Twilio Voice (Outbound) | €0.09/Min | ~€27/Monat @ 300 Min |
-| Telegram Bot | €0 | Kostenlos |
-| OpenAI GPT-4o-mini | ~€10 | @ 100k requests |
-| Google Maps | €5 | 1000 Geocoding Requests |
-| WhatsApp Business API | €5-15 | Optional |
-| **Gesamt (CX21)** | **~€80-120/Monat** | @ 1000 Leads |
-| **Gesamt (CX11)** | **~€60-90/Monat** | @ 1000 Leads |
+**📋 Phase 3: Scale & Features**
+- [ ] Multi-Installer Support (Franchise-Modell)
+- [ ] KfW/BAFA Förderrechner-Integration
+- [ ] Baserow CRM UI (Self-hosted)
+- [ ] PDF Angebots-Generator (LaTeX)
+- [ ] Solarkataster.de API (Dachpotenzial)
 
-Mit Google Sheets (kein PostgreSQL) und Waha (kein WhatsApp API): ~€40-60/Monat.
+**💡 Phase 4: Automation++**
+- [ ] WhatsApp Interactive Messages (Buttons)
+- [ ] Auto-Terminbuchung (Calendly Integration)
+- [ ] Voice-to-Text Transkription (Twilio)
+- [ ] Lead Scoring (ML-basiert)
+
+## 💸 Realistische Kostenrechnung
+
+### Basis-Setup (100 Leads/Monat)
+
+| Komponente | Kosten | Notizen |
+|-----------|--------|---------|
+| **Hetzner CX21** | €5.82 | n8n + Waha + PostgreSQL + Redis |
+| **Twilio Deutsche Nummer** | €1.00 | +49 15... für seriöses Auftreten |
+| **Twilio Voice Inbound** | €1.50 | €0.05/Min × 30 Min (Dach-Modus Anrufe) |
+| **Twilio SMS Fallback** | €2.50 | €0.05/SMS × 50 SMS (WhatsApp Fails) |
+| **Twilio WhatsApp (ab Monat 2)** | €0.80 | €0.008/msg × 100 msgs |
+| **Google Maps Geocoding** | €0.00 | 28.000 Requests/Monat kostenlos |
+| **Telegram Bot** | €0.00 | Gratis |
+| **Domain (optional)** | €1.00 | z.B. solar-meier.de @ Namecheap |
+| **GESAMT Monat 1 (mit Waha)** | **€10.82** | Legal riskant, nur zum Testen |
+| **GESAMT ab Monat 2 (Legal)** | **€12.62** | Mit Twilio WhatsApp, TKG-konform |
+
+### Skalierung (500 Leads/Monat)
+
+| Komponente | Kosten | Diff zu Basis |
+|-----------|--------|---------------|
+| Hetzner CX31 (4GB) | €11.90 | +€6 (mehr RAM) |
+| Twilio Voice | €7.50 | 150 Min @ €0.05/Min |
+| Twilio WhatsApp | €4.00 | 500 msgs @ €0.008/msg |
+| **GESAMT** | **~€25/Monat** | ROI: 1 Auftrag = 3 Monate Kosten |
+
+### Was kostet DICH ein verlorener Lead?
+
+- Durchschnittlicher PV-Auftrag: **€15.000**
+- Conversion-Rate ohne System: **5%** (1 von 20)
+- Conversion-Rate MIT System: **15%** (1 von 7)
+- **Gewinn:** 10% mehr Conversions = **€75/Lead**
+
+**Break-Even:** Du brauchst 1 Extra-Auftrag alle 3 Monate → System bezahlt sich 50x.
 
 ---
 
