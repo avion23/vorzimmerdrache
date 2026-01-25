@@ -107,7 +107,7 @@ async function demoSimplifiedWorkflow() {
   console.log('  • Familiar interface for wife\n');
 
   console.log('✅ Demo Complete!');
-  console.log('\nKey Improvements for Ralf:');
+  console.log('\nKey Improvements for Installers:');
   console.log('  • Binary decision: Call now/later/skip (no 100-point scoring)');
   console.log('  • One-click actions in Telegram (no reading long messages)');
   console.log('  • Google Maps integration (no manual address entry)');

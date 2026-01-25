@@ -62,7 +62,7 @@
     Kunde erhält Antwort + Du wirst informiert
 ```
 
-## 📋 Einkaufsliste (Ralf's Checkliste)
+## 📋 Einkaufsliste
 
 - [ ] **Hetzner CX21** (~€6/Monat) - [hetzner.cloud](https://hetzner.cloud)
 - [ ] **Twilio Account** (~€10 Startguthaben) - [twilio.com/try-twilio](https://twilio.com/try-twilio)
@@ -153,9 +153,6 @@ curl http://your-domain.com:3000/api/sessions/default/qr
  │   ├── deploy-1gb-vps.sh
  │   ├── monitor.sh
  │   └── logs-clean.sh
-├── docs/
-│   ├── infrastructure.md
-│   └── gdpr-compliance.md
 ├── docker-compose.yml
 └── .env.example
 ```
@@ -182,7 +179,7 @@ Kunde             Twilio          n8n         Waha        Telegram
 **Telegram Bot Befehle:**
 - `/status` - Offene Leads
 - `/today` - Tagesübersicht
-- `/register Ralf` - Dich registrieren
+- `/register <installer>` - Installateur registrieren
 
 ### 2. Speed-to-Lead (Outbound)
 
@@ -291,7 +288,7 @@ curl -fsSL https://raw.githubusercontent.com/avion23/vorzimmerdrache/main/script
 - API Keys niemals committen (nutze .env)
 - HTTPS für alle Webhooks (Traefik reverse proxy)
 
-Siehe `docs/gdpr-compliance.md` für Details.
+See Compliance Section above.
 
 ## 📊 Advanced Monitoring
 
