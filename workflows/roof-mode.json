@@ -12,83 +12,124 @@
       "name": "Webhook Trigger",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [
-        250,
-        300
-      ],
+      "position": [250, 300],
       "webhookId": "roof-mode-webhook"
     },
     {
       "parameters": {
-        "jsCode": "// Normalize German phone to E.164\nconst input = $input.first().json.body.From;\nlet phone = input;\n\n// Remove whitespace, dashes, etc.\nphone = phone.replace(/[^0-9+]/g, '');\n\n// Handle 0170, 0151, etc. -> +49\nif (phone.startsWith('01')) {\n  phone = '+49' + phone.substring(1);\n}\n\nreturn {\n  phone: phone\n};"
+        "jsCode": "const phone = $input.first().json.body.From;\nlet normalizedPhone = phone;\nif (normalizedPhone.startsWith('0')) {\n  normalizedPhone = '+49' + normalizedPhone.substring(1);\n} else if (!normalizedPhone.startsWith('+')) {\n  normalizedPhone = '+49' + normalizedPhone;\n}\nreturn [{ json: { phone: normalizedPhone } }];"
       },
       "id": "normalize-phone",
       "name": "Code - Normalize Phone",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [
-        450,
-        300
-      ]
+      "position": [450, 300]
     },
     {
       "parameters": {
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "twilioApi",
-        "accountSid": "={{$env.TWILIO_ACCOUNT_SID}}",
-        "authToken": "={{$env.TWILIO_AUTH_TOKEN}}",
-        "from": "whatsapp:+14155238886",
-        "to": "={{$json.phone}}",
-        "contentSid": "={{$env.TWILIO_WHATSAPP_TEMPLATE_SID}}",
-        "contentVariables": "{\"1\":\"\",\"2\":\"\",\"3\":\"\"}",
+        "url": "=https://sheets.googleapis.com/v4/spreadsheets/{{$env.GOOGLE_SHEET_ID}}/values/Sheet1",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "method": "GET",
         "options": {}
       },
-      "id": "twilio-whatsapp",
-      "name": "Twilio - Send WhatsApp Template",
-      "type": "n8n-nodes-base.twilio",
-      "typeVersion": 1,
-      "position": [
-        650,
-        300
-      ],
-      "credentials": {
-        "twilioApi": {
-          "id": "twilio-credentials",
-          "name": "Twilio API"
-        }
-      }
+      "id": "google-sheets-lookup",
+      "name": "HTTP Request - Google Sheets Lookup",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [650, 300]
     },
     {
       "parameters": {
         "respondWith": "xml",
-        "responseBody": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Response>\n  <Say voice=\"alice\" language=\"de-DE\">Moin! Wir sind auf dem Dach und rufen gleich zurück.</Say>\n  <Hangup/>\n</Response>"
+        "responseBody": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Response>\n  <Say voice=\"alice\" language=\"de-DE\">Moin! Wir sind auf dem Dach. Wir rufen Sie gleich zurück.</Say>\n  <Pause length=\"1\"/>\n</Response>"
       },
       "id": "twiml-response",
       "name": "Twilio - Respond to Webhook (TwiML)",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [
-        850,
-        200
-      ]
+      "position": [850, 200]
     },
     {
       "parameters": {
-        "url": "=https://api.telegram.org/bot{{$env.TELEGRAM_BOT_TOKEN}}/sendMessage",
-        "authentication": "none",
+        "jsCode": "const sheetsData = $node['HTTP Request - Google Sheets Lookup'].first().json;\nconst rows = sheetsData?.values || [];\nlet knownCustomer = null;\nfor (let i = 0; i < rows.length; i++) {\n  if (rows[i][0] === $json.phone) {\n    knownCustomer = rows[i];\n    break;\n  }\n}\nreturn [{ json: { phone: $json.phone, knownCustomer } }];"
+      },
+      "id": "check-customer-known",
+      "name": "Code - Check Customer Known",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{ $json.knownCustomer }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "isTrue"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-known-customer",
+      "name": "IF - Known Customer",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1050, 400]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "from": "whatsapp:+14155238886",
+        "to": "={{ $json.phone }}",
+        "content": "Moin! Bin auf dem Dach. Worum geht's?",
+        "options": {}
+      },
+      "id": "twilio-whatsapp-known",
+      "name": "Twilio - Send WhatsApp",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "from": "whatsapp:+14155238886",
+        "to": "={{ $item(0).$json.phone }}",
+        "body": "Hallo! Hab deinen Anruf gesehen. Wir sind auf dem Dach.",
+        "options": {}
+      },
+      "id": "twilio-whatsapp-fallback",
+      "name": "Twilio - Send WhatsApp (Fallback)",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [1250, 500]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.TELEGRAM_BOT_API_URL }}/sendMessage",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"chat_id\": \"{{$env.TELEGRAM_CHAT_ID}}\",\n  \"text\": \"Verpasster Anruf von {{$json.phone}}. Habe WhatsApp geschickt.\"\n}",
+        "jsonBody": "={\"chat_id\": \"{{ $env.TELEGRAM_CHAT_ID }}\", \"text\": \"Verpasster Anruf von {{ $json.phone }}. Habe WhatsApp geschickt.\"}",
         "options": {}
       },
       "id": "telegram-alert",
-      "name": "Telegram - Send Alert",
+      "name": "HTTP Request - Telegram Alert",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        850,
-        400
-      ]
+      "position": [1450, 400]
     }
   ],
   "connections": {
@@ -107,14 +148,14 @@
       "main": [
         [
           {
-            "node": "Twilio - Send WhatsApp Template",
+            "node": "HTTP Request - Google Sheets Lookup",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Twilio - Send WhatsApp Template": {
+    "HTTP Request - Google Sheets Lookup": {
       "main": [
         [
           {
@@ -123,12 +164,69 @@
             "index": 0
           },
           {
-            "node": "Telegram - Send Alert",
+            "node": "Code - Check Customer Known",
             "type": "main",
             "index": 0
           }
         ]
       ]
+    },
+    "Twilio - Respond to Webhook (TwiML)": {
+      "main": []
+    },
+    "Code - Check Customer Known": {
+      "main": [
+        [
+          {
+            "node": "IF - Known Customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Known Customer": {
+      "main": [
+        [
+          {
+            "node": "Twilio - Send WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Twilio - Send WhatsApp (Fallback)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twilio - Send WhatsApp": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Telegram Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twilio - Send WhatsApp (Fallback)": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Telegram Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Telegram Alert": {
+      "main": []
     }
   },
   "pinData": {},
