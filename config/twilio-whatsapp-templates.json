@@ -1,9 +1,0 @@
-{
-  "roof_mode_response": {
-    "name": "roof_mode_response",
-    "category": "UTILITY",
-    "language": "de",
-    "body": "Moin! Bin gerade auf dem Dach. Schreib mir hier was du brauchst: {{1}}",
-    "variables": ["Neue Anlage? Termin? Störung?"]
-  }
-}

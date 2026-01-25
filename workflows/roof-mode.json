@@ -1,0 +1,143 @@
+{
+  "name": "Roof-Mode",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook/incoming-call",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "roof-mode-webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normalize German phone to E.164\nconst input = $input.first().json.body.From;\nlet phone = input;\n\n// Remove whitespace, dashes, etc.\nphone = phone.replace(/[^0-9+]/g, '');\n\n// Handle 0170, 0151, etc. -> +49\nif (phone.startsWith('01')) {\n  phone = '+49' + phone.substring(1);\n}\n\nreturn {\n  phone: phone\n};"
+      },
+      "id": "normalize-phone",
+      "name": "Code - Normalize Phone",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "twilioApi",
+        "accountSid": "={{$env.TWILIO_ACCOUNT_SID}}",
+        "authToken": "={{$env.TWILIO_AUTH_TOKEN}}",
+        "from": "whatsapp:+14155238886",
+        "to": "={{$json.phone}}",
+        "contentSid": "={{$env.TWILIO_WHATSAPP_TEMPLATE_SID}}",
+        "contentVariables": "{\"1\":\"\",\"2\":\"\",\"3\":\"\"}",
+        "options": {}
+      },
+      "id": "twilio-whatsapp",
+      "name": "Twilio - Send WhatsApp Template",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ],
+      "credentials": {
+        "twilioApi": {
+          "id": "twilio-credentials",
+          "name": "Twilio API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "xml",
+        "responseBody": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Response>\n  <Say voice=\"alice\" language=\"de-DE\">Moin! Wir sind auf dem Dach und rufen gleich zurück.</Say>\n  <Hangup/>\n</Response>"
+      },
+      "id": "twiml-response",
+      "name": "Twilio - Respond to Webhook (TwiML)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        850,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.telegram.org/bot{{$env.TELEGRAM_BOT_TOKEN}}/sendMessage",
+        "authentication": "none",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"chat_id\": \"{{$env.TELEGRAM_CHAT_ID}}\",\n  \"text\": \"Verpasster Anruf von {{$json.phone}}. Habe WhatsApp geschickt.\"\n}",
+        "options": {}
+      },
+      "id": "telegram-alert",
+      "name": "Telegram - Send Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        850,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code - Normalize Phone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Normalize Phone": {
+      "main": [
+        [
+          {
+            "node": "Twilio - Send WhatsApp Template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twilio - Send WhatsApp Template": {
+      "main": [
+        [
+          {
+            "node": "Twilio - Respond to Webhook (TwiML)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram - Send Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-25T00:00:00.000Z",
+  "versionId": "1"
+}
