@@ -66,6 +66,11 @@ services:
           memory: 512M
         reservations:
           memory: 128M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     networks:
       - vorzimmerdrache
 
