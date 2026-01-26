@@ -81,86 +81,15 @@ Für rechtssichere WhatsApp-Nutzung empfiehlt sich der folgende Opt-In-Prozess:
 
 ---
 
-## Setup
+## Deployment
 
+**For deployment instructions, see [SERVER_SETUP.md](SERVER_SETUP.md)**
+
+Quick start:
 1. Setup Twilio account (WhatsApp + Voice)
-2. Load €20 credit
-3. Create Google Sheet
-4. Copy keys to .env
-5. Run: `./scripts/deploy-1gb.sh`
-
----
-
-### Google Sheets Setup with OAuth2
-
-**Step 1: Enable Google Sheets API**
-1. Go to: https://console.cloud.google.com/apis/library
-2. Search: "Google Sheets API"
-3. Click "Enable"
-
-**Step 2: Create OAuth2 Credentials**
-1. Go to: https://console.cloud.google.com/apis/credentials
-2. Create credentials → OAuth client ID
-3. Application type: Desktop app
-4. Name: "Vorzimmerdrache-n8n"
-5. Scopes: https://www.googleapis.com/auth/spreadsheets.readonly
-
-**Step 3: Get Access Tokens**
-1. Use this URL to get OAuth tokens:
-   https://developers.google.com/oauthplayground/
-2. Authorize with your Google account
-3. Copy the access token and refresh token
-
-**Step 4: Share the Spreadsheet**
-1. Open your spreadsheet
-2. Click "Share"
-3. Use: https://docs.google.com/spreadsheets/d/1U73YUGk_GBWsAnM5LPjXpCT8bTXHYScuPoLumNdnfUY/edit?usp=sharing
-4. Add email from OAuth credentials as "Editor"
-5. Click "Send"
-
-**Step 5: Configure n8n**
-1. Add credentials to .env
-2. Import workflows/roof-mode.json
-3. Update Google Sheets node with OAuth2 credentials
-
----
-
-### Google Sheets Setup with Service Account (Alternative)
-
-**Service accounts don't expire - better for headless servers**
-
-**Step 1: Enable Google Sheets API**
-1. Go to: https://console.cloud.google.com/apis/library
-2. Search: "Google Sheets API"
-3. Click "Enable"
-
-**Step 2: Create Service Account**
-1. Go to: https://console.cloud.google.com/iam-admin/serviceaccounts
-2. Click "Create Service Account"
-3. Name: "Vorzimmerdrache-n8n"
-4. Click "Create and Continue"
-5. Skip roles (optional)
-6. Click "Done"
-
-**Step 3: Generate JSON Key**
-1. Click on your new service account
-2. Go to "Keys" tab
-3. Click "Add Key" → "Create new key"
-4. Key type: JSON
-5. Download the JSON file
-6. Copy contents to GOOGLE_SHEETS_SERVICE_ACCOUNT_JSON in .env
-
-**Step 4: Share the Spreadsheet**
-1. Open your spreadsheet
-2. Click "Share"
-3. Use: https://docs.google.com/spreadsheets/d/1U73YUGk_GBWsAnM5LPjXpCT8bTXHYScuPoLumNdnfUY/edit?usp=sharing
-4. Add service account email (from JSON file) as "Editor"
-5. Click "Send"
-
-**Step 5: Configure n8n**
-1. Add credentials to .env
-2. Import workflows/roof-mode.json
-3. Update Google Sheets node with Service Account credentials
+2. Create Google Sheet
+3. Configure `.env` file
+4. Run: `./scripts/deploy-1gb.sh`
 
 ---
 
