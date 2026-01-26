@@ -37,6 +37,7 @@ services:
       - EXECUTIONS_DATA_PRUNE=true
       - EXECUTIONS_DATA_MAX_AGE=168
       - DB_TYPE=sqlite
+      - N8N_RUNNERS_ENABLED=false
     volumes:
       - n8n_data:/home/node/.n8n
     labels:
