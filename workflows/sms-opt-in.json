@@ -17,7 +17,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const body = $input.first().json.body || '';\nconst phone = $input.first().json.From || '';\nconst normalizedResponse = body.trim().toLowerCase();\nconst isValidResponse = normalizedResponse === 'ja';\nlet p = phone.replace(/[^0-9]/g, '');\nif (p.startsWith('0049')) {\n  p = '+49' + p.substring(4);\n} else if (p.startsWith('0') && p.length === 10) {\n  p = '+49' + p.substring(1);\n} else if (p.startsWith('49') && p.length === 12) {\n  p = '+49' + p.substring(2);\n} else if (!p.startsWith('+')) {\n  p = '+49' + p;\n}\nreturn [{ json: { phone: p, response: body, isValidResponse } }];"
+        "jsCode": "const body = $input.first().json.body || '';\nconst phone = $input.first().json.From || '';\nconst normalizedResponse = body.trim().toLowerCase();\nconst isValidResponse = normalizedResponse === 'ja';\nlet p = phone.replace(/[^0-9]/g, '');\nif (p.startsWith('0049')) {\n  p = '+49' + p.substring(4);\n} else if (p.startsWith('0') && p.length >= 10 && p.length <= 13) {\n  p = '+49' + p.substring(1);\n} else if (p.startsWith('49') && p.length >= 12 && p.length <= 13) {\n  p = '+49' + p.substring(2);\n} else if (!p.startsWith('+')) {\n  p = '+49' + p;\n}\nreturn [{ json: { phone: p, response: body, isValidResponse } }];"
       },
       "id": "parse-sms",
       "name": "Code - Parse SMS",
@@ -131,6 +131,41 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [850, 400]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.TELEGRAM_BOT_API_URL }}/sendMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"chat_id\": \"{{ $env.TELEGRAM_CHAT_ID }}\", \"text\": \"❌ Workflow Error: Google Sheets Update Opt-In\\n\\nDetails: {{ $json.error || $json.message }}\"}",
+        "options": {}
+      },
+      "id": "error-update-optin",
+      "name": "Error: Update Failed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [850, 500]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Danke! Wir werden Sie per WhatsApp benachrichtigen.",
+        "responseHeaders": {
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Type",
+                "value": "text/plain"
+              }
+            ]
+          }
+        }
+      },
+      "id": "response-error-swallow",
+      "name": "Error: Telegram Swallow",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1250, 300]
     }
   ],
   "connections": {
@@ -183,6 +218,15 @@
             "index": 0
           }
         ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Error: Update Failed",
+            "type": "error",
+            "index": 0
+          }
+        ]
       ]
     },
     "HTTP Request - Telegram Alert": {
@@ -194,12 +238,35 @@
             "index": 0
           }
         ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Error: Telegram Swallow",
+            "type": "error",
+            "index": 0
+          }
+        ]
       ]
     },
     "Respond - Success": {
       "main": []
     },
     "Respond - Acknowledge": {
+      "main": []
+    },
+    "Error: Update Failed": {
+      "main": [
+        [
+          {
+            "node": "Respond - Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error: Telegram Swallow": {
       "main": []
     }
   },

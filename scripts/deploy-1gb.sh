@@ -18,7 +18,7 @@ fi
 
 docker compose -f "$DOCKER_COMPOSE_FILE" pull
 docker compose -f "$DOCKER_COMPOSE_FILE" down 2>/dev/null || true
-docker system prune -f --volumes
+docker system prune -f
 docker compose -f "$DOCKER_COMPOSE_FILE" up -d
 
 retries=0
