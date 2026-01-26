@@ -109,13 +109,13 @@
     {
       "parameters": {
         "operation": "send",
-        "from": "whatsapp:+14155238886",
+        "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
         "to": "={{ $json.phone }}",
-        "content": "Moin! Bin auf dem Dach. Worum geht's?",
+        "body": "Hi, wir haben Ihren Anruf verpasst. Möchten Sie Updates per WhatsApp? Antworten Sie mit JA.",
         "options": {}
       },
-      "id": "twilio-whatsapp-known",
-      "name": "Twilio - Send WhatsApp",
+      "id": "twilio-sms-known",
+      "name": "Twilio - Send SMS",
       "type": "n8n-nodes-base.twilio",
       "typeVersion": 1,
       "position": [1250, 300]
@@ -123,13 +123,13 @@
     {
       "parameters": {
         "operation": "send",
-        "from": "whatsapp:+14155238886",
+        "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
         "to": "={{ $item(0).$json.phone }}",
-        "body": "Hallo! Hab deinen Anruf gesehen. Wir sind auf dem Dach.",
+        "body": "Hi, wir haben Ihren Anruf verpasst. Möchten Sie Updates per WhatsApp? Antworten Sie mit JA.",
         "options": {}
       },
-      "id": "twilio-whatsapp-fallback",
-      "name": "Twilio - Send WhatsApp (Fallback)",
+      "id": "twilio-sms-fallback",
+      "name": "Twilio - Send SMS (Fallback)",
       "type": "n8n-nodes-base.twilio",
       "typeVersion": 1,
       "position": [1250, 500]
@@ -164,7 +164,7 @@
         "url": "={{ $env.TELEGRAM_BOT_API_URL }}/sendMessage",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\"chat_id\": \"{{ $env.TELEGRAM_CHAT_ID }}\", \"text\": \"Verpasster Anruf von {{ $json.phone }}. Habe WhatsApp geschickt.\"}",
+        "jsonBody": "={\"chat_id\": \"{{ $env.TELEGRAM_CHAT_ID }}\", \"text\": \"Verpasster Anruf von {{ $json.phone }}. Habe SMS mit WhatsApp Opt-In geschickt.\"}",
         "options": {}
       },
       "id": "telegram-alert",
@@ -231,21 +231,21 @@
       "main": [
         [
           {
-            "node": "Twilio - Send WhatsApp",
+            "node": "Twilio - Send SMS",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Twilio - Send WhatsApp (Fallback)",
+            "node": "Twilio - Send SMS (Fallback)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Twilio - Send WhatsApp": {
+    "Twilio - Send SMS": {
       "main": [
         [
           {
@@ -256,7 +256,7 @@
         ]
       ]
     },
-    "Twilio - Send WhatsApp (Fallback)": {
+    "Twilio - Send SMS (Fallback)": {
       "main": [
         [
           {

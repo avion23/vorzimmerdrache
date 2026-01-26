@@ -25,6 +25,32 @@ That's it. No fancy scoring, no subsidy calculator, no enrichment.
 
 ---
 
+## WhatsApp Opt-In Flow (UWG-Konform)
+
+Für rechtssichere WhatsApp-Nutzung empfiehlt sich der folgende Opt-In-Prozess:
+
+### Option A: SMS als Brücke → WhatsApp erst nach "JA"
+
+1. Kunde ruft an, PV-Betrieb geht nicht ran (oder nach X Sekunden keine Annahme)
+2. System schickt sofort eine kurze SMS (neutral, nicht werblich):
+   "Hi, wir haben Ihren Anruf verpasst. Möchten Sie Updates per WhatsApp? Antworten Sie mit JA."
+3. Antwortet der Kunde "JA" → WhatsApp Opt-in dokumentiert → ab dann WhatsApp-Nachrichten (Terminlink, Rückrufzeit, Fragen)
+
+**Vorteile:**
+- Trifft die WhatsApp-Opt-In Logik deutlich sauberer
+- Reduziert UWG-Risiko (Gesetz gegen den unlauteren Wettbewerb)
+- Erst um Erlaubnis bitten, dann nutzen
+- Bleibt trotzdem schnell im Workflow
+
+### SMS Opt-in Setup
+
+1. Configure Twilio SMS webhook to: `https://<DEINE-DOMAIN>/webhook/sms-response`
+2. Add Google Sheets column "whatsapp_opt_in" to track consent
+3. Import workflows/sms-opt-in.json into n8n
+4. Twilio will send SMS responses to the webhook
+
+---
+
 ## Tech Stack
 
 - Docker: Traefik + n8n only
