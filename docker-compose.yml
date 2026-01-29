@@ -35,7 +35,7 @@ services:
       - vorzimmerdrache
 
   n8n:
-    image: docker.n8n.io/n8nio/n8n
+    image: docker.n8n.io/n8nio/n8n:0.236.3
     restart: always
     environment:
       - N8N_HOST=${DOMAIN:-instance1.duckdns.org}
@@ -43,6 +43,7 @@ services:
       - N8N_PROTOCOL=https
       - WEBHOOK_URL=https://${DOMAIN:-instance1.duckdns.org}/
       - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+      - N8N_BASIC_AUTH_ACTIVE=${N8N_BASIC_AUTH_ACTIVE:-true}
       - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER:-admin}
       - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD:-changeme}
       - EXECUTIONS_TIMEOUT=300
