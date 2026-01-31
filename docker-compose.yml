@@ -14,9 +14,14 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.email=${SSL_EMAIL:-admin@example.com}"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--ping=true"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entryPoint.permanent=true"
     ports:
       - "80:80"
       - "443:443"
+      - "8080:8080"
     volumes:
       - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -35,7 +40,7 @@ services:
       - vorzimmerdrache
 
   n8n:
-    image: docker.n8n.io/n8nio/n8n:latest
+    image: docker.n8n.io/n8nio/n8n:1.50.0
     restart: always
     environment:
       - N8N_HOST=${DOMAIN:-instance1.duckdns.org}
@@ -55,6 +60,19 @@ services:
       - N8N_RUNNERS_ENABLED=false
       - DB_SQLITE_PRAGMAS=journal_mode=WAL;busy_timeout=30000;wal_autocheckpoint=1000
       - N8N_CONCURRENCY_PRODUCTION_LIMIT=1
+      - GOOGLE_SHEETS_SPREADSHEET_ID=${GOOGLE_SHEETS_SPREADSHEET_ID}
+      - GOOGLE_SHEETS_SHEET_NAME=${GOOGLE_SHEETS_SHEET_NAME:-Sheet1}
+      - GOOGLE_SHEETS_RANGE=${GOOGLE_SHEETS_RANGE}
+      - N8N_WEBHOOK_URL=${N8N_WEBHOOK_URL}
+      - WEBHOOK_TUNNEL_URL=${WEBHOOK_TUNNEL_URL}
+      - GOOGLE_OAUTH_CLIENT_ID=${GOOGLE_OAUTH_CLIENT_ID}
+      - GOOGLE_OAUTH_CLIENT_SECRET=${GOOGLE_OAUTH_CLIENT_SECRET}
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER}
+      - TWILIO_WHATSAPP_SENDER=${TWILIO_WHATSAPP_SENDER}
+      - TELEGRAM_BOT_API_URL=${TELEGRAM_BOT_API_URL}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
     volumes:
       - n8n_data:/home/node/.n8n
     labels:
@@ -62,12 +80,14 @@ services:
       - "traefik.http.routers.n8n.rule=Host(`${DOMAIN:-instance1.duckdns.org}`)"
       - "traefik.http.routers.n8n.entrypoints=websecure"
       - "traefik.http.routers.n8n.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.n8n.middlewares=n8n-headers,n8n-ratelimit"
+      - "traefik.http.routers.n8n.service=n8n"
+      - "traefik.http.services.n8n.loadbalancer.server.port=5678"
       - "traefik.http.middlewares.n8n-headers.headers.customrequestheaders.X-Frame-Options=DENY"
       - "traefik.http.middlewares.n8n-headers.headers.customrequestheaders.X-Content-Type-Options=nosniff"
       - "traefik.http.middlewares.n8n-headers.headers.customrequestheaders.Content-Security-Policy=default-src 'self'"
       - "traefik.http.middlewares.n8n-ratelimit.ratelimit.average=100"
       - "traefik.http.middlewares.n8n-ratelimit.ratelimit.burst=200"
-      - "traefik.http.routers.n8n.middlewares=n8n-headers,n8n-ratelimit"
     healthcheck:
       test: ["CMD-SHELL", "node -e \"require('http').get('http://localhost:5678/healthz', (r) => process.exit(r.statusCode === 200 ? 0 : 1))\""]
       interval: 30s

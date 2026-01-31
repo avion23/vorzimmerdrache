@@ -53,11 +53,15 @@ Für rechtssichere WhatsApp-Nutzung empfiehlt sich der folgende Opt-In-Prozess:
 
 ## Tech Stack
 
-- Docker: Traefik + n8n only
-- Database: SQLite internal to n8n
-- WhatsApp: Twilio Business API (stateless, runs on Twilio's servers)
-- Voice: Twilio (stateless, runs on Twilio's servers)
-- CRM: Google Sheets (you manage in browser)
+- **n8n**: v1.50.0 (stable, 1GB RAM optimized)
+- **Traefik**: v2.11 (SSL termination, HTTP→HTTPS redirect)
+- **Database**: SQLite (internal to n8n, WAL mode enabled)
+- **WhatsApp**: Twilio Business API (stateless, runs on Twilio's servers)
+- **Voice**: Twilio (stateless, runs on Twilio's servers)
+- **CRM**: Google Sheets (you manage in browser)
+- **Notifications**: Telegram Bot API
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed system design, data flows, and operational procedures.
 
 ---
 
