@@ -1,0 +1,38 @@
+{
+  "name": "SMS Minimal Test",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sms-minimal",
+        "responseMode": "responseNode"
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "webhookId": "sms-minimal"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json: {message: 'Hello from n8n'}}];"
+      },
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "OK"
+      },
+      "name": "Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Webhook": {"main": [[{"node": "Code"}]]},
+    "Code": {"main": [[{"node": "Response"}]]}
+  },
+  "settings": {"executionOrder": "v1"}
+}

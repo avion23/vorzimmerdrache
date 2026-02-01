@@ -7,6 +7,7 @@
 - [Quick Start](#quick-start-5-minuten)
 - [Was das ist](#was-das-ist)
 - [Funktionsweise](#funktionsweise)
+- [Loop-Prevention](#loop-prevention)
 - [Tech Stack](#tech-stack)
 - [Kosten](#kosten)
 - [WhatsApp Opt-In](#whatsapp-opt-in-flow-uwg-konform)
@@ -56,6 +57,63 @@ KEIN PostgreSQL, KEIN Redis, KEIN WAHA, KEIN Baserow, KEINE Worker-Prozesse.
 6. n8n sendet Telegram-Alert an dich.
 
 Minimalistischer Ansatz. Kein Lead-Scoring, keine Förderrechner, keine Datenanreicherung.
+
+---
+
+## Loop-Prevention
+
+Um zu verhindern, dass sich zwei Vorzimmerdrache-Systeme gegenseitig "bespielen" (z.B. wenn der Handwerker einen Kunden zurückruft, der auch das System nutzt), sind folgende Schutzmechanismen implementiert:
+
+### 1. Blacklist-Funktion
+
+**Problem:** Der Handwerker ruft einen Kunden zurück → Kunde nimmt nicht ab → Kunden-System ruft Handwerker zurück → Endlosschleife.
+
+**Lösung:** 
+- Blacklist in Google Sheet "Blacklist" (Spalte A)
+- Eigene Nummern des Handwerkers eintragen
+- Bei Anruf von blacklisted Nummer: Sofortiges Auflegen, kein SMS-Versand
+
+**Einrichtung:**
+1. Google Sheet "Blacklist" erstellen
+2. In Spalte A die zu sperrenden Nummern eintragen (Format: +491711234567)
+3. Workflow "Roof-Mode" aktivieren
+
+### 2. Cooldown-Periode
+
+**Problem:** Kunde ruft 3x innerhalb 5 Minuten an → 3x SMS-Kosten.
+
+**Lösung:**
+- 5-Minuten-Cooldown pro Telefonnummer
+- Nur bei erstem Anruf: SMS + Sprachansage
+- Bei wiederholten Anrufen: Nur Sprachansage
+
+**Kosteneinsparung:** ~75% bei wiederholten Anrufen
+
+**Beispiel:**
+| Zeit | Anruf | Aktion | SMS? |
+|------|-------|--------|------|
+| 10:00 | 1. | SMS + Sprache | ✅ |
+| 10:02 | 2. | Nur Sprache | ❌ |
+| 10:04 | 3. | Nur Sprache | ❌ |
+| 10:06 | 4. | SMS + Sprache | ✅ (Cooldown abgelaufen) |
+
+### 3. Workflow-Struktur
+
+```
+Eingehender Anruf
+       ↓
+Blacklist-Prüfung (Google Sheets)
+       ↓
+[Blacklist?] → JA → Auflegen
+       ↓ NEIN
+Cooldown-Prüfung
+       ↓
+[SMS senden?] → JA → Log + SMS + Sprache
+       ↓ NEIN
+       └───────→ Log + Sprache (ohne SMS)
+```
+
+**Details:** Siehe [LOOP_PREVENTION.md](LOOP_PREVENTION.md)
 
 ---
 
@@ -152,8 +210,10 @@ Quick Start:
 
 **Workflows:**
 - `roof-mode.json` (Anrufe, SMS, WhatsApp, Telegram).
+- `roof-mode-with-protection.json` (Anrufe mit Blacklist + Cooldown).
 - `sms-opt-in.json` (WhatsApp Opt-In via SMS).
 - Error-Nodes mit Retry-Logik.
+- Loop-Prevention (Blacklist + Cooldown-Periode).
 
 **Automatisierung:**
 - `scripts/configure-system.sh` (Initiales Setup).

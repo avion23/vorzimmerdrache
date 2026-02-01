@@ -1,0 +1,64 @@
+{
+  "name": "SMS Opt-In - Simple",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook/sms-response",
+        "responseMode": "responseNode"
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body.Body || '';\nconst phone = $input.first().json.body.From || '';\nconst isJA = body.trim().toLowerCase().includes('ja');\nreturn [{ json: { phone, isJA } }];"
+      },
+      "name": "Parse SMS",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "conditions": [{"leftValue": "={{ $json.isJA }}", "rightValue": true}]
+        }
+      },
+      "name": "IF - Is JA",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": "={{ $env.GOOGLE_SHEETS_DOCUMENT_ID }}",
+        "sheetName": "Lead_DB",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {"conversation_state": "awaiting_plz"}
+        }
+      },
+      "name": "Set Awaiting PLZ",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4
+    },
+    {
+      "parameters": {
+        "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
+        "to": "={{ $json.phone }}",
+        "body": "Danke! Bitte senden Sie Ihre PLZ (5-stellig)."
+      },
+      "name": "Ask PLZ",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {"main": [[{"node": "Parse SMS"}]]},
+    "Parse SMS": {"main": [[{"node": "IF - Is JA"}]]},
+    "IF - Is JA": {"main": [[{"node": "Set Awaiting PLZ"}], []]},
+    "Set Awaiting PLZ": {"main": [[{"node": "Ask PLZ"}]]}
+  },
+  "settings": {"executionOrder": "v1"}
+}

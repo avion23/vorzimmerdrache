@@ -1,0 +1,66 @@
+{
+  "name": "SMS With Twilio Test",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sms-with-twilio",
+        "responseMode": "responseNode"
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "webhookId": "sms-with-twilio"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body || {};\nconst phone = body.From || '+491711234567';\nconst msg = (body.Body || '').toLowerCase().trim();\nconst isJA = msg.includes('ja');\nreturn [{json: {phone, isJA}}];"
+      },
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "conditions": [{"leftValue": "={{ $json.isJA }}", "rightValue": true}]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
+        "to": "={{ $json.phone }}",
+        "body": "Test SMS from n8n workflow!"
+      },
+      "name": "Send SMS",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "credentials": {
+        "twilioApi": {
+          "id": "RcKJFQREVgo1VV3y",
+          "name": "Twilio API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "SMS sent"
+      },
+      "name": "Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Webhook": {"main": [[{"node": "Code"}]]},
+    "Code": {"main": [[{"node": "IF"}]]},
+    "IF": {"main": [[{"node": "Send SMS"}]]},
+    "Send SMS": {"main": [[{"node": "Response"}]]}
+  },
+  "settings": {"executionOrder": "v1"}
+}

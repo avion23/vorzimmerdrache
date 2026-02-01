@@ -1,0 +1,29 @@
+{
+  "name": "Simple Webhook Test",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "simple-test",
+        "responseMode": "responseNode"
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "webhookId": "simple-test"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Hello from n8n!"
+      },
+      "name": "Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Webhook": {"main": [[{"node": "Response"}]]}
+  },
+  "settings": {"executionOrder": "v1"}
+}

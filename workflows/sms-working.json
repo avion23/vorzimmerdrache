@@ -1,0 +1,91 @@
+{
+  "name": "SMS Opt-In - Working",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sms-response",
+        "responseMode": "responseNode"
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "webhookId": "sms-response"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body || {}; const phone = body.From || ''; const msg = (body.Body || '').toLowerCase().trim(); const isJA = msg.includes('ja'); return [{json: {phone, isJA, body}}];"
+      },
+      "name": "Parse SMS",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "conditions": [{"leftValue": "={{ $json.isJA }}", "rightValue": true}]
+        }
+      },
+      "name": "IF - Is JA",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": "={{ $env.GOOGLE_SHEETS_DOCUMENT_ID }}",
+        "sheetName": "Lead_DB",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "phone": "={{ $json.phone }}",
+            "conversation_state": "awaiting_plz",
+            "timestamp": "={{ $now }}"
+          }
+        }
+      },
+      "name": "Create Lead",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "credentials": {
+        "googleSheets": {
+          "id": "T0vN3oiZElUAYwT8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
+        "to": "={{ $json.phone }}",
+        "body": "Danke! Bitte senden Sie Ihre PLZ (5-stellig)."
+      },
+      "name": "Ask PLZ",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "credentials": {
+        "twilioApi": {
+          "id": "FLTo0keeCh2osFRj",
+          "name": "Twilio API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "OK"
+      },
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {"main": [[{"node": "Parse SMS"}]]},
+    "Parse SMS": {"main": [[{"node": "IF - Is JA"}]]},
+    "IF - Is JA": {"main": [[{"node": "Create Lead"}], [{"node": "Respond"}]]},
+    "Create Lead": {"main": [[{"node": "Ask PLZ"}]]},
+    "Ask PLZ": {"main": [[{"node": "Respond"}]]}
+  },
+  "settings": {"executionOrder": "v1"}
+}

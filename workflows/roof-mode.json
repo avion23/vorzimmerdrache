@@ -4,7 +4,7 @@
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "webhook/incoming-call",
+        "path": "incoming-call",
         "responseMode": "responseNode",
         "options": {}
       },

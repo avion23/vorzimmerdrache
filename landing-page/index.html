@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeadRettet - Nie wieder Leads verlieren</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --gray: #6b7280;
+            --border: #e5e7eb;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Navigation */
+        nav {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 20px;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background: var(--light);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn-secondary:hover {
+            background: white;
+            color: var(--primary);
+        }
+        
+        .hero-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-feature {
+            text-align: center;
+        }
+        
+        .hero-feature-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .hero-feature h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .hero-feature p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin: 0;
+        }
+        
+        /* Problem Section */
+        .problem {
+            padding: 5rem 0;
+            background: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            color: var(--gray);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+        
+        .quotes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .quote-card {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .quote-card p {
+            font-style: italic;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .quote-card cite {
+            color: var(--gray);
+            font-size: 0.9rem;
+            font-style: normal;
+        }
+        
+        .stat-box {
+            background: var(--dark);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .stat-box .stat {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+        
+        .stat-box p {
+            margin-top: 0.5rem;
+            opacity: 0.9;
+        }
+        
+        /* Solution Section */
+        .solution {
+            padding: 5rem 0;
+            background: var(--light);
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .step {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 2rem;
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+        
+        .step h3 {
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .step p {
+            color: var(--gray);
+        }
+        
+        /* Before/After */
+        .comparison {
+            padding: 5rem 0;
+            background: white;
+        }
+        
+        .comparisons {
+            display: grid;
+            gap: 2rem;
+            max-width: 800px;
+            margin: 3rem auto 0;
+        }
+        
+        .comparison-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        
+        .before, .after {
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+        
+        .before {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+        }
+        
+        .after {
+            background: #f0fdf4;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .before::before {
+            content: "❌ Vorher";
+            display: block;
+            font-weight: 600;
+            color: #dc2626;
+            margin-bottom: 0.5rem;
+        }
+        
+        .after::before {
+            content: "✅ Nachher";
+            display: block;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* ROI Calculator */
+        .roi {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+        }
+        
+        .roi .section-title {
+            color: white;
+        }
+        
+        .roi .section-subtitle {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .calculator {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 3rem auto 0;
+        }
+        
+        .calculator-inputs {
+            background: rgba(255,255,255,0.05);
+            padding: 2rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .input-group input[type="range"] {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        
+        .input-group input[type="number"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .input-value {
+            text-align: right;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+        
+        .calculator-results {
+            background: rgba(255,255,255,0.1);
+            padding: 2rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .result-label {
+            opacity: 0.8;
+        }
+        
+        .result-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .result-highlight {
+            background: var(--secondary);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+        
+        .result-highlight .amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .result-highlight .label {
+            opacity: 0.9;
+        }
+        
+        /* Pricing */
+        .pricing {
+            padding: 5rem 0;
+            background: var(--light);
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .pricing-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        .pricing-card.featured {
+            border: 2px solid var(--primary);
+            transform: scale(1.05);
+        }
+        
+        .badge {
+            position: absolute;
+            top: -12px;
+            right: 2rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pricing-card .subtitle {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+        
+        .price {
+            margin-bottom: 1.5rem;
+        }
+        
+        .price .setup {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .price .amount {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .price .period {
+            color: var(--gray);
+        }
+        
+        .pricing-card ul {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-card li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .pricing-card li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+            font-weight: 700;
+        }
+        
+        .pricing-card .btn {
+            width: 100%;
+            text-align: center;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* FAQ */
+        .faq {
+            padding: 5rem 0;
+            background: white;
+        }
+        
+        .faq-list {
+            max-width: 800px;
+            margin: 3rem auto 0;
+        }
+        
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 0;
+        }
+        
+        .faq-question {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .faq-answer {
+            color: var(--gray);
+        }
+        
+        /* Contact */
+        .contact {
+            padding: 5rem 0;
+            background: var(--light);
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 1000px;
+            margin: 3rem auto 0;
+        }
+        
+        .contact-info h3 {
+            margin-bottom: 1rem;
+        }
+        
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .contact-method-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .contact-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-brand .logo {
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        .footer-brand p {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        .footer-links h4 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 2rem;
+            text-align: center;
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .comparison-item {
+                grid-template-columns: 1fr;
+            }
+            
+            .calculator {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="logo">LeadRettet</div>
+            <ul class="nav-links">
+                <li><a href="#problem">Problem</a></li>
+                <li><a href="#loesung">Lösung</a></li>
+                <li><a href="#roi">ROI-Rechner</a></li>
+                <li><a href="#preise">Preise</a></li>
+                <li><a href="#kontakt">Kontakt</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <h1>Nie wieder Leads verlieren, weil Sie auf dem Dach sind</h1>
+            <p>Ihr automatisierter Anruf-Assistent antwortet sofort auf verpasste Anrufe, qualifiziert Kunden über WhatsApp und benachrichtigt Sie per Telegram – für weniger als 7 € im Monat.</p>
+            <div class="hero-buttons">
+                <a href="#kontakt" class="btn btn-primary">Kostenlos testen</a>
+                <a href="#roi" class="btn btn-secondary">ROI berechnen</a>
+            </div>
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <div class="hero-feature-icon">⚡</div>
+                    <h3>Sofortantwort</h3>
+                    <p>In unter 30 Sekunden</p>
+                </div>
+                <div class="hero-feature">
+                    <div class="hero-feature-icon">📱</div>
+                    <h3>WhatsApp Qualifizierung</h3>
+                    <p>Mit 3-Fragen-System</p>
+                </div>
+                <div class="hero-feature">
+                    <div class="hero-feature-icon">🔔</div>
+                    <h3>Telegram Alerts</h3>
+                    <p>Realtime Benachrichtigungen</p>
+                </div>
+                <div class="hero-feature">
+                    <div class="hero-feature-icon">💰</div>
+                    <h3>Ab 6,15 €/Monat</h3>
+                    <p>Keine versteckten Kosten</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem" id="problem">
+        <div class="container">
+            <h2 class="section-title">Kennen Sie das?</h2>
+            <p class="section-subtitle">So klingt es täglich in Handwerksbetrieben</p>
+            <div class="quotes">
+                <div class="quote-card">
+                    <p>„Das Telefon klingelt immer im falschen Moment – auf der Leiter, unter dem Auto, auf dem Dach..."</p>
+                    <cite>— Dachdeckerbetrieb, Köln</cite>
+                </div>
+                <div class="quote-card">
+                    <p>„Ich verliere Aufträge, weil ich zu spät antworte. Die Kunden haben schon beim nächsten angerufen."</p>
+                    <cite>— Selbstständiger Elektriker</cite>
+                </div>
+                <div class="quote-card">
+                    <p>„Verpasste Anrufe, endlose Rückruflisten. Jeden Abend 2 Stunden nur fürs Telefonieren."</p>
+                    <cite>— Installateur, 5-Mann-Betrieb</cite>
+                </div>
+                <div class="quote-card">
+                    <p>„WhatsApp-Nachrichten kommen 23:48 Uhr. Ich kann doch nicht rund um die Uhr erreichbar sein!"</p>
+                    <cite>— Heizungsbauer, München</cite>
+                </div>
+            </div>
+            <div class="stat-box">
+                <div class="stat">70%</div>
+                <p>der Kunden springen ab, wenn beim ersten Anruf niemand rangeht<br><small>— Bitkom-Studie, 2024</small></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section class="solution" id="loesung">
+        <div class="container">
+            <h2 class="section-title">So funktioniert LeadRettet</h2>
+            <p class="section-subtitle">Vier einfache Schritte zu mehr Umsatz</p>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Kunde ruft an</h3>
+                    <p>Ihre Twilio-Nummer klingelt – egal ob Sie erreichbar sind oder nicht.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Sofortige Antwort</h3>
+                    <p>Der Anrufer hört: „Moin! Wir sind auf dem Dach. Antworten Sie JA für WhatsApp."</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Automatische Qualifizierung</h3>
+                    <p>Über WhatsApp werden PLZ, Verbrauch und Fotos erfasst – vollautomatisch.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Sie übernehmen</h3>
+                    <p>Sie bekommen einen Telegram-Alert mit allen Infos – der Kunde ist vorgequalifiziert.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Before/After -->
+    <section class="comparison">
+        <div class="container">
+            <h2 class="section-title">Vorher vs. Nachher</h2>
+            <p class="section-subtitle">So verändert sich Ihr Arbeitsalltag</p>
+            <div class="comparisons">
+                <div class="comparison-item">
+                    <div class="before">
+                        „Das Telefon klingelt ununterbrochen, meine Mailbox platzt – ich weiß nicht, wo mir der Kopf steht."
+                    </div>
+                    <div class="after">
+                        „Klingelt es? Mein digitaler Assistent hat schon abgehoben. Ich sehe alles entspannt auf meinem Handy, kein Stress."
+                    </div>
+                </div>
+                <div class="comparison-item">
+                    <div class="before">
+                        „Ich verbringe jeden Abend 2 Stunden mit Rückrufen. Die Hälfte erreiche ich gar nicht mehr."
+                    </div>
+                    <div class="after">
+                        „Nach Feierabend habe ich wirklich Feierabend. Mein System hat alle wichtigen Antworten schon gegeben und Leads qualifiziert."
+                    </div>
+                </div>
+                <div class="comparison-item">
+                    <div class="before">
+                        „Kunden erreichen mich oft erst spät – oder gar nicht. 'Hab fünfmal angerufen, keiner ging ran.'"
+                    </div>
+                    <div class="after">
+                        „Kein Kunde muss mehr warten. Jeder Anruf wird sofort beantwortet – ob ich gerade auf dem Dach bin oder nicht."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Calculator -->
+    <section class="roi" id="roi">
+        <div class="container">
+            <h2 class="section-title">ROI-Rechner: Ihr Lead-Potenzial</h2>
+            <p class="section-subtitle">Stellen Sie Ihre Zahlen ein und sehen Sie sofort den monatlichen Mehrumsatz</p>
+            <div class="calculator">
+                <div class="calculator-inputs">
+                    <div class="input-group">
+                        <label>Anrufe pro Woche</label>
+                        <input type="range" id="callsPerWeek" min="5" max="100" value="20" oninput="updateCalculator()">
+                        <div class="input-value"><span id="callsValue">20</span> Anrufe</div>
+                    </div>
+                    <div class="input-group">
+                        <label>Verpasst oder zu spät (%)</label>
+                        <input type="range" id="missedPercent" min="10" max="80" value="30" oninput="updateCalculator()">
+                        <div class="input-value"><span id="missedValue">30</span>%</div>
+                    </div>
+                    <div class="input-group">
+                        <label>Durchschnittlicher Auftragswert (€)</label>
+                        <input type="number" id="orderValue" value="800" min="100" max="10000" oninput="updateCalculator()">
+                    </div>
+                    <div class="input-group">
+                        <label>LeadRettet Paket</label>
+                        <select id="package" onchange="updateCalculator()" style="width: 100%; padding: 0.75rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: white;">
+                            <option value="6.15">Basic (6,15 €/Monat)</option>
+                            <option value="15">Pro (15 €/Monat)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="calculator-results">
+                    <div class="result-item">
+                        <span class="result-label">Verpasste Anrufe / Woche</span>
+                        <span class="result-value" id="missedCalls">6</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Verlorene Aufträge / Woche</span>
+                        <span class="result-value" id="lostOrders">4</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Umsatzverlust / Monat</span>
+                        <span class="result-value" id="revenueLoss">13.440 €</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Geretteter Umsatz (60%)</span>
+                        <span class="result-value" id="savedRevenue" style="color: #10b981;">8.064 €</span>
+                    </div>
+                    <div class="result-highlight">
+                        <div class="amount" id="netBenefit">+8.058 €</div>
+                        <div class="label">Netto-Vorteil / Monat</div>
+                    </div>
+                    <div style="text-align: center; margin-top: 1rem; opacity: 0.7; font-size: 0.9rem;">
+                        ROI: <span id="roiPercent">130.943%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing" id="preise">
+        <div class="container">
+            <h2 class="section-title">Transparente Preise, keine versteckten Kosten</h2>
+            <p class="section-subtitle">Wählen Sie das Paket, das zu Ihrem Betrieb passt</p>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Basic</h3>
+                    <p class="subtitle">Für den Einstieg</p>
+                    <div class="price">
+                        <div class="setup">Einmalig: 99 € Setup</div>
+                        <div class="amount">6,15 €</div>
+                        <div class="period">pro Monat</div>
+                    </div>
+                    <ul>
+                        <li>Automatische Anrufbeantwortung</li>
+                        <li>SMS Opt-in Flow</li>
+                        <li>WhatsApp Nachrichten</li>
+                        <li>Telegram Benachrichtigungen</li>
+                        <li>Google Sheets Integration</li>
+                        <li>1 Telefonnummer</li>
+                        <li>Community Support</li>
+                    </ul>
+                    <a href="#kontakt" class="btn btn-outline">Anfragen</a>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="badge">BELIEBTESTE WAHL</div>
+                    <h3>Pro</h3>
+                    <p class="subtitle">Mit 3-Fragen-Qualifizierung</p>
+                    <div class="price">
+                        <div class="setup">Einmalig: 149 € Setup</div>
+                        <div class="amount">15 €</div>
+                        <div class="period">pro Monat</div>
+                    </div>
+                    <ul>
+                        <li>Alles aus Basic plus:</li>
+                        <li>3-Fragen Qualifizierung (PLZ, kWh, Foto)</li>
+                        <li>Erweiterte Lead-Daten</li>
+                        <li>Timeout-Handling (24h)</li>
+                        <li>Festnetz-Erkennung</li>
+                        <li>Mehrere Handwerker (bis 3)</li>
+                        <li>Prioritäts-Support</li>
+                    </ul>
+                    <a href="#kontakt" class="btn btn-primary">Jetzt starten</a>
+                </div>
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <p class="subtitle">Maßgeschneiderte Lösung</p>
+                    <div class="price">
+                        <div class="setup">Setup: Individuell</div>
+                        <div class="amount">auf Anfrage</div>
+                        <div class="period">pro Monat</div>
+                    </div>
+                    <ul>
+                        <li>Alles aus Pro plus:</li>
+                        <li>Unbegrenzte Handwerker</li>
+                        <li>Custom Workflows</li>
+                        <li>API-Zugriff</li>
+                        <li>Dedizierter Account Manager</li>
+                        <li>SLA-Garantie</li>
+                        <li>On-Premise Option</li>
+                    </ul>
+                    <a href="#kontakt" class="btn btn-outline">Beratung buchen</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq">
+        <div class="container">
+            <h2 class="section-title">Häufig gestellte Fragen</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">❓ „Meine Kunden wollen persönlich mit mir reden, keine Maschine"</div>
+                    <div class="faq-answer">✅ LeadRettet überbrückt nur die Wartezeit. Kunden bekommen sofort Antwort statt stundenlang niemanden zu erreichen. Das persönliche Gespräch findet danach auf WhatsApp statt – nur jetzt sind die Kunden vorgequalifiziert.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">❓ „Schon wieder eine Software... ich hab keine Zeit für Einrichtung"</div>
+                    <div class="faq-answer">✅ Wir richten alles für Sie ein. Nach dem Setup läuft es vollautomatisch. Sie müssen kein IT-Experte sein – nur Ihre Telegram-App öffnen und die Alerts lesen.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">❓ „WhatsApp im Geschäft? Ich hab Angst vor DSGVO-Problemen"</div>
+                    <div class="faq-answer">✅ Wir nutzen die offizielle WhatsApp Business API von Twilio, DSGVO-konform mit Opt-in-Verfahren. Keine Daten werden ohne Zustimmung gespeichert – alles rechtssicher.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">❓ „Was wenn ein Notfall reinkommt?"</div>
+                    <div class="faq-answer">✅ Bei Trigger-Wörtern wie „Wasserschaden", „Notfall", „Heizung ausgefallen" wird der Anruf sofort an Sie weitergeleitet oder Sie bekommen einen priorisierten Alert. Kein Notfall geht verloren.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">❓ "Was kostet das wirklich?"</div>
+                    <div class="faq-answer">✅ Transparente Kosten: 6,15 €/Monat für Server + ca. 0,05 € pro WhatsApp-Nachricht. Bei 100 Kunden/Monat sind Sie bei unter 15 € Gesamtkosten. Ein einziger geretteter Auftrag zahlt das Jahresabo.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact" id="kontakt">
+        <div class="container">
+            <h2 class="section-title">Kostenlosen Test starten</h2>
+            <p class="section-subtitle">In 10 Minuten besprechen wir, wie LeadRettet Ihren Betrieb unterstützen kann</p>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Direkter Kontakt</h3>
+                    <div class="contact-method">
+                        <div class="contact-method-icon">📧</div>
+                        <div>
+                            <strong>E-Mail</strong><br>
+                            <a href="mailto:hello@leadrettet.de" style="color: var(--primary);">hello@leadrettet.de</a><br>
+                            <small>Antwort innerhalb 24h</small>
+                        </div>
+                    </div>
+                    <div class="contact-method">
+                        <div class="contact-method-icon">📱</div>
+                        <div>
+                            <strong>WhatsApp</strong><br>
+                            <a href="https://wa.me/491234567890" style="color: var(--primary);">+49 123 456 7890</a><br>
+                            <small>Mo-Sa 8-20 Uhr</small>
+                        </div>
+                    </div>
+                    <div class="contact-method">
+                        <div class="contact-method-icon">⚡</div>
+                        <div>
+                            <strong>Schnellstart</strong><br>
+                            Setup in 7 Tagen<br>
+                            <small>30 Tage Geld-zurück-Garantie</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form onsubmit="event.preventDefault(); alert('Danke für Ihre Anfrage! Wir melden uns innerhalb von 24 Stunden bei Ihnen.');">
+                        <div class="form-group">
+                            <label>Ihr Name *</label>
+                            <input type="text" required placeholder="Max Mustermann">
+                        </div>
+                        <div class="form-group">
+                            <label>Firma *</label>
+                            <input type="text" required placeholder="Musterbau GmbH">
+                        </div>
+                        <div class="form-group">
+                            <label>E-Mail *</label>
+                            <input type="email" required placeholder="max@firma.de">
+                        </div>
+                        <div class="form-group">
+                            <label>Telefon</label>
+                            <input type="tel" placeholder="+49 123 456789">
+                        </div>
+                        <div class="form-group">
+                            <label>Ihre Nachricht (optional)</label>
+                            <textarea rows="3" placeholder="Wie können wir helfen?"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Jetzt unverbindlich anfragen</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo">LeadRettet</div>
+                    <p>Automatisierte Lead-Qualifizierung für Handwerker. Nie wieder Aufträge verlieren, weil Sie auf der Baustelle sind.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Navigation</h4>
+                    <ul>
+                        <li><a href="#problem">Problem</a></li>
+                        <li><a href="#loesung">Lösung</a></li>
+                        <li><a href="#roi">ROI-Rechner</a></li>
+                        <li><a href="#preise">Preise</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Service</h4>
+                    <ul>
+                        <li><a href="#kontakt">Kontakt</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                        <li><a href="#">Datenschutz</a></li>
+                        <li><a href="#">Impressum</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Kontakt</h4>
+                    <ul>
+                        <li>hello@leadrettet.de</li>
+                        <li>+49 123 456 7890</li>
+                        <li>Köln, NRW</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                © 2025 LeadRettet. Alle Rechte vorbehalten.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function updateCalculator() {
+            const callsPerWeek = parseInt(document.getElementById('callsPerWeek').value);
+            const missedPercent = parseInt(document.getElementById('missedPercent').value);
+            const orderValue = parseInt(document.getElementById('orderValue').value) || 800;
+            const packageCost = parseFloat(document.getElementById('package').value);
+            
+            // Update display values
+            document.getElementById('callsValue').textContent = callsPerWeek;
+            document.getElementById('missedValue').textContent = missedPercent;
+            
+            // Calculate metrics
+            const missedCalls = Math.round(callsPerWeek * (missedPercent / 100));
+            const lostOrders = Math.round(missedCalls * 0.7); // 70% of missed calls are lost orders
+            const revenueLoss = lostOrders * orderValue * 4.3; // 4.3 weeks per month
+            const savedRevenue = revenueLoss * 0.6; // 60% recovery rate with LeadRettet
+            const netBenefit = savedRevenue - packageCost;
+            const roiPercent = packageCost > 0 ? ((netBenefit / packageCost) * 100).toFixed(0) : 0;
+            
+            // Update results
+            document.getElementById('missedCalls').textContent = missedCalls;
+            document.getElementById('lostOrders').textContent = lostOrders;
+            document.getElementById('revenueLoss').textContent = revenueLoss.toLocaleString('de-DE') + ' €';
+            document.getElementById('savedRevenue').textContent = savedRevenue.toLocaleString('de-DE') + ' €';
+            document.getElementById('netBenefit').textContent = (netBenefit >= 0 ? '+' : '') + netBenefit.toLocaleString('de-DE') + ' €';
+            document.getElementById('roiPercent').textContent = roiPercent + '%';
+            
+            // Color code the net benefit
+            const netBenefitEl = document.getElementById('netBenefit');
+            if (netBenefit >= 0) {
+                netBenefitEl.style.color = '#10b981';
+            } else {
+                netBenefitEl.style.color = '#ef4444';
+            }
+        }
+        
+        // Initialize calculator
+        updateCalculator();
+        
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
