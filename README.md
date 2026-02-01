@@ -1,5 +1,20 @@
 # Vorzimmerdrache
 
+**Automatisierte Anrufbearbeitung für Handwerker**
+
+## Inhaltsverzeichnis
+
+- [Quick Start](#quick-start-5-minuten)
+- [Was das ist](#was-das-ist)
+- [Funktionsweise](#funktionsweise)
+- [Tech Stack](#tech-stack)
+- [Kosten](#kosten)
+- [WhatsApp Opt-In](#whatsapp-opt-in-flow-uwg-konform)
+- [Troubleshooting](#troubleshooting)
+- [FAQ](#faq)
+
+---
+
 ## Quick Start (5 Minuten)
 
 1. **Repository klonen & Server starten:**

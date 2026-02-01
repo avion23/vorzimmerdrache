@@ -1,5 +1,19 @@
 # Vorzimmerdrache: Systemarchitektur-Dokumentation
 
+## Inhaltsverzeichnis
+
+- [System Overview](#1-system-overview)
+- [Call Handling Flow](#2-call-handling-flow)
+- [SMS Opt-In Flow](#3-sms-opt-in-flow)
+- [Data Model](#4-data-model)
+- [Error Handling](#5-error-handling--recovery-flows)
+- [Security](#6-security)
+- [Multi-User](#7-erweiterung-für-weitere-handwerker)
+- [Daily Operations](#8-daily-operations)
+- [Technology Stack](#13-technology-stack)
+
+---
+
 ## Quick Start
 **Funktion:** Verarbeitet automatisch verpasste Anrufe von Kunden, sendet eine Sprachnachricht, erfasst Informationen in einer Tabelle und leitet Kunden zur Nachverfolgung an WhatsApp weiter.
 
@@ -389,55 +403,13 @@ if (signature !== twilioSignature) {
   ```
 - **Prevention:** WAL mode enabled, max 1 concurrent write
 
-## 7. Multi-User Architecture
+## 7. Erweiterung für weitere Handwerker
 
-### Einzelner Handwerker (Aktuelle Implementierung)
+**Aktuelles System:** Ein Handwerker, eine Telefonnummer, alle Kunden.
 
-**⚠️ Aktuelle Einschränkung:** Das System ist für EINEN Handwerker ausgelegt.
+**Für zusätzliche Handwerker:** Separate Server-Instanz aufsetzen mit eigenen Credentials.
 
-**Konfiguration pro Handwerker:**
-- Eine Twilio-Telefonnummer.
-- Eine Telegram Chat ID (empfängt alle Alarme).
-- Ein Google Sheet (speichert alle Kunden).
-
-**Um einen zweiten Handwerker hinzuzufügen, ist erforderlich:**
-- Separate Twilio-Nummer.
-- Separater Telegram-Bot/Chat.
-- Separate n8n-Instanz ODER Routing-Logik nach:
-  - Geografischem Gebiet (PLZ/Vorwahl).
-  - Tageszeit (Geschäftszeiten pro Region).
-  - Telefonnummer-Präfix.
-
-### Zweiten Handwerker hinzufügen
-
-**Option A: Separate Instanz (Empfohlen)**
-```bash
-# Neue Server-Instanz aufsetzen
-git clone <repo> vorzimmerdrache-craftsman2
-cd vorzimmerdrache-craftsman2
-
-# Neue .env mit anderen Credentials
-cp .env.example .env
-nano .env
-# Anpassen:
-# - DOMAIN: craftsman2.example.com
-# - CRAFTSMAN_NAME: "Max Mustermann"
-# - TELEGRAM_CHAT_ID: <andere Chat ID>
-# - TWILIO_PHONE_NUMBER: <andere Twilio-Nummer>
-# - GOOGLE_SHEETS_SPREADSHEET_ID: <anderes Sheet>
-
-# Deployen
-./scripts/deploy-1gb.sh
-```
-
-**Option B: Gemeinsame Instanz mit Routing (Komplex)**
-- Erfordert Anpassung der Workflows
-- Routing-Logik basierend auf:
-  - Anrufer-Region (Vorwahl)
-  - Tageszeit
-  - Tag der Woche
-
-**Empfehlung:** Für 1-2 Handwerker → Separate Instanzen. Für 10+ Handwerker → Routing-Logik implementieren.
+Siehe `README.md` Abschnitt "Multi-Instance Setup".
 
 ### Mehrere Kunden ✅
 
@@ -577,54 +549,7 @@ Alle eingehenden Nummern werden in das E.164 Format konvertiert:
 - Mit „JA" auf SMS antworten.
 - WhatsApp-Zustellung prüfen.
 
-### Multi-Craftsman Routing (Future Architecture)
 
-```mermaid
-flowchart TD
-    Start[Eingehender Anruf] --> Lookup{Anruferregion ermitteln}
-    
-    Lookup -->|Vorwahl 030| Berlin[Berlin Region]
-    Lookup -->|Vorwahl 089| Munich[München Region]
-    Lookup -->|Vorwahl 040| Hamburg[Hamburg Region]
-    Lookup -->|Andere| Default[Standard Handwerker]
-    
-    Berlin --> CheckB{Berlin Handwerker verfügbar?}
-    Munich --> CheckM{München Handwerker verfügbar?}
-    Hamburg --> CheckH{Hamburg Handwerker verfügbar?}
-    
-    CheckB -->|Ja| RouteB[Route an Berlin]
-    CheckB -->|Nein| RouteB2[Route an Backup]
-    
-    CheckM -->|Ja| RouteM[Route an München]
-    CheckM -->|Nein| RouteM2[Route an Backup]
-    
-    CheckH -->|Ja| RouteH[Route an Hamburg]
-    CheckH -->|Nein| RouteH2[Route an Backup]
-    
-    RouteB --> AlertB[Telegram: Berlin Handwerker]
-    RouteM --> AlertM[Telegram: München Handwerker]
-    RouteH --> AlertH[Telegram: Hamburg Handwerker]
-    
-    RouteB2 --> AlertBackup[Telegram: Bereitschafts-Backup]
-    RouteM2 --> AlertBackup
-    RouteH2 --> AlertBackup
-    
-    Default --> AlertDefault[Telegram: Standard Handwerker]
-    
-    style Berlin fill:#9f9,stroke:#333,stroke-width:2px
-    style Munich fill:#9f9,stroke:#333,stroke-width:2px
-    style Hamburg fill:#9f9,stroke:#333,stroke-width:2px
-    style AlertBackup fill:#ff9,stroke:#333,stroke-width:2px
-```
-
-**Routing Logic (Future Implementation):**
-
-| Routing Method | Description | Complexity |
-|----------------|-------------|------------|
-| **Geographic** | Area code → Regional craftsman | Medium |
-| **Time-based** | Business hours → Local, Off-hours → On-call | High |
-| **Load balancing** | Round-robin across available craftsmen | Low |
-| **Skill-based** | Project type → Specialist craftsman | Very High |
 
 ## 8. Daily Operations
 

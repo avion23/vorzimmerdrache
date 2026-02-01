@@ -20,15 +20,15 @@
     },
     {
       "parameters": {
-        "jsCode": "const crypto = require('crypto');\nconst authToken = $env.TWILIO_AUTH_TOKEN;\nconst headers = $input.first().json.headers || {};\nconst signature = headers['x-twilio-signature'] || headers['X-Twilio-Signature'];\nconst body = $input.first().json.body || {};\n\n// Sort parameters alphabetically (Twilio requirement)\nconst sortedKeys = Object.keys(body).sort();\nconst payload = sortedKeys.map(key => key + body[key]).join('');\nconst webhookUrl = `https://${$env.DOMAIN}/webhook/incoming-call`;\nconst expected = crypto.createHmac('sha1', authToken)\n  .update(webhookUrl + payload)\n  .digest('base64');\n\nif (!crypto.timingSafeEqual(Buffer.from(signature || ''), Buffer.from(expected))) {\n  return [{ json: { error: 'Invalid signature', statusCode: 403 } }];\n}\nreturn [{ json: body, valid: true }];"
+        "jsCode": "const customData = $run.executionData.customData || {};\nconst now = Date.now();\nconst errorWindow = 60000;\nconst recentErrors = (customData.sheetsErrors || []).filter(ts => now - ts < errorWindow);\nrecentErrors.push(now);\n\nreturn [{ json: { errorLogged: true, totalErrors: recentErrors.length } }];"
       },
-      "id": "validate-signature",
-      "name": "Code - Validate Twilio Signature",
+      "id": "track-circuit-error",
+      "name": "Code - Track Circuit Error",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        150,
-        300
+        800,
+        650
       ]
     },
     {
@@ -100,6 +100,32 @@
       "typeVersion": 2,
       "position": [
         400,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const phone = $json.phone;\nconst e164Pattern = /^\\+[1-9]\\d{1,14}$/;\nconst isValidPhone = e164Pattern.test(phone);\n\nif (!isValidPhone) {\n  return [{ json: { phone, error: 'Invalid phone format (not E.164)', validationError: true } }];\n}\n\nreturn [{ json: { phone, validPhone: true } }];"
+      },
+      "id": "validate-phone-format",
+      "name": "Code - Validate Phone Format",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        550,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const customData = $run.executionData.customData || {};\nconst now = Date.now();\nconst errorWindow = 60000; // 1 minute window\nconst maxErrors = 3;\n\n// Get recent errors from customData\nconst recentErrors = (customData.sheetsErrors || []).filter(ts => now - ts < errorWindow);\n\n// Check if circuit should be open\nif (recentErrors.length >= maxErrors) {\n  return [{ json: { circuitOpen: true, skipApi: true, errorCount: recentErrors.length } }];\n}\n\nreturn [{ json: { circuitOpen: false, proceed: true } }];"
+      },
+      "id": "circuit-breaker-sheets",
+      "name": "Code - Circuit Breaker (Sheets)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        650,
         350
       ]
     },
@@ -205,7 +231,7 @@
         "options": {
           "maxTries": 3,
           "waitBetweenTries": 2000,
-          "continueOnFail": false
+          "continueOnFail": true
         }
       },
       "id": "twilio-sms-known",
@@ -226,7 +252,7 @@
         "options": {
           "maxTries": 3,
           "waitBetweenTries": 2000,
-          "continueOnFail": false
+          "continueOnFail": true
         }
       },
       "id": "twilio-sms-fallback",
@@ -249,7 +275,9 @@
         "columns": {
           "mappingMode": "autoMapInputData"
         },
-        "options": {}
+        "options": {
+          "continueOnFail": true
+        }
       },
       "id": "google-sheets-log",
       "name": "Google Sheets - Log Call",
@@ -268,18 +296,46 @@
     },
     {
       "parameters": {
-        "url": "={{ $env.TELEGRAM_BOT_API_URL }}/sendMessage",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\"chat_id\": \"{{ $env.TELEGRAM_CHAT_ID }}\", \"text\": \"Verpasster Anruf von {{ $json.phone }}. Habe SMS mit WhatsApp Opt-In geschickt.\"}",
+        "jsCode": "const data = $input.first().json;\nconst hasError = !!(data.error || data.message);\nreturn [{ json: { ...data, hasError } }];"
+      },
+      "id": "check-log-error",
+      "name": "Code - Check Log Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1550,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-has-error",
+              "leftValue": "={{ $json.hasError }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "isTrue"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
         "options": {}
       },
-      "id": "telegram-alert",
-      "name": "HTTP Request - Telegram Alert",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "if-log-error",
+      "name": "IF - Log Error",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
       "position": [
-        1600,
+        1700,
         450
       ]
     },
@@ -288,8 +344,128 @@
         "url": "={{ $env.TELEGRAM_BOT_API_URL }}/sendMessage",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\"chat_id\": \"{{ $env.TELEGRAM_CHAT_ID }}\", \"text\": \"\u274c Workflow Error: Google Sheets Lookup\\n\\nDetails: {{ $json.error || $json.message }}\"}",
+        "jsonBody": "={\"chat_id\": \"{{ $env.TELEGRAM_CHAT_ID }}\", \"text\": \"✅ Verpasster Anruf von {{ $json.phone }}. Habe SMS mit WhatsApp Opt-In geschickt.\"}",
+        "options": {
+          "continueOnFail": true
+        }
+      },
+      "id": "telegram-alert",
+      "name": "HTTP Request - Telegram Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1850,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "xml",
+        "responseBody": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Response>\n  <Say voice=\"alice\" language=\"de-DE\">Moin! Wir sind auf dem Dach. Wir rufen Sie gleich zur\u00fcck.</Say>\n  <Pause length=\"1\"/>\n</Response>",
+        "responseHeaders": {
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Type",
+                "value": "text/xml"
+              }
+            ]
+          }
+        },
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "graceful-response",
+      "name": "Respond - Graceful Degradation",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        900,
+        650
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"error\": \"Invalid phone number format\", \"message\": \"Phone number must be in E.164 format\"}",
+        "options": {
+          "responseCode": 400
+        },
+        "responseHeaders": {
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-validation-error",
+      "name": "Respond - Validation Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        650,
+        550
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-circuit-open",
+              "leftValue": "={{ $json.circuitOpen }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "isTrue"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
         "options": {}
+      },
+      "id": "if-circuit-open",
+      "name": "IF - Circuit Open",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        750,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const crypto = require('crypto');\nconst authToken = $env.TWILIO_AUTH_TOKEN;\nconst headers = $input.first().json.headers || {};\nconst signature = headers['x-twilio-signature'] || headers['X-Twilio-Signature'];\nconst body = $input.first().json.body || {};\n\n// Sort parameters alphabetically (Twilio requirement)\nconst sortedKeys = Object.keys(body).sort();\nconst payload = sortedKeys.map(key => key + body[key]).join('');\nconst webhookUrl = `https://${$env.DOMAIN}/webhook/incoming-call`;\nconst expected = crypto.createHmac('sha1', authToken)\n  .update(webhookUrl + payload)\n  .digest('base64');\n\nif (!crypto.timingSafeEqual(Buffer.from(signature || ''), Buffer.from(expected))) {\n  return [{ json: { error: 'Invalid signature', statusCode: 403 } }];\n}\nreturn [{ json: body, valid: true }];"
+      },
+      "id": "validate-signature",
+      "name": "Code - Validate Twilio Signature",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        150,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.TELEGRAM_BOT_API_URL }}/sendMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"chat_id\": \"{{ $env.TELEGRAM_CHAT_ID }}\", \"text\": \"❌ Workflow Error: Google Sheets Lookup\\n\\nDetails: {{ $json.error || $json.message }}\"}",
+        "options": {
+          "continueOnFail": true
+        }
       },
       "id": "error-sheets-lookup",
       "name": "Error: Sheets Failed",
@@ -305,8 +481,10 @@
         "url": "={{ $env.TELEGRAM_BOT_API_URL }}/sendMessage",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\"chat_id\": \"{{ $env.TELEGRAM_CHAT_ID }}\", \"text\": \"\u274c Workflow Error: Twilio SMS Known\\n\\nDetails: {{ $json.error || $json.message }}\"}",
-        "options": {}
+        "jsonBody": "={\"chat_id\": \"{{ $env.TELEGRAM_CHAT_ID }}\", \"text\": \"❌ Workflow Error: Twilio SMS Known\\n\\nDetails: {{ $json.error || $json.message }}\"}",
+        "options": {
+          "continueOnFail": true
+        }
       },
       "id": "error-sms-known",
       "name": "Error: SMS Failed (Known)",
@@ -322,8 +500,10 @@
         "url": "={{ $env.TELEGRAM_BOT_API_URL }}/sendMessage",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\"chat_id\": \"{{ $env.TELEGRAM_CHAT_ID }}\", \"text\": \"\u274c Workflow Error: Twilio SMS Fallback\\n\\nDetails: {{ $json.error || $json.message }}\"}",
-        "options": {}
+        "jsonBody": "={\"chat_id\": \"{{ $env.TELEGRAM_CHAT_ID }}\", \"text\": \"❌ Workflow Error: Twilio SMS Fallback\\n\\nDetails: {{ $json.error || $json.message }}\"}",
+        "options": {
+          "continueOnFail": true
+        }
       },
       "id": "error-sms-fallback",
       "name": "Error: SMS Failed (Fallback)",
@@ -339,8 +519,10 @@
         "url": "={{ $env.TELEGRAM_BOT_API_URL }}/sendMessage",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\"chat_id\": \"{{ $env.TELEGRAM_CHAT_ID }}\", \"text\": \"\u274c Workflow Error: Google Sheets Log Call\\n\\nDetails: {{ $json.error || $json.message }}\"}",
-        "options": {}
+        "jsonBody": "={\"chat_id\": \"{{ $env.TELEGRAM_CHAT_ID }}\", \"text\": \"❌ Workflow Error: Google Sheets Log Call\\n\\nDetails: {{ $json.error || $json.message }}\"}",
+        "options": {
+          "continueOnFail": true
+        }
       },
       "id": "error-log-call",
       "name": "Error: Log Failed",
@@ -397,12 +579,70 @@
       "main": [
         [
           {
-            "node": "Twilio - Respond to Webhook (TwiML)",
+            "node": "Code - Validate Phone Format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Validate Phone Format": {
+      "main": [
+        [
+          {
+            "node": "IF - Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Validation Error": {
+      "main": [
+        [
+          {
+            "node": "Code - Circuit Breaker (Sheets)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond - Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Circuit Breaker (Sheets)": {
+      "main": [
+        [
+          {
+            "node": "IF - Circuit Open",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Circuit Open": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets - Lookup Customer",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Google Sheets - Lookup Customer",
+            "node": "Twilio - Respond to Webhook (TwiML)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond - Graceful Degradation",
             "type": "main",
             "index": 0
           }
@@ -422,8 +662,19 @@
       "error": [
         [
           {
-            "node": "Error: Sheets Failed",
+            "node": "Code - Track Circuit Error",
             "type": "error",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Track Circuit Error": {
+      "main": [
+        [
+          {
+            "node": "Respond - Graceful Degradation",
+            "type": "main",
             "index": 0
           }
         ]
@@ -505,17 +756,37 @@
       "main": [
         [
           {
-            "node": "HTTP Request - Telegram Alert",
+            "node": "Code - Check Log Error",
             "type": "main",
             "index": 0
           }
         ]
-      ],
-      "error": [
+      ]
+    },
+    "Code - Check Log Error": {
+      "main": [
+        [
+          {
+            "node": "IF - Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Log Error": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Telegram Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "Error: Log Failed",
-            "type": "error",
+            "type": "main",
             "index": 0
           }
         ]
