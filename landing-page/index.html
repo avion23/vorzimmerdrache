@@ -751,7 +751,188 @@
             outline: none;
             border-color: var(--accent);
         }
-        
+
+        /* ROI Calculator Section */
+        .roi {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            position: relative;
+        }
+
+        .roi .section-title {
+            color: white;
+        }
+
+        .roi .section-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .calculator {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 2.5rem;
+            border: 1px solid rgba(201, 169, 98, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .calculator-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .input-group input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .input-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(201, 169, 98, 0.4);
+            transition: all 0.2s;
+        }
+
+        .input-group input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(201, 169, 98, 0.6);
+        }
+
+        .input-group input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 10px rgba(201, 169, 98, 0.4);
+            transition: all 0.2s;
+        }
+
+        .input-group input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(201, 169, 98, 0.6);
+        }
+
+        .input-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .input-value span {
+            font-size: 1.4rem;
+        }
+
+        .input-group input[type="number"] {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(201, 169, 98, 0.3);
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .input-group input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .input-group input[type="number"]::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .premium-highlight {
+            background: linear-gradient(135deg, rgba(201, 169, 98, 0.15) 0%, rgba(201, 169, 98, 0.05) 100%);
+            border: 1px solid rgba(201, 169, 98, 0.3);
+        }
+
+        .calculator-results {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .result-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .result-highlight {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
+            border: 2px solid var(--success);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 1rem;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
+        }
+
+        .result-highlight .amount {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--success);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-highlight .label {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
         /* Footer */
         footer {
             background: var(--primary);
@@ -843,6 +1024,38 @@
             
             .section-title {
                 font-size: 2rem;
+            }
+
+            .calculator {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 1.5rem;
+            }
+
+            .calculator-inputs {
+                gap: 1.5rem;
+            }
+
+            .calculator-results {
+                padding: 1.5rem;
+            }
+
+            .result-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .result-value {
+                font-size: 1.2rem;
+            }
+
+            .result-highlight .amount {
+                font-size: 2.2rem;
+            }
+
+            .result-highlight {
+                padding: 1.5rem;
             }
         }
     </style>
@@ -1018,6 +1231,73 @@
                     <h3>DSGVO-konform & Sicher</h3>
                     <p>Alle Gespräche werden datenschutzkonform dokumentiert. Made in Germany mit Serverstandort Frankfurt.</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Calculator Section -->
+    <section class="roi" id="roi">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">ROI-Rechner</div>
+                <h2 class="section-title">Berechnen Sie Ihren Mehrumsatz</h2>
+                <p class="section-subtitle">Sehen Sie sofort, wie viel zusätzlichen Umsatz Sie mit professioneller Anrufbeantwortung generieren können.</p>
+            </div>
+            
+            <div class="calculator">
+                <div class="calculator-inputs">
+                    <div class="input-group">
+                        <label for="callsPerWeek">Anrufe pro Woche</label>
+                        <input type="range" id="callsPerWeek" min="5" max="100" value="25" oninput="updateCalculator()">
+                        <div class="input-value"><span id="callsValue">25</span> Anrufe</div>
+                    </div>
+                    <div class="input-group">
+                        <label for="missedPercent">Verpasst oder zu spät (%)</label>
+                        <input type="range" id="missedPercent" min="10" max="80" value="35" oninput="updateCalculator()">
+                        <div class="input-value"><span id="missedValue">35</span>%</div>
+                    </div>
+                    <div class="input-group">
+                        <label for="orderValue">Durchschnittlicher Auftragswert (€)</label>
+                        <input type="number" id="orderValue" value="1200" min="100" max="20000" oninput="updateCalculator()">
+                    </div>
+                    <div class="input-group">
+                        <label>LeadRettet Premium</label>
+                        <div class="premium-highlight" style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; border: 1px solid var(--accent);">
+                            <strong style="color: var(--accent);">€200/Monat</strong>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">3 Monate kostenlos testen</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="calculator-results">
+                    <div class="result-item">
+                        <span class="result-label">Verpasste Anrufe / Woche</span>
+                        <span class="result-value" id="missedCalls">9</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Verlorene Aufträge / Woche</span>
+                        <span class="result-value" id="lostOrders">6</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Umsatzverlust / Monat</span>
+                        <span class="result-value" id="revenueLoss">33.480 €</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Geretteter Umsatz (60%)</span>
+                        <span class="result-value" id="savedRevenue" style="color: var(--success);">20.088 €</span>
+                    </div>
+                    <div class="result-highlight">
+                        <div class="amount" id="netBenefit">+19.888 €</div>
+                        <div class="label">Netto-Vorteil / Monat</div>
+                    </div>
+                    <div style="text-align: center; margin-top: 1rem; opacity: 0.7; font-size: 0.9rem;">
+                        ROI: <span id="roiPercent">9.944%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="calculator-cta" style="text-align: center; margin-top: 3rem;">
+                <a href="#kontakt" class="btn btn-primary" style="font-size: 1.2rem; padding: 1.2rem 2.5rem;">3 Monate kostenlos testen</a>
+                <p style="margin-top: 1rem; opacity: 0.8;">Jederzeit kündbar • Keine Kreditkarte erforderlich</p>
             </div>
         </div>
     </section>
@@ -1244,6 +1524,55 @@
     </footer>
 
     <script>
+        // ROI Calculator
+        function updateCalculator() {
+            try {
+                const callsPerWeek = parseInt(document.getElementById('callsPerWeek').value) || 0;
+                const missedPercent = parseInt(document.getElementById('missedPercent').value) || 0;
+                const orderValue = parseInt(document.getElementById('orderValue').value) || 1200;
+                const packageCost = 200; // Premium price
+                
+                // Validate inputs
+                if (callsPerWeek < 0 || missedPercent < 0 || orderValue < 0) {
+                    console.warn('Negative values detected in calculator');
+                    return;
+                }
+                
+                // Update display values
+                document.getElementById('callsValue').textContent = callsPerWeek;
+                document.getElementById('missedValue').textContent = missedPercent;
+                
+                // Calculate metrics
+                const missedCalls = Math.round(callsPerWeek * (missedPercent / 100));
+                const lostOrders = Math.round(missedCalls * 0.7);
+                const revenueLoss = lostOrders * orderValue * 4.3;
+                const savedRevenue = revenueLoss * 0.6;
+                const netBenefit = savedRevenue - packageCost;
+                const roiPercent = packageCost > 0 ? ((netBenefit / packageCost) * 100).toFixed(0) : 0;
+                
+                // Update results
+                document.getElementById('missedCalls').textContent = missedCalls;
+                document.getElementById('lostOrders').textContent = lostOrders;
+                document.getElementById('revenueLoss').textContent = revenueLoss.toLocaleString('de-DE') + ' €';
+                document.getElementById('savedRevenue').textContent = savedRevenue.toLocaleString('de-DE') + ' €';
+                document.getElementById('netBenefit').textContent = (netBenefit >= 0 ? '+' : '') + netBenefit.toLocaleString('de-DE') + ' €';
+                document.getElementById('roiPercent').textContent = roiPercent + '%';
+                
+                // Color code the net benefit
+                const netBenefitEl = document.getElementById('netBenefit');
+                if (netBenefit >= 0) {
+                    netBenefitEl.style.color = '#10b981';
+                } else {
+                    netBenefitEl.style.color = '#ef4444';
+                }
+            } catch (error) {
+                console.error('Calculator error:', error);
+            }
+        }
+        
+        // Initialize calculator
+        updateCalculator();
+        
         document.getElementById('contact-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
