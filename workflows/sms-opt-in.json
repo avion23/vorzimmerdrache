@@ -420,6 +420,439 @@
       "name": "Respond - Opt-Out Confirmed",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "lookup",
+        "sheetId": {
+          "__rl": true,
+          "mode": "url"
+        },
+        "range": "={{ $env.GOOGLE_SHEETS_RANGE }}",
+        "lookupColumn": "Phone",
+        "lookupValue": "={{ $json.phone }}",
+        "options": {}
+      },
+      "name": "Google Sheets - Lookup User",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "googleSheetsOAuth2Api",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const lookupResult = $input.first().json; const phone = $('Code - Parse SMS').first().json.phone; const conversationState = lookupResult.conversation_state || ''; return [{ json: { phone, conversationState, rowData: lookupResult } }];"
+      },
+      "name": "Code - Extract State",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "name": "Empty / SMS_Sent",
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "condition-empty",
+                    "leftValue": "={{ $json.conversationState }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "isEmpty"
+                    }
+                  }
+                ],
+                "combinator": "or"
+              }
+            },
+            {
+              "name": "Awaiting PLZ",
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "condition-plz",
+                    "leftValue": "={{ $json.conversationState }}",
+                    "rightValue": "awaiting_plz",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "name": "Awaiting kWh",
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "condition-kwh",
+                    "leftValue": "={{ $json.conversationState }}",
+                    "rightValue": "awaiting_kwh",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "name": "Awaiting Photo",
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "condition-photo",
+                    "leftValue": "={{ $json.conversationState }}",
+                    "rightValue": "awaiting_foto",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "name": "Qualified Complete",
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "condition-complete",
+                    "leftValue": "={{ $json.conversationState }}",
+                    "rightValue": "qualified_complete",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Switch - State Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-ja",
+              "leftValue": "={{ $('Code - Parse SMS').first().json.response.trim().toLowerCase() }}",
+              "rightValue": "ja",
+              "operator": {
+                "type": "string",
+                "operation": "includes"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "IF - Is JA Response",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $('Code - Parse SMS').first().json.response.trim(); const plzPattern = /^\\d{5}$/; const isValid = plzPattern.test(response); return [{ json: { phone: $('Code - Parse SMS').first().json.phone, response, isValid, fieldType: 'plz' } }];"
+      },
+      "name": "Code - Validate PLZ",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $('Code - Parse SMS').first().json.response.trim(); const numValue = parseFloat(response); const isValid = !isNaN(numValue) && numValue > 0; return [{ json: { phone: $('Code - Parse SMS').first().json.phone, response, isValid, fieldType: 'kwh' } }];"
+      },
+      "name": "Code - Validate kWh",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "const numMedia = parseInt($('Code - Parse SMS').first().json.numMedia || '0'); const isValid = numMedia > 0; return [{ json: { phone: $('Code - Parse SMS').first().json.phone, numMedia, isValid, fieldType: 'photo' } }];"
+      },
+      "name": "Code - Validate Photo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "sheetId": {
+          "__rl": true,
+          "mode": "url"
+        },
+        "range": "={{ $env.GOOGLE_SHEETS_RANGE }}",
+        "options": {},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "conversation_state": "awaiting_plz"
+          }
+        }
+      },
+      "name": "Google Sheets - Set Awaiting PLZ",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "googleSheetsOAuth2Api",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "sheetId": {
+          "__rl": true,
+          "mode": "url"
+        },
+        "range": "={{ $env.GOOGLE_SHEETS_RANGE }}",
+        "options": {},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "conversation_state": "awaiting_kwh",
+            "plz": "={{ $('Code - Validate PLZ').first().json.response }}"
+          }
+        }
+      },
+      "name": "Google Sheets - Set Awaiting kWh",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "googleSheetsOAuth2Api",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "sheetId": {
+          "__rl": true,
+          "mode": "url"
+        },
+        "range": "={{ $env.GOOGLE_SHEETS_RANGE }}",
+        "options": {},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "conversation_state": "awaiting_foto",
+            "kwh": "={{ $('Code - Validate kWh').first().json.response }}"
+          }
+        }
+      },
+      "name": "Google Sheets - Set Awaiting Photo",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "googleSheetsOAuth2Api",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "sheetId": {
+          "__rl": true,
+          "mode": "url"
+        },
+        "range": "={{ $env.GOOGLE_SHEETS_RANGE }}",
+        "options": {},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "conversation_state": "qualified_complete"
+          }
+        }
+      },
+      "name": "Google Sheets - Set Qualified Complete",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "googleSheetsOAuth2Api",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
+        "to": "={{ $json.phone }}",
+        "body": "Willkommen! Bitte teilen Sie uns Ihre Postleitzahl mit (5-stellig).",
+        "options": {
+          "maxTries": 3,
+          "waitBetweenTries": 2000
+        }
+      },
+      "name": "Twilio - Send Q1 (PLZ)",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
+        "to": "={{ $json.phone }}",
+        "body": "Danke! Wie hoch ist Ihr Jahresstromverbrauch in kWh?",
+        "options": {
+          "maxTries": 3,
+          "waitBetweenTries": 2000
+        }
+      },
+      "name": "Twilio - Send Q2 (kWh)",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
+        "to": "={{ $json.phone }}",
+        "body": "Alles klar! Bitte senden Sie uns ein Foto von Ihrem Stromz\u00e4hler.",
+        "options": {
+          "maxTries": 3,
+          "waitBetweenTries": 2000
+        }
+      },
+      "name": "Twilio - Send Q3 (Photo)",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
+        "to": "={{ $json.phone }}",
+        "body": "Bitte geben Sie eine g\u00fcltige 5-stellige Postleitzahl ein.",
+        "options": {
+          "maxTries": 3,
+          "waitBetweenTries": 2000
+        }
+      },
+      "name": "Twilio - Send Error PLZ",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
+        "to": "={{ $json.phone }}",
+        "body": "Bitte geben Sie eine g\u00fcltige kWh-Zahl gr\u00f6\u00dfer als 0 ein.",
+        "options": {
+          "maxTries": 3,
+          "waitBetweenTries": 2000
+        }
+      },
+      "name": "Twilio - Send Error kWh",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
+        "to": "={{ $json.phone }}",
+        "body": "Bitte senden Sie uns ein Foto Ihres Stromz\u00e4hlers.",
+        "options": {
+          "maxTries": 3,
+          "waitBetweenTries": 2000
+        }
+      },
+      "name": "Twilio - Send Error Photo",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
+        "to": "={{ $json.phone }}",
+        "body": "Vielen Dank! Wir haben alle Informationen erhalten. Wir melden uns bald bei Ihnen.",
+        "options": {
+          "maxTries": 3,
+          "waitBetweenTries": 2000
+        }
+      },
+      "name": "Twilio - Send Complete",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Nachricht verarbeitet.",
+        "responseHeaders": {
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Type",
+                "value": "text/plain"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Respond - 3Q Complete",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1
     }
   ],
   "connections": {
@@ -489,7 +922,7 @@
       "main": [
         [
           {
-            "node": "IF - STOP Request",
+            "node": "Google Sheets - Lookup User",
             "type": "main",
             "index": 0
           }
@@ -670,6 +1103,263 @@
       ]
     },
     "Respond - Opt-Out Confirmed": {
+      "main": []
+    },
+    "Google Sheets - Lookup User": {
+      "main": [
+        [
+          {
+            "node": "Code - Extract State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Extract State": {
+      "main": [
+        [
+          {
+            "node": "Switch - State Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch - State Router": {
+      "main": [
+        [
+          {
+            "node": "IF - Is JA Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code - Validate PLZ",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code - Validate kWh",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code - Validate Photo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond - 3Q Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Is JA Response": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets - Set Awaiting PLZ",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond - Acknowledge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Validate PLZ": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets - Set Awaiting kWh",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Twilio - Send Error PLZ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Validate kWh": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets - Set Awaiting Photo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Twilio - Send Error kWh",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Validate Photo": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets - Set Qualified Complete",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Twilio - Send Error Photo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets - Set Awaiting PLZ": {
+      "main": [
+        [
+          {
+            "node": "Twilio - Send Q1 (PLZ)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets - Set Awaiting kWh": {
+      "main": [
+        [
+          {
+            "node": "Twilio - Send Q2 (kWh)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets - Set Awaiting Photo": {
+      "main": [
+        [
+          {
+            "node": "Twilio - Send Q3 (Photo)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets - Set Qualified Complete": {
+      "main": [
+        [
+          {
+            "node": "Twilio - Send Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twilio - Send Q1 (PLZ)": {
+      "main": [
+        [
+          {
+            "node": "Respond - 3Q Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twilio - Send Q2 (kWh)": {
+      "main": [
+        [
+          {
+            "node": "Respond - 3Q Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twilio - Send Q3 (Photo)": {
+      "main": [
+        [
+          {
+            "node": "Respond - 3Q Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twilio - Send Error PLZ": {
+      "main": [
+        [
+          {
+            "node": "Respond - 3Q Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twilio - Send Error kWh": {
+      "main": [
+        [
+          {
+            "node": "Respond - 3Q Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twilio - Send Error Photo": {
+      "main": [
+        [
+          {
+            "node": "Respond - 3Q Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twilio - Send Complete": {
+      "main": [
+        [
+          {
+            "node": "Respond - 3Q Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond - 3Q Complete": {
       "main": []
     }
   },
