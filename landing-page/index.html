@@ -3,182 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Premium Anrufservice für erfolgreiche Handwerker. Professionalisieren Sie Ihren Telefonkontakt und gewinnen Sie mehr Aufträge. 3 Monate kostenlos testen.">
-    <meta name="keywords" content="Premium Anrufservice, Telefonsekretariat Handwerk, Kundenservice Handwerker, Erstkontakt Telefon, Callcenter Handwerk">
-    <meta name="theme-color" content="#0f172a">
+    <meta name="description" content="Anruf-Service für PV-Installateure. Wir übernehmen Ihre Anrufe, wenn Sie auf dem Dach sind. Spezialisiert auf Photovoltaik und BAFA-Fristen.">
+    <meta name="keywords" content="PV-Service, Telefonsekretariat Photovoltaik, Anrufservice Installateure, BAFA Frist, Solar-Telefon service">
     <link rel="canonical" href="https://vorzimmerdrache.pages.dev/">
-    
-    <title>LeadRettet Premium | Exklusiver Anrufservice für erfolgreiche Handwerker</title>
-    
+
+    <title>Anruf-Service für PV-Installateure | Wir kennen die BAFA-Frist</title>
+
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         :root {
             --primary: #0f172a;
-            --primary-light: #1e293b;
+            --primary-dark: #0a0f1c;
             --accent: #c9a962;
-            --accent-hover: #b8953f;
-            --success: #10b981;
-            --dark: #0f172a;
-            --light: #f8fafc;
-            --gray: #64748b;
-            --border: #e2e8f0;
+            --accent-darker: #a67c00;
+            --white: #ffffff;
+            --light-gray: #f1f3f4;
+            --medium-gray: #9ca3af;
+            --dark-gray: #374151;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--dark);
-            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            color: var(--dark-gray);
+            background: var(--white);
         }
-        
+
         .container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 0 20px;
         }
-        
-        /* Premium Navigation */
+
+        /* Simple Navigation */
         nav {
-            background: rgba(255, 255, 255, 0.98);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            background: var(--primary);
+            padding: 1rem 0;
+            border-bottom: 3px solid var(--accent);
         }
-        
+
         nav .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 20px;
         }
-        
+
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            color: var(--primary);
-            letter-spacing: -0.5px;
+            color: var(--white);
         }
-        
+
         .logo span {
             color: var(--accent);
         }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-            align-items: center;
-        }
-        
-        .nav-links a {
-            text-decoration: none;
-            color: var(--gray);
-            font-weight: 500;
-            transition: color 0.2s;
-            font-size: 0.95rem;
-        }
-        
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-        
+
         .nav-cta {
             background: var(--accent);
-            color: white !important;
-            padding: 0.6rem 1.5rem;
-            border-radius: 6px;
-            font-weight: 600 !important;
-            transition: all 0.2s;
-        }
-        
-        .nav-cta:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
-        }
-        
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            color: white;
-            padding: 6rem 0 5rem;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 50%;
-            height: 100%;
-            background: radial-gradient(ellipse at top right, rgba(201, 169, 98, 0.1) 0%, transparent 60%);
-        }
-        
-        .hero-content {
-            text-align: center;
-            max-width: 900px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .hero-badge {
-            display: inline-block;
-            background: rgba(201, 169, 98, 0.2);
-            color: var(--accent);
-            padding: 0.5rem 1.2rem;
-            border-radius: 30px;
-            font-size: 0.9rem;
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            text-decoration: none;
             font-weight: 600;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(201, 169, 98, 0.3);
+            font-size: 0.9rem;
         }
-        
+
+        .nav-cta:hover {
+            background: var(--accent-darker);
+        }
+
+        /* Hero Section - Industrial Feel */
+        .hero {
+            background: var(--primary);
+            color: var(--white);
+            padding: 4rem 0;
+            border-bottom: 3px solid var(--accent);
+        }
+
         .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.1;
+            font-size: 2.2rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
             font-weight: 700;
-            letter-spacing: -1px;
         }
-        
-        .hero h1 span {
-            color: var(--accent);
-        }
-        
-        .hero-subtitle {
-            font-size: 1.3rem;
-            margin-bottom: 2.5rem;
-            opacity: 0.9;
-            line-height: 1.5;
+
+        .hero-subline {
+            font-size: 1.15rem;
+            color: #d1d5db;
+            margin-bottom: 2rem;
             max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
         }
-        
+
         .hero-cta {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 3rem;
+            display: inline-block;
+            background: var(--accent);
+            color: var(--white);
+            padding: 1rem 2rem;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-cta:hover {
+            background: var(--accent-darker);
         }
 
         .hero-image {
-            margin-top: 3rem;
-            border-radius: 12px;
+            margin-top: 2rem;
+            border-radius: 4px;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            border: 2px solid rgba(201, 169, 98, 0.3);
         }
 
         .hero-image img {
@@ -186,1000 +124,320 @@
             height: auto;
             display: block;
         }
-        
-        .btn {
-            display: inline-block;
-            padding: 1.2rem 2.5rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-        
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-            box-shadow: 0 10px 30px rgba(201, 169, 98, 0.3);
-        }
-        
-        .btn-primary:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(201, 169, 98, 0.4);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid rgba(255,255,255,0.3);
-        }
-        
-        .btn-secondary:hover {
-            background: white;
-            color: var(--primary);
-        }
-        
-        .urgency-banner {
-            background: rgba(201, 169, 98, 0.15);
-            border: 1px solid rgba(201, 169, 98, 0.3);
-            border-radius: 8px;
-            padding: 1rem 1.5rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-        
-        .urgency-icon {
-            font-size: 1.5rem;
-        }
-        
-        .urgency-text {
-            font-size: 0.95rem;
-        }
-        
-        .urgency-text strong {
-            color: var(--accent);
-            font-weight: 600;
-        }
-        
-        /* Trust Stats */
-        .trust-stats {
-            background: white;
+
+        /* Pain Points Section */
+        .pain-points {
             padding: 3rem 0;
-            border-bottom: 1px solid var(--border);
+            background: var(--light-gray);
+            border-bottom: 2px solid #e5e7eb;
         }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            text-align: center;
-        }
-        
-        .stat-item {
-            padding: 1rem;
-        }
-        
-        .stat-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 0.25rem;
-        }
-        
-        .stat-label {
-            color: var(--gray);
-            font-size: 0.95rem;
-        }
-        
-        /* Social Proof Section */
-        .social-proof {
-            padding: 5rem 0;
-            background: var(--light);
-        }
-        
-        .section-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-        
-        .section-tag {
-            display: inline-block;
-            background: var(--accent);
-            color: white;
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
+
         .section-title {
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             color: var(--primary);
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-        
-        .section-subtitle {
-            color: var(--gray);
-            font-size: 1.15rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .testimonials {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
-        
-        .testimonial-card {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            border: 1px solid var(--border);
-        }
-        
-        .testimonial-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
             margin-bottom: 1.5rem;
-        }
-        
-        .testimonial-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .testimonial-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .testimonial-avatar-placeholder {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: white;
             font-weight: 700;
-            flex-shrink: 0;
         }
-        
-        .testimonial-author h4 {
+
+        .pain-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .pain-item {
+            background: var(--white);
+            padding: 1.5rem;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .pain-item h3 {
             font-size: 1.1rem;
             color: var(--primary);
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
         }
-        
-        .testimonial-author p {
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-        
-        .testimonial-rating {
-            color: #fbbf24;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-        
-        .testimonial-quote {
-            font-size: 1.05rem;
-            line-height: 1.6;
-            color: var(--dark);
-            font-style: italic;
-        }
-        
-        .client-logos {
-            text-align: center;
-        }
-        
-        .client-logos p {
-            color: var(--gray);
-            margin-bottom: 1.5rem;
+
+        .pain-item p {
+            color: var(--dark-gray);
             font-size: 0.95rem;
         }
-        
-        .logos-grid {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            flex-wrap: wrap;
-            opacity: 0.6;
+
+        /* How It Works */
+        .how-it-works {
+            padding: 3rem 0;
         }
-        
-        .logo-item {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--gray);
-            padding: 1rem 2rem;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-        }
-        
-        /* Value Proposition */
-        .value-proposition {
-            padding: 5rem 0;
-            background: white;
-        }
-        
-        .features-grid {
+
+        .steps-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2.5rem;
-            margin-top: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
         }
-        
-        .feature-card {
-            padding: 2rem;
-            border-radius: 12px;
-            background: var(--light);
-            border: 1px solid var(--border);
-            transition: all 0.3s;
+
+        .step-item {
+            padding: 1.5rem;
+            background: var(--light-gray);
+            border-radius: 4px;
         }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        }
-        
-        .feature-icon {
-            width: 60px;
-            height: 60px;
+
+        .step-number {
+            display: inline-block;
             background: var(--primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
+            color: var(--white);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: 700;
+            margin-bottom: 1rem;
         }
-        
-        .feature-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.75rem;
+
+        .step-item h3 {
+            font-size: 1rem;
             color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
         }
-        
-        .feature-card p {
-            color: var(--gray);
-            line-height: 1.6;
+
+        .step-item p {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
         }
-        
+
         /* Pricing Section */
         .pricing {
-            padding: 5rem 0;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            color: white;
-            position: relative;
+            padding: 3rem 0;
+            background: var(--primary);
+            color: var(--white);
+            text-align: center;
         }
-        
+
         .pricing .section-title {
-            color: white;
+            color: var(--white);
         }
-        
-        .pricing .section-subtitle {
-            color: rgba(255,255,255,0.8);
-        }
-        
-        .pricing-card {
-            background: white;
-            color: var(--dark);
-            border-radius: 20px;
-            padding: 3rem;
-            max-width: 700px;
-            margin: 3rem auto 0;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            position: relative;
+
+        .pricing-box {
+            background: var(--white);
+            color: var(--dark-gray);
+            max-width: 500px;
+            margin: 2rem auto 0;
+            padding: 2rem;
+            border-radius: 4px;
             border: 3px solid var(--accent);
         }
-        
-        .pricing-badge {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--accent);
-            color: white;
-            padding: 0.6rem 2rem;
-            border-radius: 30px;
+
+        .price-main {
+            font-size: 2.5rem;
             font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .price-sub {
             font-size: 1rem;
-            box-shadow: 0 4px 15px rgba(201, 169, 98, 0.4);
+            color: var(--medium-gray);
+            margin-bottom: 1.5rem;
         }
-        
-        .pricing-header {
-            text-align: center;
+
+        .price-features {
+            text-align: left;
             margin-bottom: 2rem;
         }
-        
-        .pricing-header h3 {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-        
-        .pricing-header .subtitle {
-            color: var(--gray);
-            font-size: 1.1rem;
-        }
-        
-        .trial-highlight {
-            background: linear-gradient(135deg, rgba(201, 169, 98, 0.2) 0%, rgba(201, 169, 98, 0.1) 100%);
-            border: 2px solid var(--accent);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .trial-highlight .trial-text {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-        
-        .trial-highlight .trial-sub {
-            color: var(--gray);
-        }
-        
-        .price-display {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .price-display .amount {
-            font-size: 4rem;
-            font-weight: 700;
-            color: var(--primary);
-            line-height: 1;
-        }
-        
-        .price-display .period {
-            color: var(--gray);
-            font-size: 1.2rem;
-            margin-top: 0.5rem;
-        }
-        
-        .price-display .guarantee {
-            display: inline-block;
-            margin-top: 1rem;
-            color: var(--success);
-            font-weight: 600;
+
+        .price-features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e5e7eb;
             font-size: 0.95rem;
         }
-        
-        .feature-list {
-            margin-bottom: 2.5rem;
-        }
-        
-        .feature-list ul {
-            list-style: none;
-        }
-        
-        .feature-list li {
-            padding: 0.75rem 0;
-            padding-left: 2.5rem;
-            position: relative;
-            border-bottom: 1px solid var(--border);
-            font-size: 1.05rem;
-        }
-        
-        .feature-list li:last-child {
+
+        .price-features li:last-child {
             border-bottom: none;
         }
-        
-        .feature-list li::before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: var(--success);
-            font-weight: 700;
-            font-size: 1.2rem;
-        }
-        
-        .feature-list li strong {
-            color: var(--primary);
-        }
-        
+
         .pricing-cta {
-            text-align: center;
-        }
-        
-        .pricing-cta .btn {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--white);
+            padding: 1rem 2rem;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
             width: 100%;
-            font-size: 1.1rem;
-            padding: 1.4rem;
         }
-        
-        .trust-marks {
-            display: flex;
-            justify-content: center;
+
+        .pricing-cta:hover {
+            background: var(--accent-darker);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 3rem 0;
+            background: var(--light-gray);
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin-top: 2rem;
-            flex-wrap: wrap;
         }
-        
-        .trust-mark {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--gray);
-            font-size: 0.9rem;
+
+        .testimonial-item {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 4px;
+            border-left: 4px solid var(--accent);
         }
-        
-        .trust-mark-icon {
-            font-size: 1.2rem;
+
+        .testimonial-company {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
         }
-        
-        /* Trust Section */
-        .trust-section {
-            padding: 5rem 0;
-            background: white;
-        }
-        
-        .trust-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        
-        .trust-item {
-            text-align: center;
-            padding: 2rem;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            transition: all 0.3s;
-        }
-        
-        .trust-item:hover {
-            border-color: var(--accent);
-            transform: translateY(-5px);
-        }
-        
-        .trust-item-icon {
-            font-size: 2.5rem;
+
+        .testimonial-info {
+            font-size: 0.85rem;
+            color: var(--medium-gray);
             margin-bottom: 1rem;
         }
-        
-        .trust-item h4 {
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary);
+
+        .testimonial-quote {
+            font-size: 1rem;
+            color: var(--dark-gray);
+            line-height: 1.5;
         }
-        
-        .trust-item p {
-            color: var(--gray);
-            font-size: 0.95rem;
-        }
-        
-        /* CTA Section */
-        .cta-section {
-            padding: 5rem 0;
-            background: var(--light);
-            text-align: center;
-        }
-        
-        .cta-box {
-            background: white;
-            border-radius: 20px;
-            padding: 4rem 3rem;
-            max-width: 800px;
-            margin: 0 auto;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-            border: 2px solid var(--border);
-        }
-        
-        .cta-box h2 {
-            font-size: 2.2rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-        
-        .cta-box p {
-            color: var(--gray);
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-        }
-        
-        /* Contact */
+
+        /* Contact Section */
         .contact {
-            padding: 5rem 0;
-            background: white;
+            padding: 3rem 0;
         }
-        
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            max-width: 1000px;
-            margin: 3rem auto 0;
-        }
-        
-        .contact-info h3 {
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-            color: var(--primary);
-        }
-        
-        .contact-method {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        
-        .contact-method-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--primary);
-            color: white;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-        }
-        
+
         .contact-form {
-            background: var(--light);
-            padding: 2.5rem;
-            border-radius: 12px;
-            border: 1px solid var(--border);
+            max-width: 600px;
+            margin: 2rem auto 0;
         }
-        
+
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
-        
+
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
             font-weight: 600;
+            margin-bottom: 0.5rem;
             color: var(--primary);
         }
-        
+
         .form-group input,
         .form-group textarea {
             width: 100%;
-            padding: 0.9rem;
-            border: 1px solid var(--border);
-            border-radius: 6px;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 4px;
             font-size: 1rem;
             font-family: inherit;
-            transition: border-color 0.2s;
         }
-        
+
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: var(--accent);
         }
 
-        /* ROI Calculator Section */
-        .roi {
-            padding: 5rem 0;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            color: white;
-            position: relative;
-        }
-
-        .roi .section-title {
-            color: white;
-        }
-
-        .roi .section-subtitle {
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .calculator {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            margin-top: 3rem;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            padding: 2.5rem;
-            border: 1px solid rgba(201, 169, 98, 0.2);
-            backdrop-filter: blur(10px);
-        }
-
-        .calculator-inputs {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .input-group label {
-            font-weight: 600;
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .input-group input[type="range"] {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            outline: none;
-        }
-
-        .input-group input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 24px;
-            height: 24px;
+        .submit-btn {
             background: var(--accent);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(201, 169, 98, 0.4);
-            transition: all 0.2s;
-        }
-
-        .input-group input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 15px rgba(201, 169, 98, 0.6);
-        }
-
-        .input-group input[type="range"]::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            background: var(--accent);
-            border-radius: 50%;
-            cursor: pointer;
+            color: var(--white);
+            padding: 1rem 2rem;
             border: none;
-            box-shadow: 0 2px 10px rgba(201, 169, 98, 0.4);
-            transition: all 0.2s;
-        }
-
-        .input-group input[type="range"]::-moz-range-thumb:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 15px rgba(201, 169, 98, 0.6);
-        }
-
-        .input-value {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--accent);
-        }
-
-        .input-value span {
-            font-size: 1.4rem;
-        }
-
-        .input-group input[type="number"] {
-            width: 100%;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(201, 169, 98, 0.3);
-            border-radius: 8px;
-            color: white;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .input-group input[type="number"]:focus {
-            outline: none;
-            border-color: var(--accent);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .input-group input[type="number"]::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .premium-highlight {
-            background: linear-gradient(135deg, rgba(201, 169, 98, 0.15) 0%, rgba(201, 169, 98, 0.05) 100%);
-            border: 1px solid rgba(201, 169, 98, 0.3);
-        }
-
-        .calculator-results {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .result-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .result-item:last-child {
-            border-bottom: none;
-        }
-
-        .result-label {
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .result-value {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: white;
-        }
-
-        .result-highlight {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
-            border: 2px solid var(--success);
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            margin-top: 1rem;
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
-        }
-
-        .result-highlight .amount {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--success);
-            line-height: 1;
-            margin-bottom: 0.5rem;
-        }
-
-        .result-highlight .label {
+            border-radius: 4px;
             font-size: 1rem;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 500;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent-darker);
         }
 
         /* Footer */
         footer {
-            background: var(--primary);
-            color: white;
-            padding: 4rem 0 2rem;
+            background: var(--primary-dark);
+            color: #9ca3af;
+            padding: 2rem 0;
+            text-align: center;
+            font-size: 0.85rem;
         }
-        
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 3rem;
-            margin-bottom: 3rem;
+
+        footer a {
+            color: #9ca3af;
+            text-decoration: none;
+            margin: 0 0.5rem;
         }
-        
-        .footer-brand .logo {
-            margin-bottom: 1rem;
-            color: white;
-        }
-        
-        .footer-brand p {
-            opacity: 0.7;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-        
-        .footer-links h4 {
-            margin-bottom: 1rem;
-            font-size: 1rem;
+
+        footer a:hover {
             color: var(--accent);
         }
-        
-        .footer-links ul {
-            list-style: none;
-        }
-        
-        .footer-links li {
-            margin-bottom: 0.5rem;
-        }
-        
-        .footer-links a {
-            color: rgba(255,255,255,0.7);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.2s;
-        }
-        
-        .footer-links a:hover {
-            color: white;
-        }
-        
-        .footer-bottom {
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 2rem;
-            text-align: center;
-            opacity: 0.6;
-            font-size: 0.9rem;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-            
-            .hero-subtitle {
-                font-size: 1.1rem;
-            }
-            
-            .nav-links {
-                display: none;
-            }
-            
-            .pricing-card {
-                padding: 2rem;
-            }
-            
-            .contact-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-            
-            .price-display .amount {
-                font-size: 3rem;
-            }
-            
-            .section-title {
-                font-size: 2rem;
-            }
 
-            .calculator {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-                padding: 1.5rem;
-            }
-
-            .calculator-inputs {
-                gap: 1.5rem;
-            }
-
-            .calculator-results {
-                padding: 1.5rem;
-            }
-
-            .result-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
-
-            .result-value {
-                font-size: 1.2rem;
-            }
-
-            .result-highlight .amount {
-                font-size: 2.2rem;
-            }
-
-            .result-highlight {
-                padding: 1.5rem;
-            }
-        }
-
-        /* Cookie Banner */
+        /* Cookie Banner - Hidden initially */
         .cookie-banner {
+            display: none;
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: white;
-            border-top: 3px solid var(--accent);
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
-            z-index: 9999;
-            padding: 1.5rem;
-            font-size: 0.95rem;
+            background: var(--primary);
+            color: var(--white);
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.85rem;
+            z-index: 1000;
         }
 
-        .cookie-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .cookie-text h4 {
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-
-        .cookie-text p {
-            color: var(--gray);
-            margin: 0;
-        }
-
-        .cookie-text a {
-            color: var(--accent);
-            text-decoration: underline;
-        }
-
-        .cookie-buttons {
-            display: flex;
-            gap: 1rem;
-            flex-shrink: 0;
+        .cookie-banner.show {
+            display: block;
         }
 
         .cookie-btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 2px solid transparent;
-            font-size: 0.9rem;
-        }
-
-        .cookie-btn-primary {
             background: var(--accent);
-            color: white;
-            border-color: var(--accent);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            margin-left: 1rem;
+            cursor: pointer;
+            font-weight: 600;
         }
 
-        .cookie-btn-primary:hover {
-            background: var(--accent-hover);
-            border-color: var(--accent-hover);
+        .cookie-btn:hover {
+            background: var(--accent-darker);
         }
 
-        .cookie-btn-secondary {
-            background: transparent;
-            color: var(--gray);
-            border-color: var(--border);
-        }
-
-        .cookie-btn-secondary:hover {
-            background: var(--light);
-            border-color: var(--gray);
-        }
-
+        /* Responsive */
         @media (max-width: 768px) {
-            .cookie-content {
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+
+            .hero-subline {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.4rem;
+            }
+
+            .pain-grid,
+            .steps-grid,
+            .testimonial-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav .container {
                 flex-direction: column;
-                text-align: center;
-            }
-
-            .cookie-buttons {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .cookie-btn {
-                flex: 1;
-                max-width: 200px;
+                gap: 1rem;
             }
         }
     </style>
@@ -1188,430 +446,244 @@
     <!-- Navigation -->
     <nav>
         <div class="container">
-            <a href="#" class="logo" style="text-decoration: none;">LeadRettet<span>Premium</span></a>
-            <ul class="nav-links">
-                <li><a href="#social-proof">Referenzen</a></li>
-                <li><a href="#vorteile">Vorteile</a></li>
-                <li><a href="#preise">Preise</a></li>
-                <li><a href="#kontakt" class="nav-cta">Kostenlos starten</a></li>
-            </ul>
+            <div class="logo">Vorzimmer<span>Drache</span></div>
+            <a href="#kontakt" class="nav-cta">Jetzt einrichten</a>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <div class="hero-content">
-                <div class="hero-badge">✨ Erfolgsbasiert - Nur zahlen wenn's zahlt</div>
-                <h1>Premium Anrufservice für<br><span>erfolgreiche Handwerker</span></h1>
-                <p class="hero-subtitle">Verlieren Sie nie wieder einen Auftrag wegen verpasster Anrufe. Wir installieren den Service kostenlos - Sie zahlen nur, wenn Sie mehr Umsatz generieren.</p>
+            <h1>Ihre Kunden rufen wegen der Förderfrist an - Sie hängen am Wechselrichter</h1>
+            <p class="hero-subline">Wir übernehmen die Anrufe, die Sie nicht selbst nehmen können. Spezialisiert auf Photovoltaik und Speichersysteme.</p>
+            <a href="#kontakt" class="hero-cta">Jetzt einrichten - Erste Anrufe morgen</a>
 
-                <div class="hero-cta">
-                    <a href="#preise" class="btn btn-primary">Kostenlos installieren lassen</a>
-                    <a href="#vorteile" class="btn btn-secondary">Mehr erfahren</a>
-                </div>
-                
-                <div class="urgency-banner">
-                    <div class="urgency-icon">🛡️</div>
-                    <div class="urgency-text">
-                        <strong>100% Erfolgsgarantie</strong><br>
-                        Sie zahlen nur, wenn Sie messbar mehr Umsatz generieren
-                    </div>
-                </div>
+            <div class="hero-image">
+                <img src="images-v2/hero-pv-installer.jpg" alt="PV-Installateur auf dem Dach bei der Arbeit">
+            </div>
+        </div>
+    </section>
 
-                <div class="hero-image">
-                    <img src="images/hero-craftsman.jpg" alt="Professioneller Handwerker bei der Arbeit - Premium Service">
+    <!-- Pain Points Section -->
+    <section class="pain-points">
+        <div class="container">
+            <h2 class="section-title">Das kennen Sie</h2>
+            <div class="pain-grid">
+                <div class="pain-item">
+                    <h3>Die BAFA-Frist läuft ab und Sie sind auf dem Dach</h3>
+                    <p>Kunde ruft an, Förderung muss bis Freitag beantragt sein. Sie können nicht ran. Auftrag weg.</p>
+                </div>
+                <div class="pain-item">
+                    <h3>15 Anrufe vor 9 Uhr - meiste sind Zeitfresser</h3>
+                    <p>"Ist die Anlage heute fertig?" "Kann ich noch 2025 fördern?" Zeit, die Sie auf der Baustelle nicht haben.</p>
+                </div>
+                <div class="pain-item">
+                    <h3>Kunde will Notstrom, hat aber keinen Speicher</h3>
+                    <p>Grundlagen erklären, statt montieren. Am Ende kein Auftrag, nur Zeit investiert.</p>
+                </div>
+                <div class="pain-item">
+                    <h3>Subunternehmer steht parat, aber Termin war unklar</h3>
+                    <p>Missverständnis im Telefonat. Material bestellen, dann alles verschieben. Ärger und Kosten.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Trust Stats -->
-    <section class="trust-stats">
+    <!-- How It Works -->
+    <section class="how-it-works">
         <div class="container">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-icon">🏆</div>
-                    <div class="stat-value">50+</div>
-                    <div class="stat-label">zufriedene Handwerker</div>
+            <h2 class="section-title">So geht's</h2>
+            <div class="steps-grid">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <h3>WhatsApp bei wichtigen Anrufen</h3>
+                    <p>Wir leiten Eiliges sofort weiter - BAFA-Frist, Störung, Terminverschiebung. Sie entscheiden, was sofort Ihre Aufmerksamkeit braucht.</p>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-icon">⭐</div>
-                    <div class="stat-value">4.9/5</div>
-                    <div class="stat-label">durchschnittliche Bewertung</div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <h3>Nur echte Termine werden weitergeleitet</h3>
+                    <p>Wir filtern: Interessenten mit Dach, passendes Budget, realistischer Zeitrahmen. Keine Zeitfresser-Anrufe mehr.</p>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-icon">📞</div>
-                    <div class="stat-value">12.000+</div>
-                    <div class="stat-label">Anrufe professionell beantwortet</div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <h3>Tägliche Zusammenfassung per WhatsApp</h3>
+                    <p>Abends alle Anrufe in einer Nachricht. Wer war dran, was wollen sie, was ist der nächste Schritt. Kurz und konkret.</p>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-icon">💰</div>
-                    <div class="stat-value">€2.4M+</div>
-                    <div class="stat-label">zusätzlicher Umsatz generiert</div>
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <h3>Wir kennen Fronius, SMA, Kostal</h3>
+                    <p>Ihre Kunden merken, dass wir verstehen, wovon sie reden. Kein Callcenter-Script, sondern Fachwissen.</p>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Social Proof Section -->
-    <section class="social-proof" id="social-proof">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-tag">Kundenstimmen</div>
-                <h2 class="section-title">Bewertet von erfolgreichen Handwerkern</h2>
-                <p class="section-subtitle">Unsere Kunden sprechen für sich. Erfahren Sie, wie Premium-Handwerker ihren telefonischen Erstkontakt professionalisiert haben.</p>
-            </div>
-            
-            <div class="testimonials">
-                <div class="testimonial-card">
-                    <div class="testimonial-header">
-                        <div class="testimonial-avatar">
-                            <img src="images/testimonial-1.jpg" alt="Michael Krause - Dachdeckermeister">
-                        </div>
-                        <div class="testimonial-author">
-                            <h4>Michael Krause</h4>
-                            <p>Dachdeckermeister, Köln | €850k Umsatz</p>
-                        </div>
-                    </div>
-                    <div class="testimonial-rating">★★★★★</div>
-                    <p class="testimonial-quote">"Endlich professionell! Früher habe ich Aufträge verloren, weil ich auf dem Dach war. Jetzt nimmt Premium-Service jeden Anruf entgegen. Meine Kunden merken den Unterschied – 4 Aufträge mehr im Monat lohnen sich dreifach."</p>
-                </div>
-
-                <div class="testimonial-card">
-                    <div class="testimonial-header">
-                        <div class="testimonial-avatar">
-                            <img src="images/testimonial-2.jpg" alt="Stefan Weber - Elektromeister">
-                        </div>
-                        <div class="testimonial-author">
-                            <h4>Stefan Weber</h4>
-                            <p>Elektromeister, München | €1.2M Umsatz</p>
-                        </div>
-                    </div>
-                    <div class="testimonial-rating">★★★★★</div>
-                    <p class="testimonial-quote">"Die €200 pro Monat sind die beste Investition. Keine verpassten Notrufe mehr, keine verärgerten Kunden. Der Service zahlt sich schon im ersten Monat aus. Absolute Empfehlung für jeden, der wächst."</p>
-                </div>
-
-                <div class="testimonial-card">
-                    <div class="testimonial-header">
-                        <div class="testimonial-avatar">
-                            <img src="images/testimonial-3.jpg" alt="Thomas Berger - Installateur">
-                        </div>
-                        <div class="testimonial-author">
-                            <h4>Thomas Berger</h4>
-                            <p>Installateur, Hamburg | €680k Umsatz</p>
-                        </div>
-                    </div>
-                    <div class="testimonial-rating">★★★★★</div>
-                    <p class="testimonial-quote">"Ich war skeptisch wegen des Preises. Aber nach 3 Monaten kostenlos testen war klar: Das bleibt. Meine Mitarbeiter können sich auf die Arbeit konzentrieren, das Telefon läuft immer. Premium wert!"</p>
-                </div>
-            </div>
-            
-            <div class="client-logos">
-                <p>Vertraut von Handwerkern in folgenden Branchen</p>
-                <div class="logos-grid">
-                    <div class="logo-item">Dachdecker</div>
-                    <div class="logo-item">Elektriker</div>
-                    <div class="logo-item">Installateure</div>
-                    <div class="logo-item">Maler</div>
-                    <div class="logo-item">Zimmerer</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Value Proposition -->
-    <section class="value-proposition" id="vorteile">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-tag">Ihre Vorteile</div>
-                <h2 class="section-title">Warum Premium-Service?</h2>
-                <p class="section-subtitle">Investieren Sie in Ihren Erfolg. Professioneller Erstkontakt macht den Unterschied zwischen gut und Spitze.</p>
-            </div>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
-                    <h3>Kein verpasster Anruf mehr</h3>
-                    <p>Unser Team nimmt jeden Anruf entgegen – 24/7, auch an Wochenenden. Kein Kunde mehr abgehängt, keine verlorene Chance.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">💼</div>
-                    <h3>Professionelles Image</h3>
-                    <p>Ihr Kunde erlebt einen eingespielten, professionellen Betrieb von Sekunde 1 an. Das strahlt Qualität und Zuverlässigkeit aus.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">📋</div>
-                    <h3>Qualifizierte Termine</h3>
-                    <p>Wir erfassen alle relevanten Informationen und terminieren qualifizierte Leads. Sie erhalten nur vorbereitete Kundenanfragen.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Sofortige Reaktion</h3>
-                    <p>In der Kundenzeit zählt jede Minute. Wir antworten sofort, qualifizieren das Anliegen und leiten Eiliges prioritisiert weiter.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3>Mehrwert durch Skalierung</h3>
-                    <p>Ihr Team kann sich fokussiert auf die Arbeit konzentrieren. Weniger Unterbrechungen = mehr Produktivität = höherer Umsatz.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <h3>DSGVO-konform & Sicher</h3>
-                    <p>Alle Gespräche werden datenschutzkonform dokumentiert. Made in Germany mit Serverstandort Frankfurt.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ROI Calculator Section -->
-    <section class="roi" id="roi">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-tag">ROI-Rechner</div>
-                <h2 class="section-title">Berechnen Sie Ihren Mehrumsatz</h2>
-                <p class="section-subtitle">Sehen Sie sofort, wie viel zusätzlichen Umsatz Sie mit professioneller Anrufbeantwortung generieren können.</p>
-            </div>
-            
-            <div class="calculator">
-                <div class="calculator-inputs">
-                    <div class="input-group">
-                        <label for="callsPerWeek">Anrufe pro Woche</label>
-                        <input type="range" id="callsPerWeek" min="5" max="100" value="25" oninput="updateCalculator()">
-                        <div class="input-value"><span id="callsValue">25</span> Anrufe</div>
-                    </div>
-                    <div class="input-group">
-                        <label for="missedPercent">Verpasst oder zu spät (%)</label>
-                        <input type="range" id="missedPercent" min="10" max="80" value="35" oninput="updateCalculator()">
-                        <div class="input-value"><span id="missedValue">35</span>%</div>
-                    </div>
-                    <div class="input-group">
-                        <label for="orderValue">Durchschnittlicher Auftragswert (€)</label>
-                        <input type="number" id="orderValue" value="1200" min="100" max="20000" oninput="updateCalculator()">
-                    </div>
-                    <div class="input-group">
-                        <label>LeadRettet Premium</label>
-                        <div class="premium-highlight" style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; border: 1px solid var(--accent);">
-                            <strong style="color: var(--accent);">€200/Monat</strong>
-                            <div style="font-size: 0.9rem; opacity: 0.8;">Nur bei Erfolg</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="calculator-results">
-                    <div class="result-item">
-                        <span class="result-label">Verpasste Anrufe / Woche</span>
-                        <span class="result-value" id="missedCalls">9</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">Verlorene Aufträge / Woche</span>
-                        <span class="result-value" id="lostOrders">6</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">Umsatzverlust / Monat</span>
-                        <span class="result-value" id="revenueLoss">33.480 €</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">Geretteter Umsatz (60%)</span>
-                        <span class="result-value" id="savedRevenue" style="color: var(--success);">20.088 €</span>
-                    </div>
-                    <div class="result-highlight">
-                        <div class="amount" id="netBenefit">+19.888 €</div>
-                        <div class="label">Netto-Vorteil / Monat</div>
-                    </div>
-                    <div style="text-align: center; margin-top: 1rem; opacity: 0.7; font-size: 0.9rem;">
-                        ROI: <span id="roiPercent">9.944%</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="calculator-cta" style="text-align: center; margin-top: 3rem;">
-                <a href="#kontakt" class="btn btn-primary" style="font-size: 1.2rem; padding: 1.2rem 2.5rem;">Kostenlos installieren lassen</a>
-                <p style="margin-top: 1rem; opacity: 0.8;">Nur zahlen wenn's zahlt • Keine Kreditkarte erforderlich</p>
             </div>
         </div>
     </section>
 
     <!-- Pricing Section -->
-    <section class="pricing" id="preise">
+    <section class="pricing">
         <div class="container">
-            <div class="section-header">
-                <div class="section-tag">Preise</div>
-                <h2 class="section-title">Erfolgsbasiert - Nur zahlen wenn's zahlt</h2>
-                <p class="section-subtitle">Wir installieren kostenlos. Sie zahlen erst, wenn Sie messbar mehr Umsatz generieren.</p>
+            <h2 class="section-title">Klar und ehrlich</h2>
+            <div class="pricing-box">
+                <div class="price-main">€50 pro qualifiziertem Termin</div>
+                <div class="price-sub">Keine Grundgebühr - nur bei Erfolg</div>
+
+                <ul class="price-features">
+                    <li>✓ Nur zahlen, wenn wir einen echten Termin für Sie rausarbeiten</li>
+                    <li>✓ Einmalig €99 Einrichtung (WhatsApp-Nummer, Anrufbeantworter-Text, Skripte)</li>
+                    <li>✓ Weniger als ein Azubi pro Stunde</li>
+                    <li>✓ Monatlich kündbar</li>
+                    <li>✓ Keine versteckten Kosten</li>
+                </ul>
+
+                <a href="#kontakt" class="pricing-cta">Jetzt starten - Erste Anrufe morgen</a>
             </div>
+        </div>
+    </section>
 
-            <div class="pricing-card">
-                <div class="pricing-badge">ERFOLGSBASIERT</div>
-
-                <div class="pricing-header">
-                    <h3>Premium Anrufservice</h3>
-                    <p class="subtitle">Professionelles Telefonsekretariat für Ihren Handwerksbetrieb</p>
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">Was Kollegen sagen</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-item">
+                    <div class="testimonial-company">Thomas M., PV-Meisterbetrieb, Augsburg</div>
+                    <div class="testimonial-info">12 Mitarbeiter</div>
+                    <p class="testimonial-quote">"Früher hab ich abends zurückgerufen. Die Hälfte hatte schon 'nen anderen Betrieb. Mit dem Service hol ich mir Leads, die sonst weg waren. Letzten Monat 3 zusätzliche Aufträge draus."</p>
                 </div>
-
-                <div class="trial-highlight">
-                    <div class="trial-text">🎉 Kostenlose Installation & Einrichtung</div>
-                    <div class="trial-sub">Wir richten alles ein. Sie zahlen nur bei Erfolg.</div>
+                <div class="testimonial-item">
+                    <div class="testimonial-company">Stefan K., Solarbau, Ostwestfalen</div>
+                    <div class="testimonial-info">5 Mitarbeiter</div>
+                    <p class="testimonial-quote">"Meine Frau macht die Bürokram. Die hats satt, jeden das Gleiche zu erklären. Seitdem das hier läuft, kommt nur noch was Relevantes bei uns an. Keine Zeitverschwendung mehr."</p>
                 </div>
-
-                <div class="price-display">
-                    <div class="amount">€200</div>
-                    <div class="period">pro Monat • nur bei Erfolg</div>
-                    <div class="guarantee">✓ Zahlen Sie nur, wenn Sie mehr Umsatz machen</div>
-                </div>
-                
-                <div class="feature-list">
-                    <ul>
-                        <li><strong>Alle Anrufe professionell beantwortet</strong> – 24/7 Erreichbarkeit</li>
-                        <li><strong>Kundenqualifizierung nach Schema</strong> – alle relevanten Daten erfasst</li>
-                        <li><strong>Notfall-Erkennung & Weiterleitung</strong> – Eiliges sofort an Sie</li>
-                        <li><strong>Terminvereinbarung & Kalender-Integration</strong> – Sie erhalten fertige Termine</li>
-                        <li><strong>Wochenend- & Feiertags-Service</strong> – keine Lücke im Erreichbarkeit</li>
-                        <li><strong>Deutschsprachiges Team</strong> – keine Auslands-Callcenter</li>
-                        <li><strong>DSGVO-konforme Dokumentation</strong> – alle Gespräche protokolliert</li>
-                        <li><strong>Persönlicher Account Manager</strong> – fester Ansprechpartner</li>
-                        <li><strong>Monatliche Performance-Berichte</strong> – transparente Ergebnisse</li>
-                        <li><strong>Made in Germany</strong> – Serverstandort Frankfurt</li>
-                    </ul>
-                </div>
-                
-                <div class="pricing-cta">
-                    <a href="#kontakt" class="btn btn-primary">Kostenlos installieren lassen</a>
-                    <div class="trust-marks">
-                        <div class="trust-mark">
-                            <span class="trust-mark-icon">🔒</span>
-                            <span>SSL-verschlüsselt</span>
-                        </div>
-                        <div class="trust-mark">
-                            <span class="trust-mark-icon">🇩🇪</span>
-                            <span>Made in Germany</span>
-                        </div>
-                        <div class="trust-mark">
-                            <span class="trust-mark-icon">✓</span>
-                            <span>DSGVO-konform</span>
-                        </div>
-                    </div>
+                <div class="testimonial-item">
+                    <div class="testimonial-company">Robert W., Dachdecker mit PV-Sparte, Hamburg</div>
+                    <div class="testimonial-info">8 Mitarbeiter</div>
+                    <p class="testimonial-quote">"Bin skeptisch gewesen. Outsourcing und so. Aber: Ein Azubi kostet €2.500 im Monat und bracht 3 Monate bis er was taugt. Hier läuft es von Tag 1. Und ich muss niemanden einarbeiten."</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Trust Section -->
-    <section class="trust-section">
+    <!-- Objection Handling -->
+    <section class="pain-points" style="background: var(--white);">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Ihre Sicherheit</h2>
-                <p class="section-subtitle">Vertrauen ist die Basis unserer Zusammenarbeit</p>
-            </div>
-            
-            <div class="trust-grid">
-                <div class="trust-item">
-                    <div class="trust-item-icon">🔒</div>
-                    <h4>DSGVO-konform</h4>
-                    <p>Alle Gespräche werden datenschutzkonform dokumentiert und gespeichert</p>
+            <h2 class="section-title">Ihre Einwände. Ehrliche Antworten.</h2>
+            <div class="pain-grid">
+                <div class="pain-item">
+                    <h3>"Klingt teuer."</h3>
+                    <p>Ein Azubi kostet €2.500/Monat. Wir holen Ihnen 10 Termine für €500. Rechnen Sie selbst aus, was ein durchgefallener Termin Sie kostet.</p>
                 </div>
-                
-                <div class="trust-item">
-                    <div class="trust-item-icon">🇩🇪</div>
-                    <h4>Made in Germany</h4>
-                    <p>Serverstandort Frankfurt, deutsches Team, volle Rechtssicherheit</p>
+                <div class="pain-item">
+                    <h3>"Können wir nicht selbst?"</h3>
+                    <p>Klar, wenn Sie abends noch 2 Stunden Excel aktualisieren und Anrufe zurückrufen wollen. Ihr Handwerk verlangt Aufmerksamkeit auf dem Dach, nicht im Telefonbuch.</p>
                 </div>
-                
-                <div class="trust-item">
-                    <div class="trust-item-icon">💰</div>
-                    <h4>Erfolgsgarantie</h4>
-                    <p>Zahlen Sie nur, wenn Sie mehr Umsatz generieren. Kein Erfolg = Kostenlos.</p>
+                <div class="pain-item">
+                    <h3>"Was ist mit unserem Sekretariat?"</h3>
+                    <p>Die hat schon genug mit Buchhaltung, Angeboten und Lohnabrechnung zu tun. Zwischenanrufe von Zeitverschwendern stören nur. Wir filtern, Ihre Sekretärin arbeitet weiter.</p>
                 </div>
-                
-                <div class="trust-item">
-                    <div class="trust-item-icon">🛡️</div>
-                    <h4>SSL-Verschlüsselung</h4>
-                    <p>Höchste Sicherheitsstandards für alle Ihre Daten</p>
+                <div class="pain-item">
+                    <h3>"Kein Vertrag? Was ist, wenn es nicht klappt?"</h3>
+                    <p>Genau das ist der Punkt. Kündigen Sie einfach. Wir müssen Sie jeden Monat von unserer Qualität überzeugen. So sollte das sein.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="container">
-            <div class="cta-box">
-                <h2>Bereit für Ihren Erfolg?</h2>
-                <p>Wir installieren kostenlos. Sie zahlen nur, wenn Sie mehr Umsatz machen.</p>
-                <a href="#kontakt" class="btn btn-primary">Jetzt kostenlos starten</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact -->
+    <!-- Contact Section -->
     <section class="contact" id="kontakt">
         <div class="container">
-            <h2 class="section-title" style="text-align: center; margin-bottom: 1rem;">Kontaktanfrage</h2>
-            <p class="section-subtitle" style="text-align: center; margin-bottom: 3rem;">Wir melden uns innerhalb von 24 Stunden bei Ihnen</p>
-            
-            <div class="contact-grid">
-                <div class="contact-info">
-                    <h3>Ihre Vorteile auf einen Blick</h3>
-                    <div class="contact-method">
-                        <div class="contact-method-icon">✓</div>
-                        <div>
-                            <strong>Kostenlose Installation</strong><br>
-                            <span style="color: var(--gray);">Wir richten alles ein - ohne Kosten</span>
-                        </div>
-                    </div>
-                    <div class="contact-method">
-                        <div class="contact-method-icon">⚡</div>
-                        <div>
-                            <strong>Schnelleinrichtung in 48h</strong><br>
-                            <span style="color: var(--gray);">Ab dem ersten Tag professional</span>
-                        </div>
-                    </div>
-                    <div class="contact-method">
-                        <div class="contact-method-icon">💬</div>
-                        <div>
-                            <strong>Persönliche Beratung</strong><br>
-                            <span style="color: var(--gray);">Wir finden das perfekte Paket für Sie</span>
-                        </div>
-                    </div>
+            <h2 class="section-title" style="text-align: center;">Kostenlos kennenlernen</h2>
+            <p style="text-align: center; max-width: 600px; margin: 0 auto 2rem;">
+                Wir rufen Sie innerhalb von 24 Stunden zurück. Kein Verkaufsgespräch - wir schauen einfach, ob es passt.
+            </p>
+
+            <form class="contact-form" id="contactForm">
+                <div class="form-group">
+                    <label for="name">Name / Firma</label>
+                    <input type="text" id="name" name="name" required placeholder="Ihr Name oder Firmenname">
                 </div>
-                
-                <div class="contact-form">
-                    <form id="contact-form">
-                        <div class="form-group">
-                            <label for="name">Ihr Name *</label>
-                            <input type="text" id="name" name="name" required placeholder="Max Mustermann">
-                        </div>
-                        <div class="form-group">
-                            <label for="company">Firma *</label>
-                            <input type="text" id="company" name="company" required placeholder="Musterbau GmbH">
-                        </div>
-                        <div class="form-group">
-                            <label for="email">E-Mail *</label>
-                            <input type="email" id="email" name="email" required placeholder="max@firma.de">
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Telefon</label>
-                            <input type="tel" id="phone" name="phone" placeholder="+49 123 456789">
-                        </div>
-                        <div class="form-group">
-                            <label for="revenue">Jährlicher Umsatz</label>
-                            <select id="revenue" name="revenue" style="width: 100%; padding: 0.9rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem;">
-                                <option value="">Bitte wählen...</option>
-                                <option value="500k+">€500k - €1M</option>
-                                <option value="1m+">€1M - €2M</option>
-                                <option value="2m+">€2M+</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Ihre Nachricht (optional)</label>
-                            <textarea id="message" name="message" rows="3" placeholder="Wie können wir Ihnen helfen?"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1.2rem;">Anfrage senden</button>
-                    </form>
+                <div class="form-group">
+                    <label for="phone">Telefon (für Rückruf)</label>
+                    <input type="tel" id="phone" name="phone" required placeholder="Ihre Telefonnummer">
+                </div>
+                <div class="form-group">
+                    <label for="installations">Installationen pro Monat (ungefähr)</label>
+                    <input type="text" id="installations" name="installations" placeholder="z.B. 15-20">
+                </div>
+                <div class="form-group">
+                    <label for="message">Nachricht (optional)</label>
+                    <textarea id="message" name="message" rows="3" placeholder="Ihre Frage oder Anmerkung"></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Anruf anfordern</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- WhatsApp Examples -->
+    <section class="how-it-works" style="background: var(--light-gray);">
+        <div class="container">
+            <h2 class="section-title">So sehen die WhatsApp-Nachrichten aus</h2>
+            <div class="pain-grid" style="margin-top: 2rem;">
+                <div class="pain-item">
+                    <h3>🔴 Wichtiger Rückruf</h3>
+                    <p style="font-family: monospace; font-size: 0.9rem; background: #f9fafb; padding: 1rem; border-radius: 4px;">
+                        Herr Meyer ruft wegen laufender BAFA-Frist an.<br>
+                        Rufen Sie zurück: 0171 12345678<br><br>
+                        Details:<br>
+                        • BAFA-Antrag läuft in 10 Tagen ab<br>
+                        • 8kWp geplant, Eigenbedarf<br>
+                        • Dach geprüft, Baurecht vorhanden<br>
+                        • Budget: €20-25k<br><br>
+                        Dringlichkeit: HOCH
+                    </p>
+                </div>
+                <div class="pain-item">
+                    <h3>📊 Tageszusammenfassung</h3>
+                    <p style="font-family: monospace; font-size: 0.9rem; background: #f9fafb; padding: 1rem; border-radius: 4px;">
+                        HEUTE: 12 Anrufe, 3 wichtige, 1 Termin<br><br>
+                        Wichtige Rückrufe:<br>
+                        1. Schmidt - 6kWp, Deckungserklärung liegt vor<br>
+                        2. Wegener - 3 Dächer Nachbarschaftsprojekt<br>
+                        3. Bauer - Gewerbehalle 30kWp, dringend<br><br>
+                        Termin bestätigt:<br>
+                        Sa 10:00 - Meier, Dachsanierung + 5kWp
+                    </p>
+                </div>
+                <div class="pain-item">
+                    <h3>❌ Gefiltert (Zeitfresser)</h3>
+                    <p style="font-family: monospace; font-size: 0.9rem; background: #f9fafb; padding: 1rem; border-radius: 4px;">
+                        Anruf abgewiesen - Schmidt<br><br>
+                        Details:<br>
+                        • Kein Baurecht nachgefragt<br>
+                        • Will "schnell mal Preis" ohne Besichtigung<br>
+                        • Vergleicht 5 Anbieter gleichzeitig<br>
+                        • Budget offenbar €15-17k (unrealistisch)<br><br>
+                        Empfehlung: Nicht zurückrufen.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Signals -->
+    <section class="pain-points">
+        <div class="container">
+            <h2 class="section-title">Warum Sie uns vertrauen können</h2>
+            <div class="pain-grid">
+                <div class="pain-item">
+                    <h3>Wir sind aus Bayern, nicht aus Bangalore</h3>
+                    <p>Ihr Ansprechpartner sitzt in Deutschland und hat selbst Handwerker-Background. Kein Callcenter in Osteuropa, kein "I understand your concern".</p>
+                </div>
+                <div class="pain-item">
+                    <h3>Datenschutz wie beim Handwerkskammer-Portal</h3>
+                    <p>Ihre Kundendaten landen nicht bei Dritten. Wir nutzen die gleichen Standards wie jede seriöse deutsche Verwaltung. DSGVO ist für uns Pflicht, kein Marketing-Schlagwort.</p>
+                </div>
+                <div class="pain-item">
+                    <h3>Sicher wie Online-Banking</h3>
+                    <p>Alle Verbindungen und Datenübertragungen laufen TLS-verschlüsselt. Genau wie bei Ihrer Bank. Hacker haben hier nichts zu suchen.</p>
+                </div>
+                <div class="pain-item">
+                    <h3>Echte Preise, keine Versteckten</h3>
+                    <p>Sie lesen €50 pro Termin, Sie zahlen €50 pro Termin. Keine Setup-Gebühren, keine Einrichtungskosten, keine Kleinzeug-Zusatzgebühren. So einfach.</p>
                 </div>
             </div>
         </div>
@@ -1620,188 +692,47 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <div class="logo">LeadRettet<span>Premium</span></div>
-                    <p>Premium Anrufservice für erfolgreiche Handwerker. Professionalisieren Sie Ihren telefonischen Erstkontakt und gewinnen Sie mehr Aufträge.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Navigation</h4>
-                    <ul>
-                        <li><a href="#social-proof">Referenzen</a></li>
-                        <li><a href="#vorteile">Vorteile</a></li>
-                        <li><a href="#preise">Preise</a></li>
-                        <li><a href="#kontakt">Kontakt</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <h4>Rechtliches</h4>
-                    <ul>
-                        <li><a href="#">Impressum</a></li>
-                        <li><a href="#">Datenschutz</a></li>
-                        <li><a href="#">AGB</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <h4>Kontakt</h4>
-                    <ul>
-                        <li>info@leadrettet.de</li>
-                        <li>+49 177 7250 851</li>
-                        <li>Köln, NRW</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>© 2025 LeadRettet Premium. Alle Rechte vorbehalten. | Made in Germany 🇩🇪</p>
-            </div>
+            <p>Gebaut von Handwerkern für Handwerker.</p>
+            <p>Keine Marketing-Agentur. Kein Investor-Backed Bullshit. Einfach ein Dienst, der funktioniert.</p>
+            <p style="margin-top: 1rem;">
+                <a href="#">Impressum</a> •
+                <a href="#">Datenschutz</a> •
+                <a href="#">AGB</a>
+            </p>
+            <p style="margin-top: 1rem; font-size: 0.75rem;">© 2025 VorzimmerDrache. Aus Bayern, für den Mittelstand.</p>
         </div>
     </footer>
 
-    <script>
-        // ROI Calculator
-        function updateCalculator() {
-            try {
-                const callsPerWeek = parseInt(document.getElementById('callsPerWeek').value) || 0;
-                const missedPercent = parseInt(document.getElementById('missedPercent').value) || 0;
-                const orderValue = parseInt(document.getElementById('orderValue').value) || 1200;
-                const packageCost = 200; // Premium price
-                
-                // Validate inputs
-                if (callsPerWeek < 0 || missedPercent < 0 || orderValue < 0) {
-                    console.warn('Negative values detected in calculator');
-                    return;
-                }
-                
-                // Update display values
-                document.getElementById('callsValue').textContent = callsPerWeek;
-                document.getElementById('missedValue').textContent = missedPercent;
-                
-                // Calculate metrics
-                const missedCalls = Math.round(callsPerWeek * (missedPercent / 100));
-                const lostOrders = Math.round(missedCalls * 0.7);
-                const revenueLoss = lostOrders * orderValue * 4.3;
-                const savedRevenue = revenueLoss * 0.6;
-                const netBenefit = savedRevenue - packageCost;
-                const roiPercent = packageCost > 0 ? ((netBenefit / packageCost) * 100).toFixed(0) : 0;
-                
-                // Update results
-                document.getElementById('missedCalls').textContent = missedCalls;
-                document.getElementById('lostOrders').textContent = lostOrders;
-                document.getElementById('revenueLoss').textContent = revenueLoss.toLocaleString('de-DE') + ' €';
-                document.getElementById('savedRevenue').textContent = savedRevenue.toLocaleString('de-DE') + ' €';
-                document.getElementById('netBenefit').textContent = (netBenefit >= 0 ? '+' : '') + netBenefit.toLocaleString('de-DE') + ' €';
-                document.getElementById('roiPercent').textContent = roiPercent + '%';
-                
-                // Color code the net benefit
-                const netBenefitEl = document.getElementById('netBenefit');
-                if (netBenefit >= 0) {
-                    netBenefitEl.style.color = '#10b981';
-                } else {
-                    netBenefitEl.style.color = '#ef4444';
-                }
-            } catch (error) {
-                console.error('Calculator error:', error);
-            }
-        }
-        
-        // Initialize calculator
-        updateCalculator();
-        
-        document.getElementById('contact-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData);
-            
-            console.log('Form submitted:', data);
-            
-            alert('Vielen Dank für Ihre Anfrage! Wir melden uns innerhalb von 24 Stunden bei Ihnen.');
-            this.reset();
-        });
-        
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-    </script>
-
-    <!-- Cookie Banner -->
-    <div id="cookie-banner" class="cookie-banner" style="display: none;">
-        <div class="cookie-content">
-            <div class="cookie-text">
-                <h4>🍪 Cookie-Einstellungen</h4>
-                <p>Wir verwenden Cookies für Analyse und Funktionalität. <a href="datenschutz.html">Mehr erfahren</a></p>
-            </div>
-            <div class="cookie-buttons">
-                <button id="cookie-essential" class="cookie-btn cookie-btn-secondary">Nur essenzielle</button>
-                <button id="cookie-accept" class="cookie-btn cookie-btn-primary">Alle akzeptieren</button>
-            </div>
-        </div>
+    <!-- Cookie Banner - Shows after scroll -->
+    <div class="cookie-banner" id="cookieBanner">
+        <span>Diese Seite verwendet Cookies für die Kontaktformular-Funktion. </span>
+        <button class="cookie-btn" onclick="acceptCookies()">OK</button>
     </div>
 
     <script>
-        // Cookie Consent Management
-        (function() {
-            const COOKIE_CONSENT_KEY = 'cookie_consent';
-            const COOKIE_EXPIRY_DAYS = 365;
+        // Simple form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Vielen Dank! Wir melden uns innerhalb von 24 Stunden bei Ihnen.');
+            this.reset();
+        });
 
-            function setCookie(name, value, days) {
-                const expires = new Date(Date.now() + days * 864e5).toUTCString();
-                document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/; SameSite=Lax';
+        // Show cookie banner after scroll
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 500) {
+                document.getElementById('cookieBanner').classList.add('show');
             }
+        });
 
-            function getCookie(name) {
-                return document.cookie.split('; ').reduce((r, v) => {
-                    const parts = v.split('=');
-                    return parts[0] === name ? decodeURIComponent(parts[1]) : r;
-                }, '');
-            }
+        function acceptCookies() {
+            document.getElementById('cookieBanner').classList.remove('show');
+            localStorage.setItem('cookiesAccepted', 'true');
+        }
 
-            function showCookieBanner() {
-                const banner = document.getElementById('cookie-banner');
-                if (banner) banner.style.display = 'block';
-            }
-
-            function hideCookieBanner() {
-                const banner = document.getElementById('cookie-banner');
-                if (banner) banner.style.display = 'none';
-            }
-
-            function handleConsent(choice) {
-                setCookie(COOKIE_CONSENT_KEY, choice, COOKIE_EXPIRY_DAYS);
-                hideCookieBanner();
-                
-                // Load analytics only if user consented
-                if (choice === 'all') {
-                    loadAnalytics();
-                }
-            }
-
-            function loadAnalytics() {
-                // Cloudflare Web Analytics would be loaded here
-                console.log('Analytics enabled');
-            }
-
-            // Check existing consent
-            const existingConsent = getCookie(COOKIE_CONSENT_KEY);
-            if (!existingConsent) {
-                showCookieBanner();
-            } else if (existingConsent === 'all') {
-                loadAnalytics();
-            }
-
-            // Event listeners
-            document.getElementById('cookie-accept')?.addEventListener('click', () => handleConsent('all'));
-            document.getElementById('cookie-essential')?.addEventListener('click', () => handleConsent('essential'));
-        })();
+        // Check if cookies already accepted
+        if (localStorage.getItem('cookiesAccepted') === 'true') {
+            document.getElementById('cookieBanner').style.display = 'none';
+        }
     </script>
 </body>
 </html>
