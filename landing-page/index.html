@@ -172,6 +172,102 @@
             margin-bottom: 1rem;
         }
 
+        /* Before/After Section */
+        .before-after-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .comparison-pair {
+            background: var(--white);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .comparison-before {
+            padding: 1.5rem;
+            background: #fee2e2;
+            border-bottom: 1px solid #fecaca;
+        }
+
+        .comparison-after {
+            padding: 1.5rem;
+            background: #d1fae5;
+        }
+
+        .comparison-icon {
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+        }
+
+        .comparison-text {
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        /* FAQ Section */
+        .faq-grid {
+            display: grid;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .faq-item {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 4px;
+            border-left: 4px solid var(--accent);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .faq-question {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .faq-answer {
+            font-size: 0.95rem;
+            color: var(--dark-gray);
+            line-height: 1.5;
+        }
+
+        .faq-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Guarantees Section */
+        .guarantee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .guarantee-item {
+            background: white;
+            padding: 2rem;
+            border-radius: 4px;
+            border-left: 4px solid var(--accent);
+            text-align: center;
+        }
+
+        .guarantee-item h3 {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .guarantee-item p {
+            color: var(--dark-gray);
+        }
+
         /* How It Works */
         .how-it-works {
             padding: 3rem 0;
@@ -473,34 +569,50 @@
         </div>
     </section>
 
-    <!-- Pain Points Section -->
+    <!-- Before/After Comparison Section -->
     <section class="pain-points">
         <div class="container">
-            <h2 class="section-title">Das kennen Sie</h2>
-            <div class="pain-grid">
-                <div class="pain-item">
-                    <img src="images/stressed.jpg" alt="Gestresster Installateur am Telefon" class="pain-image"
-                         width="400" height="150" loading="lazy" decoding="async">
-                    <h3>Die BAFA-Frist läuft ab und Sie sind auf dem Dach</h3>
-                    <p>Kunde ruft an, Förderung muss bis Freitag beantragt sein. Sie können nicht ran. Auftrag weg.</p>
+            <h2 class="section-title">❌ Vorher → ✅ Nachher</h2>
+            <div class="before-after-grid">
+                <div class="comparison-pair">
+                    <div class="comparison-before">
+                        <span class="comparison-icon">❌</span>
+                        <span class="comparison-text"><strong>Telefonchaos:</strong> 15 Anrufe, 3 wichtige, 12 Zeitfresser. Sie sortieren abends.</span>
+                    </div>
+                    <div class="comparison-after">
+                        <span class="comparison-icon">✅</span>
+                        <span class="comparison-text"><strong>WhatsApp-Zusammenfassung:</strong> Abends eine Nachricht mit allen wichtigen Infos. Fertig.</span>
+                    </div>
                 </div>
-                <div class="pain-item">
-                    <img src="images/phone.jpg" alt="15 verpasste Anrufe auf dem Display" class="pain-image"
-                         width="400" height="150" loading="lazy" decoding="async">
-                    <h3>15 Anrufe vor 9 Uhr - meiste sind Zeitfresser</h3>
-                    <p>"Ist die Anlage heute fertig?" "Kann ich noch 2025 fördern?" Zeit, die Sie auf der Baustelle nicht haben.</p>
+                <div class="comparison-pair">
+                    <div class="comparison-before">
+                        <span class="comparison-icon">❌</span>
+                        <span class="comparison-text"><strong>Leads verloren:</strong> Kunde ruft 3x an, niemand geht ran. Bei Konkurrenz bestellt.</span>
+                    </div>
+                    <div class="comparison-after">
+                        <span class="comparison-icon">✅</span>
+                        <span class="comparison-text"><strong>Qualifizierte Termine:</strong> Wir nehmen jeden Anruf, filtern Ernsthaftige, melden nur echte Leads.</span>
+                    </div>
                 </div>
-                <div class="pain-item">
-                    <img src="images/customer.jpg" alt="Verwirrter Kunde mit Fragen" class="pain-image"
-                         width="400" height="150" loading="lazy" decoding="async">
-                    <h3>Kunde will Notstrom, hat aber keinen Speicher</h3>
-                    <p>Grundlagen erklären, statt montieren. Am Ende kein Auftrag, nur Zeit investiert.</p>
+                <div class="comparison-pair">
+                    <div class="comparison-before">
+                        <span class="comparison-icon">❌</span>
+                        <span class="comparison-text"><strong>Abende im Büro:</strong> Rückrufe bis 21 Uhr. Familie wartet, Akku leer.</span>
+                    </div>
+                    <div class="comparison-after">
+                        <span class="comparison-icon">✅</span>
+                        <span class="comparison-text"><strong>Freie Abende:</strong> Wir haben tagsüber alles geklärt. Sie genießen Ihren Feierabend.</span>
+                    </div>
                 </div>
-                <div class="pain-item">
-                    <img src="images/team-meeting.jpg" alt="Team-Besprechung" class="pain-image"
-                         width="400" height="150" loading="lazy" decoding="async">
-                    <h3>Subunternehmer steht parat, aber Termin war unklar</h3>
-                    <p>Missverständnis im Telefonat. Material bestellen, dann alles verschieben. Ärger und Kosten.</p>
+                <div class="comparison-pair">
+                    <div class="comparison-before">
+                        <span class="comparison-icon">❌</span>
+                        <span class="comparison-text"><strong>Doppelte Fahrten:</strong> Termin vereinbart, Kunde da, Infos fehlen. Nochmal fahren.</span>
+                    </div>
+                    <div class="comparison-after">
+                        <span class="comparison-icon">✅</span>
+                        <span class="comparison-text"><strong>Komplett-Infos:</strong> Dach, Strom, Budget - alles geprüft vor dem ersten Termin.</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -547,6 +659,60 @@
         </div>
     </section>
 
+    <!-- FAQ Section -->
+    <section class="how-it-works" style="background: var(--light-gray);">
+        <div class="container">
+            <h2 class="section-title">Häufige Fragen</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="faq-icon">❓</span>
+                        Klingt teuer.
+                    </div>
+                    <div class="faq-answer">
+                        <span style="color: var(--accent);">✅</span> Ein Azubi kostet €2.500/Monat + Sozialabgaben. Wir holen Ihnen 10 qualifizierte Termine für €500. Rechnen Sie aus: Ein durchgefallener Termin (Fahrt, Angebot, Zeit) kostet Sie leicht €150-200. Das amortisiert sich schnell.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="faq-icon">❓</span>
+                        DSGVO bei WhatsApp? Geht das denn?
+                    </div>
+                    <div class="faq-answer">
+                        <span style="color: var(--accent);">✅</span> Ja. Wir leiten nur weiter, was Sie brauchen: Name, Telefon, Grund. Keine Kundendaten speichern, kein Profilbau. Das ist rechtlich dasselbe wie wenn Ihre Sekretärin Ihnen eine Notiz auf den Schreibtisch legt. Einfach, sicher, legal.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="faq-icon">❓</span>
+                        Was, wenn es nicht klappt?
+                    </div>
+                    <div class="faq-answer">
+                        <span style="color: var(--accent);">✅</span> Dann kündigen Sie. Monatlich kündbar, keine Mindestlaufzeit. Wir müssen uns jeden Monat neu beweisen. So sollte Service sein.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="faq-icon">❓</span>
+                        Nur PV? Warum nicht alle Handwerker?
+                    </div>
+                    <div class="faq-answer">
+                        <span style="color: var(--accent);">✅</span> Weil wir darin gut sind. BAFA-Fristen, Speicherklassen, Notstromkonzepte - das können wir aus dem FF. Ein Dachdecker, ein Elektriker, ein Heizungsbauer: Generalisten helfen halb. Spezialisten helfen durch.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="faq-icon">❓</span>
+                        Wie schnell geht das?
+                    </div>
+                    <div class="faq-answer">
+                        <span style="color: var(--accent);">✅</span> 7 Tage bis Go-Live. Tag 1-2: Einrichtung WhatsApp, Anrufbeantworter-Text. Tag 3-4: Schulung, FAQ-Liste Ihre Projekte. Tag 5-7: Testphase, erste Live-Anrufe. Danach läuft's.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Pricing Section -->
     <section class="pricing">
         <div class="container">
@@ -576,6 +742,88 @@
                 <div style="padding: 1rem;">
                     <p style="font-size: 1.1rem; font-weight: 600; color: var(--primary);">Jeder Termin zählt</p>
                     <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--medium-gray);">Jeder Termin den wir vereinbaren, ist eine Anlage mehr auf dem Dach.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Calculator -->
+    <section class="roi-calculator" id="roi" style="padding: 3rem 0; background: white;">
+        <div class="container">
+            <h2 class="section-title">Rechnen Sie Ihren Mehrumsatz aus</h2>
+            <p style="text-align: center; margin-bottom: 2rem;">Sehen Sie sofort, wie viel Umsatz Sie durch verpasste Anrufe verlieren – und wie viel Sie retten können.</p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                <!-- Input fields -->
+                <div class="roi-inputs" style="background: var(--light-gray); padding: 2rem; border-radius: 4px;">
+                    <h3 style="margin-bottom: 1.5rem;">Ihre Zahlen</h3>
+
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Anfragen pro Woche</label>
+                        <input type="number" id="anfragen" value="20" min="0" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Verpasst oder zu spät (%)</label>
+                        <input type="number" id="verpasst" value="30" min="0" max="100" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Durchschnittlicher Auftragswert (€)</label>
+                        <input type="number" id="auftragswert" value="8000" min="0" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+
+                    <button onclick="calculateROI()" style="width: 100%; background: var(--accent); color: white; border: none; padding: 0.75rem; font-weight: 600; cursor: pointer; margin-top: 1rem;">Berechnen</button>
+                </div>
+
+                <!-- Results -->
+                <div class="roi-results" style="background: var(--primary); color: white; padding: 2rem; border-radius: 4px;">
+                    <h3 style="color: var(--accent); margin-bottom: 1.5rem;">Ihre Ergebnisse</h3>
+
+                    <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.2);">
+                        <div style="font-size: 0.9rem; opacity: 0.8;">Verpasste Anfragen / Woche</div>
+                        <div id="verpassteAnfragen" style="font-size: 1.5rem; font-weight: 700;">6</div>
+                    </div>
+
+                    <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.2);">
+                        <div style="font-size: 0.9rem; opacity: 0.8;">Verlorene Aufträge / Woche</div>
+                        <div id="verloreneAuftraege" style="font-size: 1.5rem; font-weight: 700;">4</div>
+                    </div>
+
+                    <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.2);">
+                        <div style="font-size: 0.9rem; opacity: 0.8;">Umsatzverlust / Monat</div>
+                        <div id="umsatzverlust" style="font-size: 1.5rem; font-weight: 700; color: #ef4444;">€12.800</div>
+                    </div>
+
+                    <div style="background: rgba(201, 169, 98, 0.2); padding: 1rem; border-radius: 4px; margin-top: 1rem;">
+                        <div style="font-size: 0.9rem; color: var(--accent);">Geretteter Umsatz (80%)</div>
+                        <div id="geretteterUmsatz" style="font-size: 2rem; font-weight: 700; color: var(--accent);">€10.240</div>
+                        <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.5rem;">Unsere Kosten: €500 (10 Termine à €50)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Guarantees Section -->
+    <section class="guarantees" style="padding: 3rem 0; background: var(--light-gray);">
+        <div class="container">
+            <h2 class="section-title">Unsere Garantien</h2>
+            <div class="guarantee-grid">
+                <div class="guarantee-item">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">✅</div>
+                    <h3>7-Tage Go-Live</h3>
+                    <p>Wenn nicht in 7 Tagen alles läuft, zahlen Sie das Setup nicht.</p>
+                </div>
+                <div class="guarantee-item">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">✅</div>
+                    <h3>30-Tage Zufriedenheit</h3>
+                    <p>Nicht zufrieden? Kündigen Sie einfach. Keine Fragen.</p>
+                </div>
+                <div class="guarantee-item">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">✅</div>
+                    <h3>Nur bei Erfolg zahlen</h3>
+                    <p>Kein qualifizierter Termin? Keine Kosten. So einfach.</p>
                 </div>
             </div>
         </div>
@@ -803,8 +1051,28 @@
             }, 1500);
         });
 
-        // Show cookie banner on page load (DSGVO compliant)
+        // ROI Calculator function
+        function calculateROI() {
+            const anfragen = parseInt(document.getElementById('anfragen').value) || 0;
+            const verpasst = parseInt(document.getElementById('verpasst').value) || 0;
+            const auftragswert = parseInt(document.getElementById('auftragswert').value) || 0;
+
+            // Calculate
+            const verpassteAnfragen = Math.round(anfragen * (verpasst / 100));
+            const verloreneAuftraege = Math.round(verpassteAnfragen * 0.7); // 70% conversion rate
+            const umsatzverlust = verloreneAuftraege * auftragswert * 4.3; // 4.3 weeks per month
+            const geretteterUmsatz = umsatzverlust * 0.8; // 80% saved
+
+            // Update display
+            document.getElementById('verpassteAnfragen').textContent = verpassteAnfragen;
+            document.getElementById('verloreneAuftraege').textContent = verloreneAuftraege;
+            document.getElementById('umsatzverlust').textContent = '€' + umsatzverlust.toLocaleString();
+            document.getElementById('geretteterUmsatz').textContent = '€' + geretteterUmsatz.toLocaleString();
+        }
+
+        // Calculate on load
         document.addEventListener('DOMContentLoaded', function() {
+            calculateROI();
             if (!localStorage.getItem('cookiesAccepted')) {
                 document.getElementById('cookieBanner').classList.add('show');
             }
