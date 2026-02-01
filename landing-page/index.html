@@ -172,6 +172,20 @@
             flex-wrap: wrap;
             margin-bottom: 3rem;
         }
+
+        .hero-image {
+            margin-top: 3rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border: 2px solid rgba(201, 169, 98, 0.3);
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
         
         .btn {
             display: inline-block;
@@ -331,6 +345,20 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .testimonial-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .testimonial-avatar-placeholder {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
             background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
             display: flex;
             align-items: center;
@@ -338,6 +366,7 @@
             font-size: 1.5rem;
             color: white;
             font-weight: 700;
+            flex-shrink: 0;
         }
         
         .testimonial-author h4 {
@@ -1189,6 +1218,10 @@
                         Sie zahlen nur, wenn Sie messbar mehr Umsatz generieren
                     </div>
                 </div>
+
+                <div class="hero-image">
+                    <img src="images/hero-craftsman.jpg" alt="Professioneller Handwerker bei der Arbeit - Premium Service">
+                </div>
             </div>
         </div>
     </section>
@@ -1233,7 +1266,9 @@
             <div class="testimonials">
                 <div class="testimonial-card">
                     <div class="testimonial-header">
-                        <div class="testimonial-avatar">MK</div>
+                        <div class="testimonial-avatar">
+                            <img src="images/testimonial-1.jpg" alt="Michael Krause - Dachdeckermeister">
+                        </div>
                         <div class="testimonial-author">
                             <h4>Michael Krause</h4>
                             <p>Dachdeckermeister, Köln | €850k Umsatz</p>
@@ -1242,10 +1277,12 @@
                     <div class="testimonial-rating">★★★★★</div>
                     <p class="testimonial-quote">"Endlich professionell! Früher habe ich Aufträge verloren, weil ich auf dem Dach war. Jetzt nimmt Premium-Service jeden Anruf entgegen. Meine Kunden merken den Unterschied – 4 Aufträge mehr im Monat lohnen sich dreifach."</p>
                 </div>
-                
+
                 <div class="testimonial-card">
                     <div class="testimonial-header">
-                        <div class="testimonial-avatar">SW</div>
+                        <div class="testimonial-avatar">
+                            <img src="images/testimonial-2.jpg" alt="Stefan Weber - Elektromeister">
+                        </div>
                         <div class="testimonial-author">
                             <h4>Stefan Weber</h4>
                             <p>Elektromeister, München | €1.2M Umsatz</p>
@@ -1254,10 +1291,12 @@
                     <div class="testimonial-rating">★★★★★</div>
                     <p class="testimonial-quote">"Die €200 pro Monat sind die beste Investition. Keine verpassten Notrufe mehr, keine verärgerten Kunden. Der Service zahlt sich schon im ersten Monat aus. Absolute Empfehlung für jeden, der wächst."</p>
                 </div>
-                
+
                 <div class="testimonial-card">
                     <div class="testimonial-header">
-                        <div class="testimonial-avatar">TB</div>
+                        <div class="testimonial-avatar">
+                            <img src="images/testimonial-3.jpg" alt="Thomas Berger - Installateur">
+                        </div>
                         <div class="testimonial-author">
                             <h4>Thomas Berger</h4>
                             <p>Installateur, Hamburg | €680k Umsatz</p>
