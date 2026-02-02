@@ -1,5 +1,5 @@
 {
-  "name": "VorzimmerDrache",
+  "name": "Linda Trading UG (haftungsbeschränkt)",
   "tagline": "Anruf-Service für PV-Installateure",
   "slogan": "Wir kennen die BAFA-Frist",
   "url": "https://vorzimmerdrache.pages.dev/",
@@ -8,13 +8,20 @@
   "address": {
     "street": "Schleidener Str. 6",
     "city": "Köln",
-    "zip": "50937",
+    "postalCode": "50937",
     "country": "DE"
   },
   "legal": {
     "company": "Linda Trading UG (haftungsbeschränkt)",
     "taxId": "DE 322254850",
     "court": "HRB 97024 Amtsgericht Köln"
+  },
+  "taxID": "DE 322254850",
+  "registerNumber": "HRB 97024",
+  "registerCourt": "Amtsgericht Köln",
+  "contact": {
+    "email": "info@ecolinda.com",
+    "phone": "+49 177 7250 851"
   },
   "meta": {
     "description": "Anruf-Service für PV-Installateure. Wir übernehmen Ihre Anrufe, wenn Sie auf dem Dach sind. Spezialisiert auf Photovoltaik und BAFA-Fristen.",

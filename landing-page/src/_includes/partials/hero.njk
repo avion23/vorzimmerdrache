@@ -32,43 +32,56 @@
 
 <section class="hero">
     <div class="container">
-        <h1>Wie viele BAFA-Anträge sind Ihnen diesen Monat durch die Lappen gegangen?</h1>
-        <p class="hero-subline">Es klingelt immer im falschen Moment. Sie verlieren Aufträge. Und am Ende sitzen Sie abends bis 21 Uhr am Telefon. Das frustriert. Und es ist nicht Ihre Schuld.</p>
-        <a href="#kontakt" class="hero-cta">Jetzt testen - 7 Tage kostenlos</a>
+        <h1>{{ pageContent.hero.headline }}</h1>
+        <p class="hero-subline">{{ pageContent.hero.subline }}</p>
+        <a href="{{ pageContent.hero.ctaLink }}" class="hero-cta">{{ pageContent.hero.cta }}</a>
 
         <div class="hero-image">
-            <img src="images/hero-pv.jpg" alt="PV-Installateur auf dem Dach bei der Arbeit"
+            <img src="{{ pageContent.hero.image.src }}" alt="{{ pageContent.hero.image.alt }}"
                  width="1100" height="733" fetchpriority="high" decoding="async">
         </div>
     </div>
 </section>
 
-<!-- Calibrated Questions -->
-<style>
-    .pain-grid {
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 1.5rem;
-    }
-    .pain-item {
-        background: #fffbeb; padding: 1.5rem; border-left: 4px solid var(--accent);
-        border-radius: 0 4px 4px 0;
-    }
-    .pain-item h3 {
-        font-size: 1.1rem; color: var(--primary); margin-bottom: 0.5rem; font-weight: 700;
-    }
-    .pain-item p { color: var(--dark-gray); font-size: 0.95rem; }
-</style>
+<!-- Validation Section -->
+<section class="pain-points" style="background: #fef3c7; border-bottom: none; padding: 2rem 0;">
+    <div class="container">
+        <div style="background: white; padding: 2rem; border-left: 4px solid var(--accent); border-radius: 4px; max-width: 800px; margin: 0 auto;">
+            <h2 style="color: var(--primary); font-size: 1.4rem; font-weight: 700; margin-bottom: 1rem;">
+                {{ pageContent.problem.validation.headline }}
+            </h2>
+            <p style="font-size: 1.1rem; line-height: 1.6; color: var(--dark-gray);">
+                {{ pageContent.problem.validation.text | safe }}
+            </p>
+        </div>
+    </div>
+</section>
 
-<section style="padding: 3rem 0; background: white;">
+<!-- Calibrated Questions -->
+<section class="pain-points" style="background: white; border-bottom: none;">
     <div class="container">
         <h2 class="section-title" style="text-align: center;">Was passiert mit Ihrem Betrieb, wenn...</h2>
         <div class="pain-grid" style="margin-top: 2rem;">
-            {% for q in company.calibratedQuestions %}
-            <div class="pain-item">
-                <h3>...Sie {{ q.question | replace('...', '') }}</h3>
-                <p>{{ q.answer }}</p>
+            {% for item in pageContent.problem.questions %}
+            <div class="pain-item" style="background: #fffbeb;">
+                <h3>{{ item.condition }}</h3>
+                <p>{{ item.consequence }}</p>
             </div>
             {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Mirror Box -->
+<section class="pain-points" style="background: var(--light-gray); border-bottom: none;">
+    <div class="container">
+        <div style="background: var(--primary); color: white; padding: 2rem; border-radius: 8px; text-align: center; max-width: 700px; margin: 0 auto;">
+            <p style="font-size: 1.3rem; font-weight: 600; font-style: italic; line-height: 1.6;">
+                "{{ pageContent.problem.quote }}"
+            </p>
+            <p style="margin-top: 1rem; font-size: 0.95rem; color: var(--accent);">
+                — {{ pageContent.problem.quoteAttribution }}
+            </p>
         </div>
     </div>
 </section>

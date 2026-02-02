@@ -9,7 +9,7 @@
     "cta": "Jetzt testen - 7 Tage kostenlos",
     "ctaLink": "#kontakt",
     "image": {
-      "src": "images/hero-pv.jpg",
+      "src": "/assets/images/hero-pv.jpg",
       "alt": "PV-Installateur auf dem Dach bei der Arbeit"
     }
   },
@@ -47,14 +47,14 @@
         "icon": "❌",
         "title": "Telefonchaos:",
         "text": "15 Anrufe, 3 wichtige, 12 Zeitfresser. Sie sortieren abends.",
-        "image": "images/stressed.jpg",
+        "image": "/assets/images/stressed.jpg",
         "imageAlt": "Gestresster Installateur mit Telefon"
       },
       "after": {
         "icon": "✅",
         "title": "WhatsApp-Zusammenfassung:",
         "text": "Abends eine Nachricht mit allen wichtigen Infos. Fertig.",
-        "image": "images/phone.jpg",
+        "image": "/assets/images/phone.jpg",
         "imageAlt": "WhatsApp Übersicht auf Smartphone"
       }
     },
@@ -83,7 +83,7 @@
         "icon": "✅",
         "title": "Freie Abende:",
         "text": "Wir haben tagsüber alles geklärt. Sie genießen Ihren Feierabend.",
-        "image": "images/customer.jpg",
+        "image": "/assets/images/customer.jpg",
         "imageAlt": "Zufriedener Kunde nach Installation"
       }
     },
@@ -151,15 +151,15 @@
     ],
     "images": [
       {
-        "src": "images/workshop.jpg",
+        "src": "/assets/images/workshop.jpg",
         "alt": "Professionelle PV-Werkstatt"
       },
       {
-        "src": "images/electrician.jpg",
+        "src": "/assets/images/electrician.jpg",
         "alt": "Elektriker bei der Installation"
       },
       {
-        "src": "images/tools.jpg",
+        "src": "/assets/images/tools.jpg",
         "alt": "Professionelle Werkzeuge"
       }
     ],
@@ -183,7 +183,7 @@
     {
       "company": "Thomas M., PV-Meisterbetrieb, Augsburg",
       "info": "12 Mitarbeiter",
-      "avatar": "images/electrician.jpg",
+      "avatar": "/assets/images/electrician.jpg",
       "quote": "Früher hab ich abends zurückgerufen. Die Hälfte hatte schon 'nen anderen Betrieb. Mit dem Service hol ich mir Leads, die sonst weg waren. Letzten Monat 3 zusätzliche Aufträge draus."
     },
     {
@@ -195,7 +195,7 @@
     {
       "company": "Robert W., Dachdecker mit PV-Sparte, Hamburg",
       "info": "8 Mitarbeiter",
-      "avatar": "images/customer.jpg",
+      "avatar": "/assets/images/customer.jpg",
       "quote": "Bin skeptisch gewesen. Aber ein Azubi kostet €2.500 im Monat und braucht 3-6 Monate Einarbeitung. Dann kommen Berufsschule, Krankheit und die Nerven, wenn er Fehler macht. Hier läuft es von Tag 1. Ohne Management-Overhead."
     }
   ],

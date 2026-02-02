@@ -16,7 +16,7 @@
     "url": "https://vorzimmerdrache.pages.dev/",
     "title": "Anruf-Service für PV-Installateure | Wir kennen die BAFA-Frist",
     "description": "Wir übernehmen Ihre Anrufe, wenn Sie auf dem Dach sind. Spezialisiert auf Photovoltaik, Speichersysteme und BAFA-Fristen. Erste Anrufe morgen möglich.",
-    "image": "https://vorzimmerdrache.pages.dev/images/hero-pv.jpg",
+    "image": "https://vorzimmerdrache.pages.dev/assets/images/hero-pv.jpg",
     "locale": "de_DE"
   },
   "twitterCard": {
@@ -24,7 +24,7 @@
     "url": "https://vorzimmerdrache.pages.dev/",
     "title": "Anruf-Service für PV-Installateure | Wir kennen die BAFA-Frist",
     "description": "Wir übernehmen Ihre Anrufe, wenn Sie auf dem Dach sind. Spezialisiert auf Photovoltaik und BAFA-Fristen.",
-    "image": "https://vorzimmerdrache.pages.dev/images/hero-pv.jpg"
+    "image": "https://vorzimmerdrache.pages.dev/assets/images/hero-pv.jpg"
   },
   "favicon": {
     "ico": "/favicon.ico",
@@ -38,7 +38,39 @@
     "url": "https://vorzimmerdrache.pages.dev/",
     "telephone": "+49 177 7250 851",
     "email": "info@ecolinda.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Schleidener Str. 6",
+      "addressLocality": "Köln",
+      "postalCode": "50937",
+      "addressCountry": "DE"
+    },
+    "parentOrganization": {
+      "@type": "Organization",
+      "name": "Linda Trading UG (haftungsbeschränkt)",
+      "legalName": "Linda Trading UG (haftungsbeschränkt)",
+      "taxID": "DE 322254850",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Schleidener Str. 6",
+        "addressLocality": "Köln",
+        "postalCode": "50937",
+        "addressCountry": "DE"
+      }
+    },
     "priceRange": "€50 pro qualifiziertem Termin",
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      "opens": "07:00",
+      "closes": "21:00"
+    },
     "areaServed": {
       "@type": "Country",
       "name": "Germany"

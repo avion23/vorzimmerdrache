@@ -1,0 +1,59 @@
+<section class="roi-calculator" id="roi" style="padding: 3rem 0; background: white;">
+    <div class="container">
+        <h2 class="section-title">{{ pageContent.roi.headline }}</h2>
+        <p style="text-align: center; margin-bottom: 2rem;">{{ pageContent.roi.subline }}</p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            <!-- Input fields -->
+            <div class="roi-inputs" style="background: var(--light-gray); padding: 2rem; border-radius: 4px;">
+                <h3 style="margin-bottom: 1.5rem;">Ihre Zahlen</h3>
+
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">{{ pageContent.roi.inputs.requests.label }}</label>
+                    <input type="number" id="anfragen" value="{{ pageContent.roi.inputs.requests.default }}" min="0" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">{{ pageContent.roi.inputs.missed.label }}</label>
+                    <input type="number" id="verpasst" value="{{ pageContent.roi.inputs.missed.default }}" min="0" max="100" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">{{ pageContent.roi.inputs.orderValue.label }}</label>
+                    <input type="number" id="auftragswert" value="{{ pageContent.roi.inputs.orderValue.default }}" min="0" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+
+                <button onclick="calculateROI()" style="width: 100%; background: var(--accent); color: white; border: none; padding: 0.75rem; font-weight: 600; cursor: pointer; margin-top: 1rem;">Berechnen</button>
+            </div>
+
+            <!-- Results -->
+            <div class="roi-results" style="background: var(--primary); color: white; padding: 2rem; border-radius: 4px;">
+                <h3 style="color: var(--accent); margin-bottom: 1.5rem;">Ihre Ergebnisse</h3>
+
+                <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.2);">
+                    <div style="font-size: 0.9rem; opacity: 0.8;">Verpasste Anfragen / Woche</div>
+                    <div id="verpassteAnfragen" style="font-size: 1.5rem; font-weight: 700;">6</div>
+                </div>
+
+                <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.2);">
+                    <div style="font-size: 0.9rem; opacity: 0.8;">Verlorene Aufträge / Woche</div>
+                    <div id="verloreneAuftraege" style="font-size: 1.5rem; font-weight: 700;">4</div>
+                </div>
+
+                <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.2);">
+                    <div style="font-size: 0.9rem; opacity: 0.8;">Umsatzverlust / Monat (ca.)</div>
+                    <div id="umsatzverlust" style="font-size: 1.5rem; font-weight: 700; color: #ef4444;">€137,600</div>
+                </div>
+
+                <div>
+                    <div style="font-size: 0.9rem; opacity: 0.8;">Geretteter Umsatz / Monat</div>
+                    <div id="geretteterUmsatz" style="font-size: 2rem; font-weight: 800; color: var(--accent);">€110,080</div>
+                </div>
+                
+                <p style="font-size: 0.75rem; margin-top: 1.5rem; opacity: 0.7;">
+                    * Basis: 70% Conversion von Anfrage zu Auftrag. 80% Erreichbarkeit durch unseren Service.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

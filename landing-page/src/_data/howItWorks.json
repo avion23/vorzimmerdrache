@@ -65,8 +65,8 @@
     }
   ],
   "images": [
-    "images/workshop.jpg",
-    "images/electrician.jpg",
-    "images/tools.jpg"
+    "/assets/images/workshop.jpg",
+    "/assets/images/electrician.jpg",
+    "/assets/images/tools.jpg"
   ]
 }

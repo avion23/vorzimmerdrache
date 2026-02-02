@@ -1,89 +1,42 @@
-<style>
-    .contact { padding: 3rem 0; }
-    .contact-form { max-width: 600px; margin: 2rem auto 0; }
-    .form-group { margin-bottom: 1rem; }
-    .form-group label {
-        display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--primary);
-    }
-    .form-group input,
-    .form-group textarea {
-        width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb;
-        border-radius: 4px; font-size: 1rem; font-family: inherit;
-    }
-    .form-group input:focus,
-    .form-group textarea:focus { outline: none; border-color: var(--accent); }
-    .submit-btn {
-        background: var(--accent); color: var(--white); padding: 1rem 2rem;
-        border: none; border-radius: 4px; font-size: 1rem; font-weight: 700;
-        cursor: pointer; width: 100%;
-    }
-    .submit-btn:hover { background: var(--accent-darker); }
-</style>
-
 <section class="contact" id="kontakt">
     <div class="container">
-        <h2 class="section-title" style="text-align: center;">Kostenlos kennenlernen</h2>
+        <h2 class="section-title" style="text-align: center;">{{ pageContent.contact.headline }}</h2>
         <p style="text-align: center; max-width: 600px; margin: 0 auto 2rem;">
-            Wir rufen Sie innerhalb von 24 Stunden zurück. Kein Verkaufsgespräch - wir schauen einfach, ob es passt.
+            {{ pageContent.contact.subline }}
         </p>
 
         <form class="contact-form" id="contactForm">
             <div class="form-group">
-                <label for="name">Name / Firma</label>
-                <input type="text" id="name" name="name" required placeholder="Ihr Name oder Firmenname">
+                <label for="name">{{ pageContent.contact.form.name.label }}</label>
+                <input type="text" id="name" name="name" required placeholder="{{ pageContent.contact.form.name.placeholder }}">
             </div>
             <div class="form-group">
-                <label for="phone">Telefon (für Rückruf)</label>
+                <label for="phone">{{ pageContent.contact.form.phone.label }}</label>
                 <input type="tel" id="phone" name="phone" required
-                       pattern="^(\+49|0)[1-9][0-9]{1,14}$"
-                       placeholder="z.B. 0171 12345678 oder +49 171 12345678"
-                       title="Bitte geben Sie eine gültige deutsche Telefonnummer ein">
+                       pattern="{{ pageContent.contact.form.phone.pattern }}"
+                       placeholder="{{ pageContent.contact.form.phone.placeholder }}"
+                       title="{{ pageContent.contact.form.phone.title }}">
             </div>
             <div class="form-group">
-                <label for="email">E-Mail (optional)</label>
-                <input type="email" id="email" name="email" placeholder="mueller@firma.de">
+                <label for="email">{{ pageContent.contact.form.email.label }}</label>
+                <input type="email" id="email" name="email" placeholder="{{ pageContent.contact.form.email.placeholder }}">
             </div>
             <div class="form-group">
-                <label for="installations">Installationen pro Monat (ungefähr)</label>
-                <input type="text" id="installations" name="installations" placeholder="z.B. 15-20">
+                <label for="installations">{{ pageContent.contact.form.installations.label }}</label>
+                <input type="text" id="installations" name="installations" placeholder="{{ pageContent.contact.form.installations.placeholder }}">
             </div>
             <div class="form-group">
-                <label for="message">Nachricht (optional)</label>
-                <textarea id="message" name="message" rows="3" placeholder="Ihre Frage oder Anmerkung"></textarea>
+                <label for="message">{{ pageContent.contact.form.message.label }}</label>
+                <textarea id="message" name="message" rows="{{ pageContent.contact.form.message.rows }}" placeholder="{{ pageContent.contact.form.message.placeholder }}"></textarea>
             </div>
             <div class="form-group" style="background: #f9fafb; padding: 1rem; border-radius: 4px; margin-top: 1rem;">
                 <label style="font-weight: 400; font-size: 0.9rem; display: flex; align-items: flex-start; gap: 0.5rem;">
                     <input type="checkbox" required name="consent" style="width: auto; margin-top: 0.2rem; flex-shrink: 0;">
-                    <span>Ich stimme zu, dass meine Angaben zur Kontaktaufnahme gespeichert und verarbeitet werden. Ich habe die <a href="datenschutz.html" target="_blank" style="color: var(--accent);">Datenschutzerklärung</a> gelesen. *</span>
+                    <span>{{ pageContent.contact.form.consent.label | safe }}</span>
                 </label>
             </div>
-            <button type="submit" class="submit-btn">Anruf anfordern</button>
+            <button type="submit" class="submit-btn">{{ pageContent.contact.cta }}</button>
             <div id="formFeedback" role="alert" aria-live="assertive" style="margin-top: 1rem;"></div>
         </form>
     </div>
 </section>
-
-<script>
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const btn = this.querySelector('.submit-btn');
-        const feedback = document.getElementById('formFeedback');
-        const originalText = btn.textContent;
-
-        const consent = this.querySelector('input[name="consent"]');
-        if (!consent.checked) {
-            feedback.innerHTML = '<div style="background: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 4px;">Bitte stimmen Sie der Datenverarbeitung zu, damit wir Sie kontaktieren können.</div>';
-            return;
-        }
-
-        btn.textContent = 'Wird gesendet...';
-        btn.disabled = true;
-
-        setTimeout(() => {
-            feedback.innerHTML = '<div style="background: #d1fae5; color: #065f46; padding: 1rem; border-radius: 4px;">✓ Vielen Dank! Wir melden uns innerhalb von 24 Stunden bei Ihnen. Checken Sie auch Ihren Spam-Ordner.</div>';
-            this.reset();
-            btn.textContent = originalText;
-            btn.disabled = false;
-        }, 1500);
-    });
-</script>

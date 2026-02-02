@@ -1,54 +1,52 @@
-{# How It Works Section #}
 <section class="how-it-works" id="loesung">
-  <div class="container">
-    <h2 class="section-title">{{ howItWorks.title }}</h2>
+    <div class="container">
+        <h2 class="section-title">{{ howItWorks.headline or pageContent.howItWorks.headline }}</h2>
 
-    {# Visual Workflow #}
-    <div class="workflow-visual">
-      {% for step in howItWorks.workflow %}
-      <div class="workflow-step">
-        <div class="workflow-icon">{{ step.icon }}</div>
-        <h4>{{ step.title }}</h4>
-        <p>{{ step.description }}</p>
-      </div>
-      {% endfor %}
-    </div>
+        <!-- Visual Workflow -->
+        <div class="workflow-visual">
+            {% for step in howItWorks.workflow %}
+            <div class="workflow-step">
+                <div class="workflow-icon">{{ step.icon }}</div>
+                <h4>{{ step.title }}</h4>
+                <p>{{ step.subtitle or step.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
 
-    <div class="steps-grid">
-      {% for step in howItWorks.steps %}
-      <div class="step-item">
-        <div class="step-number">{{ step.number }}</div>
-        <h3>{{ step.title }}</h3>
-        <p>{{ step.description }}</p>
-      </div>
-      {% endfor %}
-    </div>
+        <div class="steps-grid">
+            {% for step in howItWorks.steps %}
+            <div class="step-item">
+                <div class="step-number">{{ step.number }}</div>
+                <h3>{{ step.title }}</h3>
+                <p>{{ step.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
 
-    <div style="margin-top: 3rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
-      {% for img in howItWorks.images %}
-      <div class="image-container">
-        <img src="{{ img }}" alt=""
-             width="400" height="200"
-             loading="lazy">
-      </div>
-      {% endfor %}
+        <div style="margin-top: 3rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+            {% for img in pageContent.howItWorks.images %}
+            <div class="image-container">
+                <img src="{{ img.src }}" alt="{{ img.alt }}"
+                     width="400" height="200" loading="lazy">
+            </div>
+            {% endfor %}
+        </div>
     </div>
-  </div>
 </section>
 
-{# WhatsApp Examples Section #}
+<!-- WhatsApp Examples -->
 <section class="how-it-works" style="background: var(--light-gray);">
-  <div class="container">
-    <h2 class="section-title">So sehen die WhatsApp-Nachrichten aus</h2>
-    <div class="pain-grid" style="margin-top: 2rem;">
-      {% for example in howItWorks.whatsAppExamples %}
-      <div class="pain-item">
-        <h3>{{ example.icon }} {{ example.title }}</h3>
-        <p style="font-family: monospace; font-size: 0.9rem; background: #f9fafb; padding: 1rem; border-radius: 4px;">
-          {{ example.content | nl2br | safe }}
-        </p>
-      </div>
-      {% endfor %}
+    <div class="container">
+        <h2 class="section-title">So sehen die WhatsApp-Nachrichten aus</h2>
+        <div class="pain-grid" style="margin-top: 2rem;">
+            {% for example in howItWorks.whatsAppExamples %}
+            <div class="pain-item">
+                <h3>{{ example.icon }} {{ example.title }}</h3>
+                <p style="font-family: monospace; font-size: 0.9rem; background: #f9fafb; padding: 1rem; border-radius: 4px;">
+                    {{ example.content | nl2br | safe }}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
     </div>
-  </div>
 </section>

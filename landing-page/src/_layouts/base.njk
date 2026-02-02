@@ -127,7 +127,7 @@
             .section-title { font-size: 1.4rem; }
         }
     </style>
-    {% block styles %}{% endblock %}
+    {{ additional_styles | safe }}
 </head>
 <body>
     <!-- Skip Link -->
@@ -142,7 +142,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main>{% block content %}{% endblock %}</main>
+    <main>{{ content | safe }}</main>
 
     <!-- Footer -->
     <footer>
@@ -150,9 +150,9 @@
             <p>Gebaut von Handwerkern für Handwerker.</p>
             <p>Keine Marketing-Agentur. Kein Investor-Backed Bullshit. Einfach ein Dienst, der funktioniert.</p>
             <p style="margin-top: 1rem;">
-                <a href="impressum.html">Impressum</a> •
-                <a href="datenschutz.html">Datenschutz</a> •
-                <a href="agb.html">AGB</a>
+                <a href="/pages/impressum/">Impressum</a> •
+                <a href="/pages/datenschutz/">Datenschutz</a> •
+                <a href="/pages/agb/">AGB</a>
             </p>
             <p style="margin-top: 1rem; font-size: 0.75rem;">
                 © 2026 {{ site.site.name }} - Ein Angebot der {{ company.name }}<br>
@@ -165,12 +165,12 @@
     <!-- Cookie Banner -->
     <div class="cookie-banner" id="cookieBanner">
         <div style="max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-            <span>Wir verwenden ausschließlich technisch notwendige Cookies für das Kontaktformular. Kein Tracking. Keine Werbung. <a href="datenschutz.html" style="color: var(--accent);">Mehr erfahren</a></span>
+            <span>Wir verwenden ausschließlich technisch notwendige Cookies für das Kontaktformular. Kein Tracking. Keine Werbung. <a href="/pages/datenschutz/" style="color: var(--accent);">Mehr erfahren</a></span>
             <button class="cookie-btn" onclick="acceptCookies()">Verstanden</button>
         </div>
     </div>
 
-    {% block scripts %}{% endblock %}
+    {{ additional_scripts | safe }}
     <script>
         if (!localStorage.getItem('cookiesAccepted')) {
             document.getElementById('cookieBanner').classList.add('show');

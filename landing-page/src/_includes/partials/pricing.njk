@@ -87,18 +87,18 @@
             <div class="pricing-row">
                 <div class="pricing-option"><strong>{{ row.criterion }}</strong></div>
                 <div class="pricing-option">
-                    {% if row.apprentice starts with '✓' or row.apprentice starts with '✗' %}
-                        <span class="{% if row.apprentice starts with '✓' %}pricing-check{% else %}pricing-cross{% endif %}">
-                            {{ row.apprentice | slice(1) }}
+                    {% if row.apprentice[0] == '✓' or row.apprentice[0] == '✗' %}
+                        <span class="{% if row.apprentice[0] == '✓' %}pricing-check{% else %}pricing-cross{% endif %}">
+                            {{ row.apprentice | replace(r/^./, '') }}
                         </span>
                     {% else %}
                         {{ row.apprentice }}
                     {% endif %}
                 </div>
                 <div class="pricing-option highlight">
-                    {% if row.service starts with '✓' or row.service starts with '✗' %}
-                        <span class="{% if row.service starts with '✓' %}pricing-check{% else %}pricing-cross{% endif %}">
-                            {{ row.service | slice(1) }}
+                    {% if row.service[0] == '✓' or row.service[0] == '✗' %}
+                        <span class="{% if row.service[0] == '✓' %}pricing-check{% else %}pricing-cross{% endif %}">
+                            {{ row.service | replace(r/^./, '') }}
                         </span>
                     {% else %}
                         <strong>{{ row.service }}</strong>

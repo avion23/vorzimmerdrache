@@ -1,14 +1,15 @@
 {
+  "sectionTitle": "Was passiert mit Ihrem Betrieb, wenn...",
   "items": [
     {
       "beforeIcon": "📞",
       "beforeTitle": "Telefonchaos",
       "beforeText": "15 Anrufe, 3 wichtige, 12 Zeitfresser. Sie sortieren abends.",
-      "beforeImage": "images/stressed.jpg",
+      "beforeImage": "/assets/images/stressed.jpg",
       "afterIcon": "✅",
       "afterTitle": "WhatsApp-Zusammenfassung",
       "afterText": "Abends eine Nachricht mit allen wichtigen Infos. Fertig.",
-      "afterImage": "images/phone.jpg"
+      "afterImage": "/assets/images/phone.jpg"
     },
     {
       "beforeIcon": "📞",
@@ -28,7 +29,7 @@
       "afterIcon": "✅",
       "afterTitle": "Freie Abende",
       "afterText": "Wir haben tagsüber alles geklärt. Sie genießen Ihren Feierabend.",
-      "afterImage": "images/customer.jpg"
+      "afterImage": "/assets/images/customer.jpg"
     },
     {
       "beforeIcon": "🚗",
@@ -40,5 +41,31 @@
       "afterText": "Dach, Strom, Budget - alles geprüft vor dem ersten Termin.",
       "afterImage": null
     }
-  ]
+  ],
+  "calibratedQuestions": [
+    {
+      "question": "...Sie drei weitere BAFA-Fristen verpassen?",
+      "impact": "Emotional & Reputation",
+      "answer": "Das sind 3 Kunden, die nie zurückkommen. Die erzählen das weiter. Ihr Ruf leidet."
+    },
+    {
+      "question": "...Sie 2 Stunden pro Tag weniger am Dach sind?",
+      "impact": "Financial",
+      "answer": "2 Stunden × 20 Arbeitstage = 40 Stunden weniger Umsatz pro Monat. Das kostet Sie mehr als unser gesamter Service."
+    },
+    {
+      "question": "...Ihr Wettbewerber die Anrufe annimmt?",
+      "impact": "Competitive",
+      "answer": "Kunden warten nicht. Die rufen den nächsten Betrieb an. Und der nächste ist schneller."
+    },
+    {
+      "question": "...Sie abends noch Rückrufe machen?",
+      "impact": "Health & Family",
+      "answer": "Akku leer, Familie wartet. Morgen sind Sie müde. Auf dem Dach gefährlich."
+    }
+  ],
+  "mirrorQuote": {
+    "text": "Es klingelt immer, wenn ich gerade die Klemmen in der Hand habe. Ich weiß nicht, ob ich ans Telefon gehen soll oder fertigkabeln. Am Ende mach ich beides halb.",
+    "source": "Was PV-Installateure uns sagen. Jeden Tag."
+  }
 }

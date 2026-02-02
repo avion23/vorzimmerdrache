@@ -3,61 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Impressum von VorzimmerDrache - Rechtsinformationen, Kontakt und Unternehmensdetails.">
-    <meta name="keywords" content="PV-Service, Telefonsekretariat Photovoltaik, Anrufservice Installateure, BAFA Frist, Solar-Telefon service">
-    <meta name="robots" content="index, follow, max-image-preview:large">
-    <link rel="canonical" href="/">
+    <meta name="description" content="{{ description }}">
+    <meta name="keywords" content="{{ metadata.meta.keywords }}">
+    <meta name="robots" content="{{ metadata.meta.robots }}">
+    <link rel="canonical" href="{{ metadata.meta.canonical }}">
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://vorzimmerdrache.pages.dev/">
-    <meta property="og:title" content="Anruf-Service für PV-Installateure | Wir kennen die BAFA-Frist">
-    <meta property="og:description" content="Wir übernehmen Ihre Anrufe, wenn Sie auf dem Dach sind. Spezialisiert auf Photovoltaik, Speichersysteme und BAFA-Fristen. Erste Anrufe morgen möglich.">
-    <meta property="og:image" content="https://vorzimmerdrache.pages.dev/images/hero-pv.jpg">
-    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="{{ metadata.openGraph.type }}">
+    <meta property="og:url" content="{{ metadata.openGraph.url }}">
+    <meta property="og:title" content="{{ metadata.openGraph.title }}">
+    <meta property="og:description" content="{{ metadata.openGraph.description }}">
+    <meta property="og:image" content="{{ metadata.openGraph.image }}">
+    <meta property="og:locale" content="{{ metadata.openGraph.locale }}">
 
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://vorzimmerdrache.pages.dev/">
-    <meta name="twitter:title" content="Anruf-Service für PV-Installateure | Wir kennen die BAFA-Frist">
-    <meta name="twitter:description" content="Wir übernehmen Ihre Anrufe, wenn Sie auf dem Dach sind. Spezialisiert auf Photovoltaik und BAFA-Fristen.">
-    <meta name="twitter:image" content="https://vorzimmerdrache.pages.dev/images/hero-pv.jpg">
+    <meta name="twitter:card" content="{{ metadata.twitterCard.card }}">
+    <meta name="twitter:url" content="{{ metadata.twitterCard.url }}">
+    <meta name="twitter:title" content="{{ metadata.twitterCard.title }}">
+    <meta name="twitter:description" content="{{ metadata.twitterCard.description }}">
+    <meta name="twitter:image" content="{{ metadata.twitterCard.image }}">
 
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
-      "name": "VorzimmerDrache",
-      "description": "Anruf-Service für PV-Installateure. Wir übernehmen Ihre Anrufe, wenn Sie auf dem Dach sind.",
-      "url": "https://vorzimmerdrache.pages.dev/",
-      "telephone": "+49 177 7250 851",
-      "email": "info@ecolinda.com",
+      "name": "{{ site.site.name }}",
+      "description": "{{ metadata.structuredData.description }}",
+      "url": "{{ metadata.structuredData.url }}",
+      "telephone": "{{ metadata.structuredData.telephone }}",
+      "email": "{{ metadata.structuredData.email }}",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "Schleidener Str. 6",
-        "addressLocality": "Köln",
-        "postalCode": "",
-        "addressCountry": "DE"
+        "streetAddress": "{{ company.address.street }}",
+        "addressLocality": "{{ company.address.city }}",
+        "postalCode": "{{ company.address.postalCode }}",
+        "addressCountry": "{{ company.address.country }}"
       },
       "parentOrganization": {
         "@type": "Organization",
-        "name": "VorzimmerDrache",
-        "legalName": "VorzimmerDrache",
-        "taxID": "",
+        "name": "{{ company.name }}",
+        "legalName": "{{ company.name }}",
+        "taxID": "{{ company.taxID }}",
         "address": {
           "@type": "PostalAddress",
-          "streetAddress": "Schleidener Str. 6",
-          "addressLocality": "Köln",
-          "postalCode": "",
-          "addressCountry": "DE"
+          "streetAddress": "{{ company.address.street }}",
+          "addressLocality": "{{ company.address.city }}",
+          "postalCode": "{{ company.address.postalCode }}",
+          "addressCountry": "{{ company.address.country }}"
         }
       },
-      "priceRange": "€50 pro qualifiziertem Termin",
+      "priceRange": "{{ pricing.pricePerAppointment }} pro qualifiziertem Termin",
       "openingHoursSpecification": {
         "@type": "OpeningHoursSpecification",
         "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
@@ -72,7 +72,7 @@
     }
     </script>
 
-    <title>Impressum - VorzimmerDrache</title>
+    <title>{% if title %}{{ title }}{% else %}{{ metadata.site.title }}{% endif %}</title>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -127,7 +127,7 @@
             .section-title { font-size: 1.4rem; }
         }
     </style>
-    
+    {% block styles %}{% endblock %}
 </head>
 <body>
     <!-- Skip Link -->
@@ -142,7 +142,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main></main>
+    <main>{% block content %}{% endblock %}</main>
 
     <!-- Footer -->
     <footer>
@@ -155,9 +155,9 @@
                 <a href="agb.html">AGB</a>
             </p>
             <p style="margin-top: 1rem; font-size: 0.75rem;">
-                © 2026 VorzimmerDrache - Ein Angebot der VorzimmerDrache<br>
-                Schleidener Str. 6,  Köln |  | <br>
-                  | USt-IdNr: 
+                © 2026 {{ site.site.name }} - Ein Angebot der {{ company.name }}<br>
+                {{ company.address.street }}, {{ company.address.postalCode }} {{ company.address.city }} | {{ company.contact.email }} | {{ company.contact.phone }}<br>
+                {{ company.registerNumber }} {{ company.registerCourt }} | USt-IdNr: {{ company.taxID }}
             </p>
         </div>
     </footer>
@@ -170,7 +170,7 @@
         </div>
     </div>
 
-    
+    {% block scripts %}{% endblock %}
     <script>
         if (!localStorage.getItem('cookiesAccepted')) {
             document.getElementById('cookieBanner').classList.add('show');

@@ -1,0 +1,24 @@
+---
+layout: base.njk
+title: Anruf-Service für PV-Installateure | Wir kennen die BAFA-Frist
+---
+
+{% block styles %}
+<link rel="stylesheet" href="/assets/css/landing.css">
+{% endblock %}
+
+{% block content %}
+    {% include "partials/hero.njk" %}
+    {% include "partials/before-after.njk" %}
+    {% include "partials/how-it-works.njk" %}
+    {% include "partials/faq.njk" %}
+    {% include "partials/pricing.njk" %}
+    {% include "partials/roi-calculator.njk" %}
+    {% include "partials/guarantees.njk" %}
+    {% include "partials/testimonials.njk" %}
+    {% include "partials/contact-form.njk" %}
+{% endblock %}
+
+{% block scripts %}
+<script src="/assets/js/landing.js"></script>
+{% endblock %}
