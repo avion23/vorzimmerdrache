@@ -1,31 +1,36 @@
 {
   "items": [
     {
-      "icon": "💰",
+      "icon": "/assets/images/icon_euro.webp",
+      "iconAlt": "Preis",
       "question": "Das klingt teuer.",
       "label": "Das ist verständlich.",
       "answer": "Ein durchgefallener Termin (Fahrt, Angebot, Zeit) kostet Sie leicht €150-200. Wir holen Ihnen 10 qualifizierte Termine für €500. Schauen Sie unten beim Vergleich: Ein Azubi kostet €2.500/Monat plus Sozialabgaben – aber vor allem: 3 Monate Einarbeitung, ständige Kontrolle, und die Nerven, wenn er zum 5. Mal die gleiche Sache falsch macht."
     },
     {
-      "icon": "⚖️",
+      "icon": "/assets/images/icon_lock.webp",
+      "iconAlt": "DSGVO",
       "question": "DSGVO bei WhatsApp? Geht das denn?",
       "label": "Sie machen sich sorgen.",
-      "answer": "Das ist legitim. Aber: Wir leiten nur weiter, was Sie brauchen: Name, Telefon, Grund. Keine Kundendaten speichern, kein Profilbau. Das ist rechtlich dasselbe wie wenn Ihre Sekretärin Ihnen eine Notiz auf den Schreibtisch legt. Einfach, sicher, legal."
+      "answer": "Das ist legitim. Aber: Wir leiten nur weiter, was Sie brauchen: Name, Telefon, Grund. Keine Kundendaten speichern, kein Profilbau. Unsere Server stehen in Deutschland. Das ist rechtlich dasselbe wie wenn Ihre Sekretärin Ihnen eine Notiz auf den Schreibtisch legt. Einfach, sicher, DSGVO-konform."
     },
     {
-      "icon": "🔓",
+      "icon": "/assets/images/icon_target.webp",
+      "iconAlt": "Kündbar",
       "question": "Was, wenn es nicht klappt?",
       "label": "Sie haben Angst festzustecken.",
       "answer": "Das wollen wir nicht. Monatlich kündbar, keine Mindestlaufzeit. Wir müssen uns jeden Monat neu beweisen. So sollte Service sein. Wenn Sie nicht zufrieden sind, gehen Sie. Keine Fragen."
     },
     {
-      "icon": "🎯",
+      "icon": "/assets/images/icon_check.webp",
+      "iconAlt": "Spezialisierung",
       "question": "Nur PV? Warum nicht alle Handwerker?",
       "label": "Sie wollen Spezialisten.",
       "answer": "Das ist richtig. Generalisten helfen halb. Spezialisten helfen durch. BAFA-Fristen, Speicherklassen, Notstromkonzepte - das können wir aus dem FF. Ein Dachdecker, ein Elektriker, ein Heizungsbauer: Wir sind gut in einer Sache. Und das ist Ihr Vorteil."
     },
     {
-      "icon": "⏱️",
+      "icon": "/assets/images/icon_lightning.webp",
+      "iconAlt": "Schnell",
       "question": "Wie schnell geht das?",
       "label": "Sie haben keine Zeit für Wochen-Tests.",
       "answer": "Verstanden. 7 Tage bis Go-Live. Tag 1-2: Einrichtung WhatsApp, Anrufbeantworter-Text. Tag 3-4: Schulung, FAQ-Liste Ihre Projekte. Tag 5-7: Testphase, erste Live-Anrufe. Danach läuft's."

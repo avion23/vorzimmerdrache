@@ -1,25 +1,30 @@
 {
-  "title": "So geht's",
+  "title": "So funktioniert's - Kunde wird abgeholt, Sie kümmern sich später",
+  "subtitle": "Wir übernehmen den ersten Kontakt. Sie übernehmen, wenn Sie Zeit haben.",
   "workflow": [
     {
-      "icon": "📞",
-      "title": "Anruf eingehend",
-      "description": "Kunde ruft an"
+      "icon": "/assets/images/icon_phone.webp",
+      "iconAlt": "Anruf",
+      "title": "Kunde ruft an",
+      "description": "Wir nehmen jeden Anruf entgegen - auch wenn Sie auf dem Dach sind"
     },
     {
-      "icon": "🔍",
-      "title": "Prüfung & Filter",
-      "description": "Wir qualifizieren"
+      "icon": "/assets/images/icon_search.webp",
+      "iconAlt": "Prüfung",
+      "title": "Wir qualifizieren",
+      "description": "Fachwissen-Check: Dach, Strom, Budget, BAFA-Frist"
     },
     {
-      "icon": "💬",
-      "title": "WhatsApp Info",
-      "description": "Sie erhalten Details"
+      "icon": "/assets/images/icon_whatsapp.webp",
+      "iconAlt": "WhatsApp",
+      "title": "Sie bekommen WhatsApp",
+      "description": "Alle Infos kompakt - wann Sie Zeit haben"
     },
     {
-      "icon": "🤝",
-      "title": "Termin bestätigt",
-      "description": "Auftrag in Sicht"
+      "icon": "/assets/images/icon_handshake.webp",
+      "iconAlt": "Termin",
+      "title": "Sie rufen zurück",
+      "description": "Wenn Sie Zeit haben - mit allen Infos vorab"
     }
   ],
   "steps": [
@@ -47,19 +52,22 @@
   "whatsAppExamples": [
     {
       "type": "urgent",
-      "icon": "🔴",
+      "icon": "/assets/images/icon_lightning.webp",
+      "iconAlt": "Dringend",
       "title": "Wichtiger Rückruf",
       "content": "Herr Meyer ruft wegen laufender BAFA-Frist an.\nRufen Sie zurück: 0171 12345678\n\nDetails:\n• BAFA-Antrag läuft in 10 Tagen ab\n• 8kWp geplant, Eigenbedarf\n• Dach geprüft, Baurecht vorhanden\n• Budget: €20-25k\n\nDringlichkeit: HOCH"
     },
     {
       "type": "summary",
-      "icon": "📊",
+      "icon": "/assets/images/icon_check.webp",
+      "iconAlt": "Zusammenfassung",
       "title": "Tageszusammenfassung",
       "content": "HEUTE: 12 Anrufe, 3 wichtige, 1 Termin\n\nWichtige Rückrufe:\n1. Schmidt - 6kWp, Deckungserklärung liegt vor\n2. Wegener - 3 Dächer Nachbarschaftsprojekt\n3. Bauer - Gewerbehalle 30kWp, dringend\n\nTermin bestätigt:\nSa 10:00 - Meier, Dachsanierung + 5kWp"
     },
     {
       "type": "filtered",
-      "icon": "❌",
+      "icon": "/assets/images/icon_target.webp",
+      "iconAlt": "Gefiltert",
       "title": "Gefiltert (Zeitfresser)",
       "content": "Anruf abgewiesen - Schmidt\n\nDetails:\n• Kein Baurecht nachgefragt\n• Will \"schnell mal Preis\" ohne Besichtigung\n• Vergleicht 5 Anbieter gleichzeitig\n• Budget offenbar €15-17k (unrealistisch)\n\nEmpfehlung: Nicht zurückrufen."
     }

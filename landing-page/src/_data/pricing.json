@@ -25,17 +25,20 @@
   ],
   "guarantees": [
     {
-      "icon": "✅",
+      "icon": "/assets/images/icon_lightning.webp",
+      "iconAlt": "Schnell",
       "title": "7-Tage Go-Live",
       "description": "Wenn nicht in 7 Tagen alles läuft, zahlen Sie das Setup nicht."
     },
     {
-      "icon": "✅",
+      "icon": "/assets/images/icon_check.webp",
+      "iconAlt": "Zufriedenheit",
       "title": "30-Tage Zufriedenheit",
       "description": "Nicht zufrieden? Kündigen Sie einfach. Keine Fragen."
     },
     {
-      "icon": "✅",
+      "icon": "/assets/images/icon_euro.webp",
+      "iconAlt": "Fair",
       "title": "Nur bei Erfolg zahlen",
       "description": "Kein qualifizierter Termin? Keine Kosten. So einfach."
     }

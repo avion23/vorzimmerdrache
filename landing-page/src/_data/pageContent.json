@@ -202,50 +202,59 @@
 
   "trustSignals": [
     {
-      "icon": "🇩🇪",
-      "title": "Aus Bayern, nicht aus Bangalore",
-      "description": "Ihr Ansprechpartner sitzt in Deutschland und hat selbst Handwerker-Background. Kein Callcenter in Osteuropa, kein \"I understand your concern\"."
+      "icon": "/assets/images/icon_germany.webp",
+      "iconAlt": "Made in Germany",
+      "title": "Made in Germany - Server in Deutschland",
+      "description": "Ihr Ansprechpartner sitzt in Deutschland. Unsere Server stehen in Frankfurt. Kein Callcenter im Ausland, keine Datenweitergabe an Dritte. 100% deutsche DSGVO-Konformität."
     },
     {
-      "icon": "🔒",
-      "title": "DSGVO wie beim Handwerkskammer-Portal",
-      "description": "Ihre Kundendaten landen nicht bei Dritten. Wir nutzen die gleichen Standards wie jede seriöse deutsche Verwaltung. TLS-Verschlüsselung wie beim Online-Banking."
+      "icon": "/assets/images/icon_lock.webp",
+      "iconAlt": "DSGVO Sicher",
+      "title": "DSGVO-konform & TLS-verschlüsselt",
+      "description": "Ihre Kundendaten bleiben in Deutschland. TLS-Verschlüsselung wie beim Online-Banking. Keine Speicherung unnötiger Daten. Wir leiten nur weiter, was Sie brauchen: Name, Telefon, Grund."
     },
     {
-      "icon": "💰",
+      "icon": "/assets/images/icon_euro.webp",
+      "iconAlt": "Faire Preise",
       "title": "Transparente Preise, keine Überraschungen",
-      "description": "Was wir versprechen, halten wir. Keine versteckten Gebühren, keine Zusatzkosten. Monatlich kündbar ohne Wenn und Aber."
+      "description": "Was wir versprechen, halten wir. Keine versteckten Gebühren, keine Zusatzkosten. Monatlich kündbar ohne Wenn und Aber. Nur €50 pro qualifiziertem Termin."
     },
     {
-      "icon": "⚡",
+      "icon": "/assets/images/icon_lightning.webp",
+      "iconAlt": "Schnell",
       "title": "7-Tage Go-Live Garantie",
-      "description": "Wenn nicht in 7 Tagen alles läuft, zahlen Sie das Setup nicht. Wir stehen hinter unserem Service."
+      "description": "Wenn nicht in 7 Tagen alles läuft, zahlen Sie das Setup nicht. Wir stehen hinter unserem Service. Ihre ersten Anrufe werden schon nach einer Woche professionell entgegengenommen."
     }
   ],
 
   "faq": [
     {
-      "icon": "💰",
+      "icon": "/assets/images/icon_euro.webp",
+      "iconAlt": "Preis",
       "question": "Das klingt teuer.",
       "answer": "Ein durchgefallener Termin (Fahrt, Angebot, Zeit) kostet Sie leicht €150-200. Wir holen Ihnen 10 qualifizierte Termine für €500. Schauen Sie unten beim Vergleich: Ein Azubi kostet €2.500/Monat plus Sozialabgaben – aber vor allem: 3 Monate Einarbeitung, ständige Kontrolle, und die Nerven, wenn er zum 5. Mal die gleiche Sache falsch macht."
     },
     {
-      "icon": "⚖️",
+      "icon": "/assets/images/icon_lock.webp",
+      "iconAlt": "DSGVO",
       "question": "DSGVO bei WhatsApp? Geht das denn?",
-      "answer": "Wir leiten nur weiter, was Sie brauchen: Name, Telefon, Grund. Keine Kundendaten speichern, kein Profilbau. Das ist rechtlich dasselbe wie wenn Ihre Sekretärin Ihnen eine Notiz auf den Schreibtisch legt. Einfach, sicher, legal."
+      "answer": "Wir leiten nur weiter, was Sie brauchen: Name, Telefon, Grund. Keine Kundendaten speichern, kein Profilbau. Unsere Server stehen in Deutschland. Das ist rechtlich dasselbe wie wenn Ihre Sekretärin Ihnen eine Notiz auf den Schreibtisch legt. Einfach, sicher, DSGVO-konform."
     },
     {
-      "icon": "🔓",
+      "icon": "/assets/images/icon_target.webp",
+      "iconAlt": "Kündbar",
       "question": "Was, wenn es nicht klappt?",
       "answer": "Monatlich kündbar, keine Mindestlaufzeit. Wir müssen uns jeden Monat neu beweisen. So sollte Service sein. Wenn Sie nicht zufrieden sind, gehen Sie. Keine Fragen."
     },
     {
-      "icon": "🎯",
+      "icon": "/assets/images/icon_check.webp",
+      "iconAlt": "Spezialisierung",
       "question": "Nur PV? Warum nicht alle Handwerker?",
       "answer": "Generalisten helfen halb. Spezialisten helfen durch. BAFA-Fristen, Speicherklassen, Notstromkonzepte - das können wir aus dem FF. Ein Dachdecker, ein Elektriker, ein Heizungsbauer: Wir sind gut in einer Sache. Und das ist Ihr Vorteil."
     },
     {
-      "icon": "⏱️",
+      "icon": "/assets/images/icon_lightning.webp",
+      "iconAlt": "Schnell",
       "question": "Wie schnell geht das?",
       "answer": "Verstanden. 7 Tage bis Go-Live. Tag 1-2: Einrichtung WhatsApp, Anrufbeantworter-Text. Tag 3-4: Schulung, FAQ-Liste Ihre Projekte. Tag 5-7: Testphase, erste Live-Anrufe. Danach läuft's."
     }

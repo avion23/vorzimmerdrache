@@ -60,7 +60,9 @@ services:
       - EXECUTIONS_DATA_PRUNE=true
       - EXECUTIONS_DATA_MAX_AGE=168
       - DB_TYPE=sqlite
-      - N8N_RUNNERS_ENABLED=false
+      - N8N_RUNNERS_ENABLED=true
+      - N8N_RUNNERS_MAX_CONCURRENCY=2
+      - N8N_RUNNERS_MODE=internal
       - N8N_TASK_RUNNERS_AUTH_TOKEN=${N8N_ENCRYPTION_KEY}
       - N8N_OAUTH_CALLBACK_REQUIRES_AUTH=false
       - DB_SQLITE_PRAGMAS=journal_mode=WAL;busy_timeout=60000;synchronous=NORMAL;temp_store=MEMORY;wal_autocheckpoint=100
@@ -68,7 +70,6 @@ services:
       - N8N_DB_MIGRATIONS_TIMEOUT=300000
       - N8N_PROXY_HOPS=1
       - EXECUTIONS_DATA_SAVE_ON_SUCCESS=none
-      - EXECUTIONS_DATA_PRUNE_TIMEOUT=3600
       - GOOGLE_SHEETS_SPREADSHEET_ID=${GOOGLE_SHEETS_SPREADSHEET_ID}
       - GOOGLE_SHEETS_SHEET_NAME=${GOOGLE_SHEETS_SHEET_NAME:-Sheet1}
       - GOOGLE_SHEETS_RANGE=${GOOGLE_SHEETS_RANGE}
@@ -119,7 +120,8 @@ services:
 
 volumes:
   n8n_data:
-    driver: local
+    name: vorzimmerdrache_n8n_data
+    external: true
 
 networks:
   vorzimmerdrache:

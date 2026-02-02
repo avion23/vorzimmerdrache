@@ -7,8 +7,8 @@
         :root {
             --primary: #0f172a;
             --primary-dark: #0a0f1c;
-            --accent: #b8860b;
-            --accent-darker: #9a7009;
+            --accent: #f97316;
+            --accent-darker: #ea580c;
             --white: #ffffff;
             --light-gray: #f1f3f4;
             --medium-gray: #6b7280;
@@ -19,7 +19,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.5;
+            line-height: 1.65;
             color: var(--dark-gray);
             background: var(--white);
         }
@@ -797,4 +797,62 @@
                 height: 60px;
                 font-size: 1.5rem;
             }
+        }
+
+        /* WhatsApp Message Bubbles */
+        .whatsapp-example {
+            background: #e7fed3;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            position: relative;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 4px solid #25d366;
+        }
+
+        .whatsapp-example.urgent {
+            background: #fff3cd;
+            border-left-color: #f97316;
+        }
+
+        .whatsapp-example.filtered {
+            background: #f8f9fa;
+            border-left-color: #6b7280;
+        }
+
+        .whatsapp-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .whatsapp-header img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .whatsapp-content {
+            font-family: 'Segoe UI', -apple-system, sans-serif;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #1f2937;
+            white-space: pre-line;
+        }
+
+        /* Icon styling for trust signals */
+        .trust-signal-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1rem;
+        }
+
+        /* FAQ Icon styling */
+        .faq-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 0.75rem;
+            vertical-align: middle;
         }

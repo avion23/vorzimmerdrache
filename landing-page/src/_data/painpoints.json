@@ -1,42 +1,80 @@
 {
   "sectionTitle": "Was passiert mit Ihrem Betrieb, wenn...",
+  "targetPersonas": [
+    {
+      "id": "dachdecker",
+      "name": "Dachdecker & PV-Monteur",
+      "image": "/assets/images/pain_dachdecker.webp",
+      "pain": "Telefon klingelt auf dem Dach. 8 Meter Höhe, eine Hand am Handy, eine am Bohrer. Absturzgefahr. Oder Anruf verpassen - Auftrag weg.",
+      "vossLabel": "Das ist gefährlich. Und Sie müssen wählen: Sicherheit oder Umsatz."
+    },
+    {
+      "id": "mechaniker",
+      "name": "Kfz-Mechaniker",
+      "image": "/assets/images/pain_mechaniker.webp",
+      "pain": "Unter dem Auto, Öl am Handy, Kunde wartet. Telefon klingelt. Wieder abbrechen, wieder anfangen. Termindruck wächst.",
+      "vossLabel": "Sie fühlen sich hin- und hergerissen. Die Arbeit leidet, die Kunden warten."
+    },
+    {
+      "id": "friseur",
+      "name": "Friseur & Dienstleister",
+      "image": "/assets/images/pain_friseur.webp",
+      "pain": "Schere in der Hand, Kunde im Stuhl, Telefon klingelt. Unterbrechen oder ignorieren? Beides schlecht für den Kunden.",
+      "vossLabel": "Das ist unprofessionell. Der Kunde merkt es. Und der nächste Anruf kommt bestimmt."
+    },
+    {
+      "id": "handwerker",
+      "name": "Handwerker allgemein",
+      "image": "/assets/images/pain_handwerker.webp",
+      "pain": "Baustelle, Material kommt, Telefon klingelt. Koordinieren oder abbrechen? Jede Minute zählt, jeder Anruf stört.",
+      "vossLabel": "Sie verlieren den Fokus. Die Baustelle verzögert sich. Das kostet Geld."
+    }
+  ],
   "items": [
     {
-      "beforeIcon": "📞",
+      "beforeIcon": "/assets/images/icon_phone.webp",
+      "beforeIconAlt": "Chaos",
       "beforeTitle": "Telefonchaos",
       "beforeText": "15 Anrufe, 3 wichtige, 12 Zeitfresser. Sie sortieren abends.",
-      "beforeImage": "/assets/images/stressed.jpg",
-      "afterIcon": "✅",
+      "beforeImage": "/assets/images/hero_problem.webp",
+      "afterIcon": "/assets/images/icon_whatsapp.webp",
+      "afterIconAlt": "Ordnung",
       "afterTitle": "WhatsApp-Zusammenfassung",
       "afterText": "Abends eine Nachricht mit allen wichtigen Infos. Fertig.",
-      "afterImage": "/assets/images/phone.jpg"
+      "afterImage": "/assets/images/hero_solution.webp"
     },
     {
-      "beforeIcon": "📞",
+      "beforeIcon": "/assets/images/icon_phone.webp",
+      "beforeIconAlt": "Verpasst",
       "beforeTitle": "Leads verloren",
       "beforeText": "Kunde ruft 3x an, niemand geht ran. Bei Konkurrenz bestellt.",
-      "beforeImage": null,
-      "afterIcon": "🤝",
+      "beforeImage": "/assets/images/before_chaos.webp",
+      "afterIcon": "/assets/images/icon_handshake.webp",
+      "afterIconAlt": "Erfolg",
       "afterTitle": "Qualifizierte Termine",
       "afterText": "Wir nehmen jeden Anruf, filtern Ernsthaftige, melden nur echte Leads.",
-      "afterImage": null
+      "afterImage": "/assets/images/after_organized.webp"
     },
     {
-      "beforeIcon": "🌙",
+      "beforeIcon": "/assets/images/icon_moon.webp",
+      "beforeIconAlt": "Überstunden",
       "beforeTitle": "Abende im Büro",
       "beforeText": "Rückrufe bis 21 Uhr. Familie wartet, Akku leer.",
       "beforeImage": null,
-      "afterIcon": "✅",
+      "afterIcon": "/assets/images/icon_check.webp",
+      "afterIconAlt": "Freizeit",
       "afterTitle": "Freie Abende",
       "afterText": "Wir haben tagsüber alles geklärt. Sie genießen Ihren Feierabend.",
-      "afterImage": "/assets/images/customer.jpg"
+      "afterImage": null
     },
     {
-      "beforeIcon": "🚗",
+      "beforeIcon": "/assets/images/icon_car.webp",
+      "beforeIconAlt": "Fahrten",
       "beforeTitle": "Doppelte Fahrten",
       "beforeText": "Termin vereinbart, Kunde da, Infos fehlen. Nochmal fahren.",
       "beforeImage": null,
-      "afterIcon": "✅",
+      "afterIcon": "/assets/images/icon_check.webp",
+      "afterIconAlt": "Perfekt",
       "afterTitle": "Komplett-Infos",
       "afterText": "Dach, Strom, Budget - alles geprüft vor dem ersten Termin.",
       "afterImage": null

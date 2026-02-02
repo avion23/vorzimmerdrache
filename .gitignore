@@ -3,6 +3,8 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+package-lock.json
+yarn.lock
 
 # Environment variables
 .env
@@ -11,6 +13,9 @@ yarn-error.log*
 .env.test
 *.key
 *.pem
+
+# 11ty build output
+landing-page/_site/
 
 # Test coverage
 coverage/
@@ -53,3 +58,6 @@ integrations/**/*.cert
 .alerts/
 scripts/monitor.conf
 scripts/monitor.conf.local
+
+# Wrangler
+.wrangler/
