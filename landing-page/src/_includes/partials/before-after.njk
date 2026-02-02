@@ -34,7 +34,7 @@
 
 <section class="pain-points" id="problem">
     <div class="container">
-        <h2 class="section-title">❌ Vorher → ✅ Nachher</h2>
+        <h2 class="section-title"><span style="color: #ef4444;">✕</span> Vorher → <span style="color: #10b981;">✓</span> Nachher</h2>
         <div class="before-after-grid">
             {% for item in painpoints.items %}
             <div class="comparison-pair">
@@ -46,7 +46,7 @@
                             <img src="{{ item.beforeIcon }}" alt="{{ item.beforeTitle }}" width="32" height="32">
                         </div>
                     {% endif %}
-                    <span class="comparison-icon">❌</span>
+                    <span class="comparison-icon" style="color: #ef4444; font-weight: bold;">✕</span>
                     <span class="comparison-text"><strong>{{ item.beforeTitle }}:</strong> {{ item.beforeText }}</span>
                 </div>
                 <div class="comparison-after">
@@ -57,7 +57,7 @@
                             <img src="{{ item.afterIcon }}" alt="{{ item.afterTitle }}" width="32" height="32">
                         </div>
                     {% endif %}
-                    <span class="comparison-icon">✅</span>
+                    <span class="comparison-icon" style="color: #10b981; font-weight: bold;">✓</span>
                     <span class="comparison-text"><strong>{{ item.afterTitle }}:</strong> {{ item.afterText }}</span>
                 </div>
                 {% if item.vossLabel %}

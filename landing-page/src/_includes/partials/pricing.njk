@@ -54,9 +54,9 @@
         <div style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 4px; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
             <p style="font-size: 1rem; margin-bottom: 0.5rem;"><strong>Ohne uns:</strong></p>
             <ul style="text-align: left; list-style: none; padding: 0;">
-                <li style="padding: 0.3rem 0;">❌ {{ pricing.losses.missedCalls }}</li>
-                <li style="padding: 0.3rem 0;">❌ {{ pricing.losses.revenueLoss }}</li>
-                <li style="padding: 0.3rem 0;">❌ {{ pricing.losses.eveningWork }}</li>
+                <li style="padding: 0.3rem 0;"><span style="color: #ef4444; font-weight: bold;">✕</span> {{ pricing.losses.missedCalls }}</li>
+                <li style="padding: 0.3rem 0;"><span style="color: #ef4444; font-weight: bold;">✕</span> {{ pricing.losses.revenueLoss }}</li>
+                <li style="padding: 0.3rem 0;"><span style="color: #ef4444; font-weight: bold;">✕</span> {{ pricing.losses.eveningWork }}</li>
             </ul>
         </div>
 
@@ -69,7 +69,7 @@
 
             <ul class="price-features">
                 {% for feature in pricing.features %}
-                <li>✓ {{ feature }}</li>
+                <li><span style="color: #10b981; font-weight: bold;">✓</span> {{ feature }}</li>
                 {% endfor %}
             </ul>
 

@@ -211,9 +211,9 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
       "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "googleSheetsOAuth2Api",
-          "name": "Google Sheets OAuth2"
+        "googleApi": {
+          "id": "googleApi",
+          "name": "Google Sheets account"
         }
       }
     },
@@ -366,9 +366,9 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
       "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "googleSheetsOAuth2Api",
-          "name": "Google Sheets OAuth2"
+        "googleApi": {
+          "id": "googleApi",
+          "name": "Google Sheets account"
         }
       }
     },
@@ -437,9 +437,9 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
       "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "googleSheetsOAuth2Api",
-          "name": "Google Sheets OAuth2"
+        "googleApi": {
+          "id": "googleApi",
+          "name": "Google Sheets account"
         }
       }
     },
@@ -644,9 +644,9 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
       "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "googleSheetsOAuth2Api",
-          "name": "Google Sheets OAuth2"
+        "googleApi": {
+          "id": "googleApi",
+          "name": "Google Sheets account"
         }
       }
     },
@@ -671,9 +671,9 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
       "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "googleSheetsOAuth2Api",
-          "name": "Google Sheets OAuth2"
+        "googleApi": {
+          "id": "googleApi",
+          "name": "Google Sheets account"
         }
       }
     },
@@ -698,9 +698,9 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
       "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "googleSheetsOAuth2Api",
-          "name": "Google Sheets OAuth2"
+        "googleApi": {
+          "id": "googleApi",
+          "name": "Google Sheets account"
         }
       }
     },
@@ -724,9 +724,9 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
       "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "googleSheetsOAuth2Api",
-          "name": "Google Sheets OAuth2"
+        "googleApi": {
+          "id": "googleApi",
+          "name": "Google Sheets account"
         }
       }
     },

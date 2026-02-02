@@ -147,9 +147,9 @@
         350
       ],
       "credentials": {
-        "googleApi": {
-          "id": "googleApi",
-          "name": "Google Sheets account"
+        "googleSheetsOAuth2Api": {
+          "id": "googleSheetsOAuth2Api",
+          "name": "Google Sheets OAuth2"
         }
       }
     },
@@ -288,9 +288,9 @@
         450
       ],
       "credentials": {
-        "googleApi": {
-          "id": "googleApi",
-          "name": "Google Sheets account"
+        "googleSheetsOAuth2Api": {
+          "id": "googleSheetsOAuth2Api",
+          "name": "Google Sheets OAuth2"
         }
       }
     },

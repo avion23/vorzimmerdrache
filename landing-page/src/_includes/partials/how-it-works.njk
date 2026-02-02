@@ -41,7 +41,7 @@
         <div class="pain-grid" style="margin-top: 2rem;">
             {% for example in howItWorks.whatsAppExamples %}
             <div class="pain-item">
-                <h3>{{ example.icon }} {{ example.title }}</h3>
+                <h3><img src="{{ example.icon }}" alt="" width="32" height="32" style="vertical-align: middle; margin-right: 8px;"> {{ example.title }}</h3>
                 <p style="font-family: monospace; font-size: 0.9rem; background: #f9fafb; padding: 1rem; border-radius: 4px;">
                     {{ example.content | nl2br | safe }}
                 </p>
