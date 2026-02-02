@@ -2,13 +2,16 @@ module.exports = function(eleventyConfig) {
     // Copy static assets
     // Map src/assets/images to /images in the output
     eleventyConfig.addPassthroughCopy("src/assets/images");
-    
-    // Copy CSS and JS from src/_includes if needed, 
+
+    // Copy CSS and JS from src/_includes if needed,
     // but better to put them in assets if they are standalone
     // For now, let's just make sure assets are copied
     eleventyConfig.addPassthroughCopy("src/assets/css");
     eleventyConfig.addPassthroughCopy("src/assets/js");
-    
+
+    // Copy _headers file for Cloudflare Pages security headers
+    eleventyConfig.addPassthroughCopy("_headers");
+
     // Watch targets for development
     eleventyConfig.addWatchTarget("src/_data/");
     eleventyConfig.addWatchTarget("src/_includes/");
