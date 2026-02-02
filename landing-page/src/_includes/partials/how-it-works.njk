@@ -6,7 +6,7 @@
         <div class="workflow-visual">
             {% for step in howItWorks.workflow %}
             <div class="workflow-step">
-                <div class="workflow-icon"><img src="{{ step.icon }}" alt="{{ step.title }}" width="32" height="32"></div>
+                <div class="workflow-icon"><img src="{{ step.icon }}" alt="{{ step.title }}" width="48" height="48" style="width: 48px; height: 48px;" loading="lazy" decoding="async" onerror="this.outerHTML='<span style=\'font-size: 2.5rem;\'>📞</span>';"></div>
                 <h4>{{ step.title }}</h4>
                 <p>{{ step.subtitle or step.description }}</p>
             </div>
@@ -27,7 +27,8 @@
             {% for img in pageContent.howItWorks.images %}
             <div class="image-container">
                 <img src="{{ img.src }}" alt="{{ img.alt }}"
-                     width="400" height="200" loading="lazy">
+                     width="400" height="200" loading="lazy" decoding="async"
+                     onerror="this.style.background='linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)'; this.alt='{{ img.alt }} (Bild nicht verfügbar)';">
             </div>
             {% endfor %}
         </div>
@@ -41,7 +42,7 @@
         <div class="pain-grid" style="margin-top: 2rem;">
             {% for example in howItWorks.whatsAppExamples %}
             <div class="pain-item">
-                <h3><img src="{{ example.icon }}" alt="" width="32" height="32" style="vertical-align: middle; margin-right: 8px;"> {{ example.title }}</h3>
+                <h3><img src="{{ example.icon }}" alt="{{ example.title }}" width="32" height="32" style="vertical-align: middle; margin-right: 8px;" loading="lazy" decoding="async" onerror="this.outerHTML='<span style=\'font-size: 1.5rem; vertical-align: middle; margin-right: 8px;\'>💬</span>';"> {{ example.title }}</h3>
                 <p style="font-family: monospace; font-size: 0.9rem; background: #f9fafb; padding: 1rem; border-radius: 4px;">
                     {{ example.content | nl2br | safe }}
                 </p>

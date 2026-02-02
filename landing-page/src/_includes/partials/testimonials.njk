@@ -48,9 +48,13 @@
             {% for item in testimonials.items %}
             <div class="testimonial-item">
                 {% if item.avatar %}
-                    <img src="{{ item.avatar }}" alt="{{ item.name }}" class="testimonial-avatar" loading="lazy" width="60" height="60">
+                    <div class="testimonial-avatar-wrapper" style="width: 60px; height: 60px; margin-bottom: 1rem;">
+                        <img src="{{ item.avatar }}" alt="{{ item.name }}" class="testimonial-avatar" loading="lazy" decoding="async" width="60" height="60"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="avatar-placeholder" style="display: none;">{{ item.initials | default(item.name | first | upper) }}</div>
+                    </div>
                 {% else %}
-                    <div class="avatar-placeholder">{{ item.initials }}</div>
+                    <div class="avatar-placeholder">{{ item.initials | default(item.name | first | upper) }}</div>
                 {% endif %}
                 <div class="testimonial-company">{{ item.name }}, {{ item.company }}</div>
                 <div class="testimonial-info">{{ item.size }}</div>

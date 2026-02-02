@@ -20,6 +20,9 @@
         width: 100%; height: 200px; display: flex; align-items: center;
         justify-content: center; border-radius: 4px; margin-bottom: 1rem; font-size: 4rem;
     }
+    .comparison-placeholder img {
+        width: 64px; height: 64px; object-fit: contain;
+    }
     .comparison-icon { font-size: 1.2rem; margin-right: 0.5rem; }
     .comparison-text { font-size: 0.95rem; line-height: 1.4; }
     .validation-box {
@@ -40,10 +43,11 @@
             <div class="comparison-pair">
                 <div class="comparison-before">
                     {% if item.beforeImage %}
-                        <img src="{{ item.beforeImage }}" alt="{{ item.beforeTitle }}" class="comparison-image" loading="lazy" width="400" height="200">
+                        <img src="{{ item.beforeImage }}" alt="{{ item.beforeTitle }}" class="comparison-image" loading="lazy" decoding="async" width="400" height="200"
+                             onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<div class=\'comparison-placeholder\' style=\'background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);\'><img src=\'{{ item.beforeIcon }}\' alt=\'{{ item.beforeTitle }}\' width=\'32\' height=\'32\'></div>');">
                     {% else %}
                         <div class="comparison-placeholder" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);">
-                            <img src="{{ item.beforeIcon }}" alt="{{ item.beforeTitle }}" width="32" height="32">
+                            <img src="{{ item.beforeIcon }}" alt="{{ item.beforeTitle }}" width="32" height="32" loading="lazy" decoding="async">
                         </div>
                     {% endif %}
                     <span class="comparison-icon" style="color: #ef4444; font-weight: bold;">✕</span>
@@ -51,10 +55,11 @@
                 </div>
                 <div class="comparison-after">
                     {% if item.afterImage %}
-                        <img src="{{ item.afterImage }}" alt="{{ item.afterTitle }}" class="comparison-image" loading="lazy" width="400" height="200">
+                        <img src="{{ item.afterImage }}" alt="{{ item.afterTitle }}" class="comparison-image" loading="lazy" decoding="async" width="400" height="200"
+                             onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<div class=\'comparison-placeholder\' style=\'background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);\'><img src=\'{{ item.afterIcon }}\' alt=\'{{ item.afterTitle }}\' width=\'32\' height=\'32\'></div>');">
                     {% else %}
                         <div class="comparison-placeholder" style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);">
-                            <img src="{{ item.afterIcon }}" alt="{{ item.afterTitle }}" width="32" height="32">
+                            <img src="{{ item.afterIcon }}" alt="{{ item.afterTitle }}" width="32" height="32" loading="lazy" decoding="async">
                         </div>
                     {% endif %}
                     <span class="comparison-icon" style="color: #10b981; font-weight: bold;">✓</span>

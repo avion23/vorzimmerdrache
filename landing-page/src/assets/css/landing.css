@@ -4,6 +4,29 @@
             box-sizing: border-box;
         }
 
+        /* Prevent FOUC - Hide body until loaded */
+        html {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Image loading states to prevent layout shift */
+        img[loading="lazy"] {
+            background: #f3f4f6;
+            min-height: 1px;
+        }
+
+        /* Ensure all images have dimensions to prevent layout shift */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Prevent layout shift for images without explicit dimensions */
+        img:not([width]):not([height]) {
+            aspect-ratio: attr(width) / attr(height);
+        }
+
         :root {
             --primary: #0f172a;
             --primary-dark: #0a0f1c;
@@ -131,6 +154,9 @@
             overflow: hidden;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             position: relative;
+            /* Prevent layout shift with aspect ratio */
+            min-height: 200px;
+            background: #1e293b;
         }
 
         .hero-image img {
@@ -138,6 +164,8 @@
             height: auto;
             display: block;
             transition: transform 0.3s ease;
+            /* Prevent layout shift during image load */
+            position: relative;
         }
 
         .hero-image:hover img {
@@ -173,13 +201,20 @@
         }
 
         /* Testimonial avatars */
+        .testimonial-avatar-wrapper {
+            position: relative;
+            border-radius: 50%;
+            border: 3px solid var(--accent);
+            overflow: hidden;
+        }
+
         .testimonial-avatar {
             width: 60px;
             height: 60px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 1rem;
-            border: 3px solid var(--accent);
+            border: none;
+            display: block;
         }
 
         .avatar-placeholder {
@@ -203,6 +238,34 @@
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 1.5rem;
             margin-top: 2rem;
+        }
+
+        /* Hero badges improvement */
+        .hero-badges {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-badges .badge {
+            background: rgba(249, 115, 22, 0.2);
+            color: var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid var(--accent);
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .hero-badges .badge img {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            object-fit: contain;
         }
 
         .trust-badge {
@@ -352,6 +415,21 @@
             padding: 1.5rem;
             border-left: 4px solid var(--accent);
             border-radius: 0 4px 4px 0;
+        }
+
+        .pain-item-image-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+            background: #f3f4f6;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .pain-item-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .pain-item h3 {
@@ -739,6 +817,16 @@
             .steps-grid,
             .testimonial-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .hero-badges {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+            }
+
+            .hero-badges .badge {
+                flex: 0 0 auto;
             }
 
             nav .container {

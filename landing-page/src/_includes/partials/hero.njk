@@ -37,6 +37,12 @@
         .hero-subline { font-size: 1rem; }
         .hero-badges { flex-direction: column; }
         .hero-badges .badge { text-align: center; }
+        .hero-social-proof { font-size: 0.85rem; margin-top: 0.5rem; }
+    }
+    .hero-badges .badge img {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 4px;
     }
 </style>
 
@@ -45,9 +51,9 @@
         <h1>{{ pageContent.hero.headline }}</h1>
         <p class="hero-subline">{{ pageContent.hero.subline }}</p>
         <div class="hero-badges">
-            <span class="badge"><img src="/assets/images/icon_germany.webp" alt="" width="16" height="16" style="vertical-align: middle; margin-right: 4px;"> Made in Germany</span>
-            <span class="badge"><img src="/assets/images/icon_lightning.webp" alt="" width="16" height="16" style="vertical-align: middle; margin-right: 4px;"> 7 Tage Go-Live</span>
-            <span class="badge"><img src="/assets/images/icon_target.webp" alt="" width="16" height="16" style="vertical-align: middle; margin-right: 4px;"> Nur Photovoltaik</span>
+            <span class="badge"><img src="/assets/images/icon_germany.webp" alt="Made in Germany" width="16" height="16" loading="lazy" decoding="async" style="vertical-align: middle; margin-right: 4px;" onerror="this.outerHTML='🇩🇪 <span style=\'vertical-align: middle; margin-right: 4px;\'>Made in Germany</span>';"> Made in Germany</span>
+            <span class="badge"><img src="/assets/images/icon_lightning.webp" alt="Schnell" width="16" height="16" loading="lazy" decoding="async" style="vertical-align: middle; margin-right: 4px;" onerror="this.outerHTML='⚡ <span style=\'vertical-align: middle; margin-right: 4px;\'>7 Tage Go-Live</span>';"> 7 Tage Go-Live</span>
+            <span class="badge"><img src="/assets/images/icon_target.webp" alt="Zielgruppe" width="16" height="16" loading="lazy" decoding="async" style="vertical-align: middle; margin-right: 4px;" onerror="this.outerHTML='🎯 <span style=\'vertical-align: middle; margin-right: 4px;\'>Nur Photovoltaik</span>';"> Nur Photovoltaik</span>
         </div>
         <a href="{{ pageContent.hero.ctaLink }}" class="hero-cta">{{ pageContent.hero.cta }}</a>
 
@@ -55,9 +61,11 @@
             Bereits 50+ PV-Betriebe vertrauen uns
         </p>
 
-        <div class="hero-image">
+        <div class="hero-image" style="aspect-ratio: 1100/733;">
             <img src="{{ pageContent.hero.image.src }}" alt="{{ pageContent.hero.image.alt }}"
-                 width="1100" height="733" fetchpriority="high" decoding="async">
+                 width="1100" height="733" fetchpriority="high" decoding="async"
+                 style="aspect-ratio: 1100/733; background: #1e293b;"
+                 onerror="this.style.background='linear-gradient(135deg, #1e3a8a 0%, #1e293b 100%)'; this.alt='PV-Installateur auf dem Dach bei der Arbeit (Bild nicht verfügbar)';">
         </div>
     </div>
 </section>
@@ -86,10 +94,11 @@
         <div class="pain-grid" style="margin-top: 2rem;">
             {% for persona in painpoints.targetPersonas %}
             <div class="pain-item" style="background: #fffbeb; padding: 0; overflow: hidden;">
-                <div style="position: relative; height: 200px; overflow: hidden;">
-                    <img src="{{ persona.image }}" alt="{{ persona.name }}" 
+                <div style="position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; background: #f3f4f6;">
+                    <img src="{{ persona.image }}" alt="{{ persona.name }}"
                          style="width: 100%; height: 100%; object-fit: cover;"
-                         loading="lazy" decoding="async">
+                         loading="lazy" decoding="async" width="400" height="225"
+                         onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #f97316, #ea580c)';">
                 </div>
                 <div style="padding: 1.5rem;">
                     <h3 style="color: var(--primary); margin-bottom: 0.5rem;">{{ persona.name }}</h3>
