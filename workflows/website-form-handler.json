@@ -20,14 +20,46 @@
     },
     {
       "parameters": {
-        "jsCode": "// Extract form data\nconst formData = {\n  name: $input.first().json.body?.name || $input.first().json.name || 'Unbekannt',\n  phone: $input.first().json.body?.phone || $input.first().json.phone || '',\n  installations: $input.first().json.body?.installations || $input.first().json.installations || '',\n  timestamp: new Date().toISOString(),\n  source: 'meisteranruf.de Website'\n};\n\n// Validate required fields\nif (!formData.name || !formData.phone) {\n  throw new Error('Name und Telefon sind Pflichtfelder');\n}\n\nreturn [formData];"
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{ $headers['x-webhook-secret'] }}",
+              "rightValue": "={{ $env.WEBHOOK_SECRET }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
       },
-      "id": "validate-node",
-      "name": "Validate Form Data",
-      "type": "n8n-nodes-base.code",
+      "id": "if-validate-webhook-secret",
+      "name": "IF - Validate Webhook Secret",
+      "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
         450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract form data\nconst formData = {\n  name: $input.first().json.body?.name || $input.first().json.name || 'Unbekannt',\n  phone: $input.first().json.body?.phone || $input.first().json.phone || '',\n  installations: $input.first().json.body?.installations || $input.first().json.installations || '',\n  timestamp: new Date().toISOString(),\n  source: 'meisteranruf.de Website'\n};\n\n// Validate required fields\nif (!formData.name || !formData.phone) {\n  throw new Error('Name und Telefon sind Pflichtfelder');\n}\n\nreturn [formData];"
+      },
+      "id": "validate-node",
+      "name": "Code - Parse Form Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        650,
         300
       ]
     },
@@ -44,7 +76,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        650,
+        850,
         200
       ]
     },
@@ -61,8 +93,25 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        650,
+        850,
         400
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Unauthorized: Invalid webhook secret",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "respond-unauthorized",
+      "name": "Respond - Unauthorized",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        650,
+        500
       ]
     },
     {
@@ -76,7 +125,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1,
       "position": [
-        850,
+        1050,
         300
       ],
       "credentials": {
@@ -99,7 +148,7 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2,
       "position": [
-        1050,
+        1250,
         300
       ],
       "credentials": {
@@ -112,7 +161,7 @@
     {
       "parameters": {
         "operation": "append",
-        "documentId": "${GOOGLE_SHEETS_SPREADSHEET_ID}",
+        "documentId": "{{$env.GOOGLE_SHEETS_SPREADSHEET_ID}}",
         "sheetName": "Sheet1",
         "options": {},
         "fieldsUi": {
@@ -146,7 +195,7 @@
         "sheetId": {
           "__rl": true,
           "mode": "url",
-          "value": "${GOOGLE_SHEETS_SPREADSHEET_ID}"
+          "value": "{{$env.GOOGLE_SHEETS_SPREADSHEET_ID}}"
         }
       },
       "id": "sheets-node",
@@ -154,7 +203,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
       "position": [
-        1250,
+        1450,
         300
       ],
       "credentials": {
@@ -170,14 +219,32 @@
       "main": [
         [
           {
-            "node": "Validate Form Data",
+            "node": "IF - Validate Webhook Secret",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Validate Form Data": {
+    "IF - Validate Webhook Secret": {
+      "main": [
+        [
+          {
+            "node": "Code - Parse Form Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond - Unauthorized",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Parse Form Data": {
       "main": [
         [
           {
