@@ -23,10 +23,20 @@
     }
     .feature-icon {
         margin-bottom: 0.75rem;
+        position: relative;
+        display: inline-block;
     }
     .feature-icon img {
         width: 40px;
         height: 40px;
+    }
+    .feature-fallback {
+        display: none;
+        font-size: 2rem;
+    }
+    .feature-icon img[src=""] + .feature-fallback,
+    .feature-icon img:not([src]) + .feature-fallback {
+        display: inline;
     }
     .feature-title {
         font-size: 1.1rem;
@@ -55,22 +65,22 @@
     <div class="container">
         <div class="features-grid">
             <div class="feature-box">
-                <div class="feature-icon"><img src="/assets/images/icon_check.webp" alt="✓" width="40" height="40" loading="lazy" decoding="async" onerror="this.outerHTML='<span style=\'font-size: 2rem;\'>✓</span>';"></div>
+                <div class="feature-icon"><img src="/assets/images/icon_check.webp" alt="✓" width="40" height="40" loading="lazy" decoding="async"><span class="feature-fallback">✓</span></div>
                 <div class="feature-title">PV-Spezialist</div>
                 <div class="feature-desc">Fronius, SMA, Kostal - wir kennen Ihre Wechselrichter und sprechen Ihre Sprache.</div>
             </div>
             <div class="feature-box">
-                <div class="feature-icon"><img src="/assets/images/icon_whatsapp.webp" alt="💬" width="40" height="40" loading="lazy" decoding="async" onerror="this.outerHTML='<span style=\'font-size: 2rem;\'>💬</span>';"></div>
+                <div class="feature-icon"><img src="/assets/images/icon_whatsapp.webp" alt="💬" width="40" height="40" loading="lazy" decoding="async"><span class="feature-fallback">💬</span></div>
                 <div class="feature-title">WhatsApp in Echtzeit</div>
                 <div class="feature-desc">Erhalte Anfragen sofort auf dein Handy - keine 24h Verzögerung mehr.</div>
             </div>
             <div class="feature-box">
-                <div class="feature-icon"><img src="/assets/images/icon_euro.webp" alt="€" width="40" height="40" loading="lazy" decoding="async" onerror="this.outerHTML='<span style=\'font-size: 2rem;\'>€</span>';"></div>
+                <div class="feature-icon"><img src="/assets/images/icon_euro.webp" alt="€" width="40" height="40" loading="lazy" decoding="async"><span class="feature-fallback">€</span></div>
                 <div class="feature-title">Nur bei Erfolg zahlen</div>
                 <div class="feature-desc">Keine monatlichen Gebühren. Du zahlst nur für qualifizierte Termine.</div>
             </div>
             <div class="feature-box">
-                <div class="feature-icon"><img src="/assets/images/icon_lightning.webp" alt="⚡" width="40" height="40" loading="lazy" decoding="async" onerror="this.outerHTML='<span style=\'font-size: 2rem;\'>⚡</span>';"></div>
+                <div class="feature-icon"><img src="/assets/images/icon_lightning.webp" alt="⚡" width="40" height="40" loading="lazy" decoding="async"><span class="feature-fallback">⚡</span></div>
                 <div class="feature-title">7 Tage bis Go-Live</div>
                 <div class="feature-desc">Schnellstmöglicher Start. In einer Woche wirst du erste Anfragen erhalten.</div>
             </div>

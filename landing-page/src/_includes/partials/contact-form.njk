@@ -5,6 +5,22 @@
             {{ pageContent.contact.subline }}
         </p>
 
+        <!-- Trust Cluster -->
+        <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap;">
+            <div style="text-align: center; font-size: 0.9rem; color: var(--medium-gray);">
+                <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">🔒</div>
+                <div>DSGVO-konform</div>
+            </div>
+            <div style="text-align: center; font-size: 0.9rem; color: var(--medium-gray);">
+                <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">⚡</div>
+                <div>7 Tage Go-Live</div>
+            </div>
+            <div style="text-align: center; font-size: 0.9rem; color: var(--medium-gray);">
+                <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">✓</div>
+                <div>Keine Verpflichtung</div>
+            </div>
+        </div>
+
         <form class="contact-form" id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
             <div class="form-group">
                 <label for="name">{{ pageContent.contact.form.name.label }}</label>
@@ -20,7 +36,7 @@
             <div class="form-group">
                 <label for="email">{{ pageContent.contact.form.email.label }}</label>
                 <input type="email" id="email" name="email" placeholder="{{ pageContent.contact.form.email.placeholder }}">
-                <input type="hidden" name="_subject" value="Neue Kontaktanfrage von VorzimmerDrache">
+                <input type="hidden" name="_subject" value="Neue Kontaktanfrage von MeisterAnruf">
             </div>
             <div class="form-group">
                 <label for="installations">{{ pageContent.contact.form.installations.label }}</label>

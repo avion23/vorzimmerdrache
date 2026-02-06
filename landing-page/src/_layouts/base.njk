@@ -8,6 +8,19 @@
     <meta name="robots" content="{{ metadata.meta.robots }}">
     <link rel="canonical" href="{{ metadata.meta.canonical }}">
 
+    <!-- Performance: Preconnect -->
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://www.google-analytics.com">
+    <link rel="preconnect" href="https://static.cloudflareinsights.com">
+
+    <!-- Performance: DNS Prefetch -->
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://www.google-analytics.com">
+    <link rel="dns-prefetch" href="https://static.cloudflareinsights.com">
+
+    <!-- Performance: Preload Hero Image -->
+    <link rel="preload" href="/assets/images/hero-pv.webp" as="image" type="image/webp">
+
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -125,6 +138,23 @@
         @media (max-width: 768px) {
             nav .container { flex-direction: column; gap: 1rem; }
             .section-title { font-size: 1.4rem; }
+        }
+
+        /* Icon fallback styles */
+        .icon-fallback, .faq-fallback, .badge-fallback, .feature-fallback, .trust-icon-fallback {
+            display: none;
+        }
+        img[src=""] + .icon-fallback,
+        img:not([src]) + .icon-fallback,
+        img[src=""] + .faq-fallback,
+        img:not([src]) + .faq-fallback,
+        img[src=""] + .badge-fallback,
+        img:not([src]) + .badge-fallback,
+        img[src=""] + .feature-fallback,
+        img:not([src]) + .feature-fallback,
+        img[src=""] + .trust-icon-fallback,
+        img:not([src]) + .trust-icon-fallback {
+            display: inline;
         }
     </style>
     {{ additional_styles | safe }}

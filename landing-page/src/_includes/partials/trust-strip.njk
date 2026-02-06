@@ -24,16 +24,31 @@
         display: block;
         margin: 0 auto;
     }
-    .trust-icon-placeholder {
+    .trust-icon-wrapper {
+        position: relative;
         width: 48px;
         height: 48px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.2);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.5rem;
         margin: 0 auto;
+    }
+    .trust-icon-wrapper img {
+        position: relative;
+        z-index: 1;
+    }
+    .trust-icon-fallback {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
     }
     .trust-text {
         font-size: 0.95rem;
@@ -52,9 +67,11 @@
             width: 40px;
             height: 40px;
         }
-        .trust-icon-placeholder {
+        .trust-icon-wrapper {
             width: 40px;
             height: 40px;
+        }
+        .trust-icon-fallback {
             font-size: 1.25rem;
         }
     }
@@ -69,19 +86,31 @@
     <div class="container">
         <div class="trust-grid">
             <div class="trust-item">
-                <img src="/assets/images/icon_germany.webp" alt="Made in Germany" width="48" height="48" loading="lazy" decoding="async" onerror="this.outerHTML='<div class=\'trust-icon-placeholder\'>🇩🇪</div>';">
+                <div class="trust-icon-wrapper">
+                    <img src="/assets/images/icon_germany.webp" alt="Made in Germany" width="48" height="48" loading="lazy" decoding="async">
+                    <span class="trust-icon-fallback">🇩🇪</span>
+                </div>
                 <span class="trust-text">Made in Germany</span>
             </div>
             <div class="trust-item">
-                <img src="/assets/images/icon_lightning.webp" alt="7 Tage Go-Live" width="48" height="48" loading="lazy" decoding="async" onerror="this.outerHTML='<div class=\'trust-icon-placeholder\'>⚡</div>';">
+                <div class="trust-icon-wrapper">
+                    <img src="/assets/images/icon_lightning.webp" alt="7 Tage Go-Live" width="48" height="48" loading="lazy" decoding="async">
+                    <span class="trust-icon-fallback">⚡</span>
+                </div>
                 <span class="trust-text">7 Tage Go-Live</span>
             </div>
             <div class="trust-item">
-                <img src="/assets/images/icon_lock.webp" alt="DSGVO-konform" width="48" height="48" loading="lazy" decoding="async" onerror="this.outerHTML='<div class=\'trust-icon-placeholder\'>🔒</div>';">
+                <div class="trust-icon-wrapper">
+                    <img src="/assets/images/icon_lock.webp" alt="DSGVO-konform" width="48" height="48" loading="lazy" decoding="async">
+                    <span class="trust-icon-fallback">🔒</span>
+                </div>
                 <span class="trust-text">DSGVO-konform</span>
             </div>
             <div class="trust-item">
-                <img src="/assets/images/icon_check.webp" alt="Monatlich kündbar" width="48" height="48" loading="lazy" decoding="async" onerror="this.outerHTML='<div class=\'trust-icon-placeholder\'>✓</div>';">
+                <div class="trust-icon-wrapper">
+                    <img src="/assets/images/icon_check.webp" alt="Monatlich kündbar" width="48" height="48" loading="lazy" decoding="async">
+                    <span class="trust-icon-fallback">✓</span>
+                </div>
                 <span class="trust-text">Monatlich kündbar</span>
             </div>
         </div>

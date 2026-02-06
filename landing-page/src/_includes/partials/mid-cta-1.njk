@@ -56,6 +56,20 @@
         height: 20px;
         filter: brightness(0) invert(1);
     }
+    .mid-cta-1 .trust-badge-icon-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+    }
+    .mid-cta-1 .trust-badge-icon-wrapper .icon-fallback {
+        display: none;
+        font-size: 1.2rem;
+    }
+    .mid-cta-1 .trust-badge-icon-wrapper img[src=""] + .icon-fallback,
+    .mid-cta-1 .trust-badge-icon-wrapper img:not([src]) + .icon-fallback {
+        display: inline;
+    }
     @media (max-width: 768px) {
         .mid-cta-1 h2 {
             font-size: 1.4rem;
@@ -79,15 +93,15 @@
 
         <div class="trust-badges">
             <div class="trust-badge">
-                <img src="/assets/images/icon_check.webp" alt="✓" width="20" height="20" loading="lazy" decoding="async" onerror="this.outerHTML='<span style=\'font-size: 1.2rem;\'>✓</span>';">
+                <span class="trust-badge-icon-wrapper"><img src="/assets/images/icon_check.webp" alt="✓" width="20" height="20" loading="lazy" decoding="async"><span class="icon-fallback">✓</span></span>
                 <span>Keine Verpflichtung</span>
             </div>
             <div class="trust-badge">
-                <img src="/assets/images/icon_lightning.webp" alt="⚡" width="20" height="20" loading="lazy" decoding="async" onerror="this.outerHTML='<span style=\'font-size: 1.2rem;\'>⚡</span>';">
+                <span class="trust-badge-icon-wrapper"><img src="/assets/images/icon_lightning.webp" alt="⚡" width="20" height="20" loading="lazy" decoding="async"><span class="icon-fallback">⚡</span></span>
                 <span>In 7 Tagen live</span>
             </div>
             <div class="trust-badge">
-                <img src="/assets/images/icon_lock.webp" alt="🔒" width="20" height="20" loading="lazy" decoding="async" onerror="this.outerHTML='<span style=\'font-size: 1.2rem;\'>🔒</span>';">
+                <span class="trust-badge-icon-wrapper"><img src="/assets/images/icon_lock.webp" alt="🔒" width="20" height="20" loading="lazy" decoding="async"><span class="icon-fallback">🔒</span></span>
                 <span>DSGVO-konform</span>
             </div>
         </div>

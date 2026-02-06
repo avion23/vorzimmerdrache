@@ -2,17 +2,16 @@
     <div class="container">
         <h2 class="section-title">Warum Sie uns vertrauen können</h2>
         <div style="margin-bottom: 2rem; text-align: center;">
-            <div class="image-container" style="max-width: 800px; margin: 0 auto;">
+            <div class="image-container" style="max-width: 800px; margin: 0 auto; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);">
                 <img src="/assets/images/team-meeting.jpg" alt="Professionelle Planung und Organisation"
-                     width="800" height="300" loading="lazy" decoding="async"
-                     onerror="this.style.background='linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)'; this.alt='Team-Meeting (Bild nicht verfügbar)';">
+                     width="800" height="300" loading="lazy" decoding="async">
             </div>
         </div>
 
         <div class="pain-grid">
             {% for signal in pageContent.trustSignals %}
             <div class="pain-item">
-                <div style="font-size: 2rem; margin-bottom: 0.5rem;"><img src="{{ signal.icon }}" alt="{{ signal.title }}" width="32" height="32" loading="lazy" decoding="async" onerror="this.outerHTML='<span style=\'font-size: 2rem;\'>🔒</span>';"></div>
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;"><span class="signal-icon-wrapper"><img src="{{ signal.icon }}" alt="{{ signal.title }}" width="32" height="32" loading="lazy" decoding="async"><span class="icon-fallback">🔒</span></span></div>
                 <h3>{{ signal.title }}</h3>
                 <p>{{ signal.description }}</p>
             </div>

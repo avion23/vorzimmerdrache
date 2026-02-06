@@ -116,7 +116,7 @@
     },
     {
       "parameters": {
-        "chatId": "6853093449",
+        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
         "text": "=🎯 NEUE WEBSITE-ANFRAGE\n\n👤 Name: {{ $json.name }}\n📞 Telefon: {{ $json.phone }}\n📊 Installationen/Monat: {{ $json.installations || 'Nicht angegeben' }}\n\n⏰ Eingegangen: {{ $json.timestamp }}\n🌐 Quelle: {{ $json.source }}",
         "additionalFields": {}
       },
@@ -130,7 +130,7 @@
       ],
       "credentials": {
         "telegramApi": {
-          "id": "telegram-bot",
+          "id": "22c3be04-0c3b-41ec-b7df-08222763e448",
           "name": "Telegram Bot"
         }
       }
@@ -138,9 +138,9 @@
     {
       "parameters": {
         "fromEmail": "noreply@meisteranruf.de",
-        "toEmail": "ralf.waldukat@gmail.com",
+        "toEmail": "={{ $env.ADMIN_EMAIL }}",
         "subject": "=🎯 Neue Website-Anfrage von {{ $json.name }}",
-        "text": "=Hallo Ralf,\n\nes gibt eine neue Anfrage über die Website:\n\nName/Firma: {{ $json.name }}\nTelefon: {{ $json.phone }}\nInstallationen/Monat: {{ $json.installations || 'Nicht angegeben' }}\n\nZeitpunkt: {{ $json.timestamp }}\n\nViele Grüße,\nMeisterAnruf Website",
+        "text": "=Hallo,\n\nes gibt eine neue Anfrage über die Website:\n\nName/Firma: {{ $json.name }}\nTelefon: {{ $json.phone }}\nInstallationen/Monat: {{ $json.installations || 'Nicht angegeben' }}\n\nZeitpunkt: {{ $json.timestamp }}\n\nViele Grüße,\nMeisterAnruf Website",
         "options": {}
       },
       "id": "email-node",
@@ -208,7 +208,7 @@
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "google-sheets",
+          "id": "f2ad47cc-53fb-44c5-94e2-1c679a0456fd",
           "name": "Google Sheets OAuth2"
         }
       }

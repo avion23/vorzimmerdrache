@@ -14,7 +14,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const crypto = require('crypto');\nconst authToken = $env.TWILIO_AUTH_TOKEN;\nconst headers = $input.first().json.headers || {};\nconst signature = headers['x-twilio-signature'] || headers['X-Twilio-Signature'];\nconst body = $input.first().json.body || {};\n\n// Sort parameters alphabetically (Twilio requirement)\nconst sortedKeys = Object.keys(body).sort();\nconst payload = sortedKeys.map(key => key + body[key]).join('');\nconst webhookUrl = `https://${$env.DOMAIN}/webhook/sms-response`;\nconst expected = crypto.createHmac('sha1', authToken)\n  .update(webhookUrl + payload)\n  .digest('base64');\n\nif (!crypto.timingSafeEqual(Buffer.from(signature || ''), Buffer.from(expected))) {\n  return [{ json: { error: 'Invalid signature', statusCode: 403 } }];\n}\nreturn [{ json: body, valid: true }];"
+        "jsCode": "const crypto = require('crypto');\nconst authToken = $env.TWILIO_AUTH_TOKEN;\nconst inputData = $input.first()?.json || {};\nconst headers = inputData.headers || {};\nconst signature = headers['x-twilio-signature'] || headers['X-Twilio-Signature'];\nconst body = inputData.body || {};\n\n// Sort parameters alphabetically (Twilio requirement)\nconst sortedKeys = Object.keys(body).sort();\nconst payload = sortedKeys.map(key => key + body[key]).join('');\nconst webhookUrl = `https://${$env.DOMAIN}/webhook/sms-response`;\nconst expected = crypto.createHmac('sha1', authToken)\n  .update(webhookUrl + payload)\n  .digest('base64');\n\nif (!crypto.timingSafeEqual(Buffer.from(signature || ''), Buffer.from(expected))) {\n  return [{ json: { error: 'Invalid signature', statusCode: 403 } }];\n}\nreturn [{ json: body, valid: true }];"
       },
       "name": "Code - Validate Twilio Signature",
       "type": "n8n-nodes-base.code",
@@ -71,7 +71,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const body = $input.first().json.body.Body || '';\nconst phone = $input.first().json.body.From || '';\nconst normalizedResponse = body.trim().toLowerCase();\n\n// Validate SMS body is not empty\nif (!body || body.trim().length === 0) {\n  return [{ json: { error: 'Empty SMS body', validationError: true } }];\n}\n\n// STOP keyword detection (DSGVO Opt-out)\nconst stopWords = ['stop', 'abmelden', 'abbestellen', 'ende', 'stopp', 'unsubscribe'];\nconst isStopRequest = stopWords.some(word => normalizedResponse.includes(word));\n\nif (isStopRequest) {\n  return [{ json: { phone: phone.replace(/[^0-9+]/g, ''), response: body, action: 'unsubscribe', isStopRequest: true } }];\n}\n\n// Affirmative response detection\nconst affirmativePatterns = ['ja', 'yes', 'ok', 'okay', 'jaa', 'klar', 'gerne', 'ja bitte'];\nconst isValidResponse = affirmativePatterns.some(pattern => normalizedResponse.includes(pattern));\n\n// Phone normalization (international support)\nlet p = phone.replace(/[^0-9+]/g, '');\nif (p.startsWith('+')) {\n  // Keep international format\n} else if (p.startsWith('00')) {\n  p = '+' + p.substring(2);\n} else if (p.startsWith('0') && p.length >= 10 && p.length <= 13) {\n  p = '+49' + p.substring(1);\n} else if (!p.startsWith('+') && p.length > 0) {\n  p = '+49' + p;\n}\n\n// Extract media fields for 3-question flow\nconst numMedia = parseInt($input.first().json.body.NumMedia || '0');\nconst mediaUrl0 = $input.first().json.body.MediaUrl0 || null;\n\n// Check 3-question feature flag\nconst use3Question = true  // DSGVO: 3-Question mandatory;\n\nreturn [{ json: { \n  phone: p, \n  response: body, \n  isValidResponse, \n  action: isValidResponse ? 'opt-in' : 'unknown',\n  numMedia,\n  mediaUrl0,\n  use3Question\n} }];"
+        "jsCode": "const inputData = $input.first()?.json || {};\nconst bodyData = inputData.body || {};\nconst body = bodyData.Body || '';\nconst phone = bodyData.From || '';\nconst messageSid = bodyData.MessageSid || '';\nconst normalizedResponse = body.trim().toLowerCase();\n\n// Validate SMS body is not empty\nif (!body || body.trim().length === 0) {\n  return [{ json: { error: 'Empty SMS body', validationError: true } }];\n}\n\n// STOP keyword detection (DSGVO Opt-out)\nconst stopWords = ['stop', 'abmelden', 'abbestellen', 'ende', 'stopp', 'unsubscribe'];\nconst isStopRequest = stopWords.some(word => normalizedResponse.includes(word));\n\nif (isStopRequest) {\n  return [{ json: { phone: phone.replace(/[^0-9+]/g, ''), response: body, action: 'unsubscribe', isStopRequest: true, messageSid } }];\n}\n\n// Affirmative response detection\nconst affirmativePatterns = ['ja', 'yes', 'ok', 'okay', 'jaa', 'klar', 'gerne', 'ja bitte'];\nconst isValidResponse = affirmativePatterns.some(pattern => normalizedResponse.includes(pattern));\n\n// Phone normalization (international support)\nlet p = phone.replace(/[^0-9+]/g, '');\nif (p.startsWith('+')) {\n  // Keep international format\n} else if (p.startsWith('00')) {\n  p = '+' + p.substring(2);\n} else if (p.startsWith('0') && p.length >= 10 && p.length <= 13) {\n  p = '+49' + p.substring(1);\n} else if (!p.startsWith('+') && p.length > 0) {\n  p = '+49' + p;\n}\n\n// Extract media fields for 3-question flow\nconst numMedia = parseInt(bodyData.NumMedia || '0');\nconst mediaUrl0 = bodyData.MediaUrl0 || null;\n\n// Check 3-question feature flag\nconst use3Question = true;  // DSGVO: 3-Question mandatory\n\n// Generate processing timestamp for race condition protection\nconst processingTimestamp = new Date().toISOString();\n\nreturn [{ json: { \n  phone: p, \n  response: body, \n  isValidResponse, \n  action: isValidResponse ? 'opt-in' : 'unknown',\n  numMedia,\n  mediaUrl0,\n  use3Question,\n  messageSid,\n  processingTimestamp\n} }];"
       },
       "name": "Code - Parse SMS",
       "type": "n8n-nodes-base.code",
@@ -213,7 +213,7 @@
       "typeVersion": 4,
       "credentials": {
         "googleApi": {
-          "id": "googleApi",
+          "id": "f2ad47cc-53fb-44c5-94e2-1c679a0456fd",
           "name": "Google Sheets account"
         }
       }
@@ -223,7 +223,8 @@
         "operation": "send",
         "from": "={{ $env.TWILIO_WHATSAPP_SENDER }}",
         "to": "={{ $json.phone }}",
-        "body": "Danke! Hier ist der Link fur Ihren Termin: https://example.com/termin",
+        "message": "Danke! Hier ist der Link fur Ihren Termin: https://example.com/termin",
+        "toWhatsapp": true,
         "options": {
           "maxTries": 3,
           "waitBetweenTries": 2000,
@@ -232,7 +233,13 @@
       },
       "name": "Twilio - Send WhatsApp",
       "type": "n8n-nodes-base.twilio",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "twilioApi": {
+          "id": "c6910f87-73ba-4094-acbd-7986707ac65d",
+          "name": "Twilio account"
+        }
+      }
     },
     {
       "parameters": {
@@ -369,7 +376,7 @@
       "typeVersion": 4,
       "credentials": {
         "googleApi": {
-          "id": "googleApi",
+          "id": "f2ad47cc-53fb-44c5-94e2-1c679a0456fd",
           "name": "Google Sheets account"
         }
       }
@@ -379,7 +386,7 @@
         "operation": "send",
         "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
         "to": "={{ $json.phone }}",
-        "body": "Sie wurden erfolgreich abgemeldet.",
+        "message": "Sie wurden erfolgreich abgemeldet.",
         "options": {
           "maxTries": 3,
           "waitBetweenTries": 2000,
@@ -388,7 +395,13 @@
       },
       "name": "Twilio - Send SMS Opt-Out",
       "type": "n8n-nodes-base.twilio",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "twilioApi": {
+          "id": "c6910f87-73ba-4094-acbd-7986707ac65d",
+          "name": "Twilio account"
+        }
+      }
     },
     {
       "parameters": {
@@ -441,16 +454,16 @@
       "typeVersion": 4,
       "credentials": {
         "googleApi": {
-          "id": "googleApi",
+          "id": "f2ad47cc-53fb-44c5-94e2-1c679a0456fd",
           "name": "Google Sheets account"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "const lookupResult = $input.first().json; const phone = $('Code - Parse SMS').first().json.phone; const conversationState = lookupResult.conversation_state || ''; return [{ json: { phone, conversationState, rowData: lookupResult } }];"
+        "jsCode": "const lookupResult = $input.first()?.json || {};\nconst parseSmsResult = $('Code - Parse SMS').first()?.json || {};\nconst phone = parseSmsResult.phone || '';\nconst conversationState = lookupResult.conversation_state || '';\nconst lastMessageSid = lookupResult.last_message_sid || '';\nconst currentMessageSid = parseSmsResult.messageSid || '';\n\n// Race Condition Protection: Check for duplicate SMS\nif (lastMessageSid && lastMessageSid === currentMessageSid) {\n  return [{ json: { phone, conversationState, rowData: lookupResult, isDuplicate: true, reason: 'MessageSid already processed' } }];\n}\n\n// Race Condition Protection: Check processing timestamp\nconst lastProcessed = lookupResult.last_processed_at;\nconst currentTimestamp = parseSmsResult.processingTimestamp;\nif (lastProcessed) {\n  const lastTime = new Date(lastProcessed).getTime();\n  const currentTime = new Date(currentTimestamp).getTime();\n  const timeDiff = currentTime - lastTime;\n  // If less than 5 seconds since last update, potential race condition\n  if (timeDiff < 5000) {\n    return [{ json: { phone, conversationState, rowData: lookupResult, isPotentialRace: true, timeDiff } }];\n  }\n}\n\nreturn [{ json: { phone, conversationState, rowData: lookupResult, messageSid: currentMessageSid, processingTimestamp: currentTimestamp, isDuplicate: false } }];"
       },
-      "name": "Code - Extract State",
+      "name": "Code - Extract State + Deduplication",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2
     },
@@ -649,7 +662,7 @@
       "typeVersion": 4,
       "credentials": {
         "googleApi": {
-          "id": "googleApi",
+          "id": "f2ad47cc-53fb-44c5-94e2-1c679a0456fd",
           "name": "Google Sheets account"
         }
       }
@@ -677,7 +690,7 @@
       "typeVersion": 4,
       "credentials": {
         "googleApi": {
-          "id": "googleApi",
+          "id": "f2ad47cc-53fb-44c5-94e2-1c679a0456fd",
           "name": "Google Sheets account"
         }
       }
@@ -705,7 +718,7 @@
       "typeVersion": 4,
       "credentials": {
         "googleApi": {
-          "id": "googleApi",
+          "id": "f2ad47cc-53fb-44c5-94e2-1c679a0456fd",
           "name": "Google Sheets account"
         }
       }
@@ -732,7 +745,7 @@
       "typeVersion": 4,
       "credentials": {
         "googleApi": {
-          "id": "googleApi",
+          "id": "f2ad47cc-53fb-44c5-94e2-1c679a0456fd",
           "name": "Google Sheets account"
         }
       }
@@ -742,7 +755,7 @@
         "operation": "send",
         "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
         "to": "={{ $json.phone }}",
-        "body": "Willkommen! Bitte teilen Sie uns Ihre Postleitzahl mit (5-stellig).",
+        "message": "Willkommen! Bitte teilen Sie uns Ihre Postleitzahl mit (5-stellig).",
         "options": {
           "maxTries": 3,
           "waitBetweenTries": 2000
@@ -750,14 +763,20 @@
       },
       "name": "Twilio - Send Q1 (PLZ)",
       "type": "n8n-nodes-base.twilio",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "twilioApi": {
+          "id": "c6910f87-73ba-4094-acbd-7986707ac65d",
+          "name": "Twilio account"
+        }
+      }
     },
     {
       "parameters": {
         "operation": "send",
         "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
         "to": "={{ $json.phone }}",
-        "body": "Danke! Wie hoch ist Ihr Jahresstromverbrauch in kWh?",
+        "message": "Danke! Wie hoch ist Ihr Jahresstromverbrauch in kWh?",
         "options": {
           "maxTries": 3,
           "waitBetweenTries": 2000
@@ -765,14 +784,20 @@
       },
       "name": "Twilio - Send Q2 (kWh)",
       "type": "n8n-nodes-base.twilio",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "twilioApi": {
+          "id": "c6910f87-73ba-4094-acbd-7986707ac65d",
+          "name": "Twilio account"
+        }
+      }
     },
     {
       "parameters": {
         "operation": "send",
         "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
         "to": "={{ $json.phone }}",
-        "body": "Alles klar! Bitte senden Sie uns ein Foto von Ihrem Stromzähler.",
+        "message": "Alles klar! Bitte senden Sie uns ein Foto von Ihrem Stromzähler.",
         "options": {
           "maxTries": 3,
           "waitBetweenTries": 2000
@@ -780,14 +805,20 @@
       },
       "name": "Twilio - Send Q3 (Photo)",
       "type": "n8n-nodes-base.twilio",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "twilioApi": {
+          "id": "c6910f87-73ba-4094-acbd-7986707ac65d",
+          "name": "Twilio account"
+        }
+      }
     },
     {
       "parameters": {
         "operation": "send",
         "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
         "to": "={{ $json.phone }}",
-        "body": "Bitte geben Sie eine gültige 5-stellige Postleitzahl ein.",
+        "message": "Bitte geben Sie eine gültige 5-stellige Postleitzahl ein.",
         "options": {
           "maxTries": 3,
           "waitBetweenTries": 2000
@@ -795,14 +826,20 @@
       },
       "name": "Twilio - Send Error PLZ",
       "type": "n8n-nodes-base.twilio",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "twilioApi": {
+          "id": "c6910f87-73ba-4094-acbd-7986707ac65d",
+          "name": "Twilio account"
+        }
+      }
     },
     {
       "parameters": {
         "operation": "send",
         "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
         "to": "={{ $json.phone }}",
-        "body": "Bitte geben Sie eine gültige kWh-Zahl größer als 0 ein.",
+        "message": "Bitte geben Sie eine gültige kWh-Zahl größer als 0 ein.",
         "options": {
           "maxTries": 3,
           "waitBetweenTries": 2000
@@ -810,14 +847,20 @@
       },
       "name": "Twilio - Send Error kWh",
       "type": "n8n-nodes-base.twilio",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "twilioApi": {
+          "id": "c6910f87-73ba-4094-acbd-7986707ac65d",
+          "name": "Twilio account"
+        }
+      }
     },
     {
       "parameters": {
         "operation": "send",
         "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
         "to": "={{ $json.phone }}",
-        "body": "Bitte senden Sie uns ein Foto Ihres Stromzählers.",
+        "message": "Bitte senden Sie uns ein Foto Ihres Stromzählers.",
         "options": {
           "maxTries": 3,
           "waitBetweenTries": 2000
@@ -825,14 +868,20 @@
       },
       "name": "Twilio - Send Error Photo",
       "type": "n8n-nodes-base.twilio",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "twilioApi": {
+          "id": "c6910f87-73ba-4094-acbd-7986707ac65d",
+          "name": "Twilio account"
+        }
+      }
     },
     {
       "parameters": {
         "operation": "send",
         "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
         "to": "={{ $json.phone }}",
-        "body": "Vielen Dank! Wir haben alle Informationen erhalten. Wir melden uns bald bei Ihnen.",
+        "message": "Vielen Dank! Wir haben alle Informationen erhalten. Wir melden uns bald bei Ihnen.",
         "options": {
           "maxTries": 3,
           "waitBetweenTries": 2000
@@ -840,7 +889,13 @@
       },
       "name": "Twilio - Send Complete",
       "type": "n8n-nodes-base.twilio",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "twilioApi": {
+          "id": "c6910f87-73ba-4094-acbd-7986707ac65d",
+          "name": "Twilio account"
+        }
+      }
     },
     {
       "parameters": {
@@ -1116,18 +1171,18 @@
       "main": [
         [
           {
-            "node": "Code - Extract State",
+            "node": "Code - Extract State + Deduplication",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Code - Extract State": {
+    "Code - Extract State + Deduplication": {
       "main": [
         [
           {
-            "node": "Switch - State Router",
+            "node": "IF - Duplicate Check",
             "type": "main",
             "index": 0
           }

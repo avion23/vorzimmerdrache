@@ -149,7 +149,7 @@
       ],
       "credentials": {
         "googleApi": {
-          "id": "googleApi",
+          "id": "f2ad47cc-53fb-44c5-94e2-1c679a0456fd",
           "name": "Google Sheets account"
         }
       }
@@ -228,7 +228,7 @@
         "operation": "send",
         "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
         "to": "={{ $json.phone }}",
-        "body": "Hi, wir haben Ihren Anruf verpasst. Möchten Sie Updates per WhatsApp? Antworten Sie mit JA.",
+        "message": "Hi, wir haben Ihren Anruf verpasst. Möchten Sie Updates per WhatsApp? Antworten Sie mit JA.",
         "options": {
           "maxTries": 3,
           "waitBetweenTries": 2000,
@@ -242,14 +242,20 @@
       "position": [
         1300,
         350
-      ]
+      ],
+      "credentials": {
+        "twilioApi": {
+          "id": "c6910f87-73ba-4094-acbd-7986707ac65d",
+          "name": "Twilio account"
+        }
+      }
     },
     {
       "parameters": {
         "operation": "send",
         "from": "={{ $env.TWILIO_PHONE_NUMBER }}",
         "to": "={{ $item(0).$json.phone }}",
-        "body": "Hi, wir haben Ihren Anruf verpasst. Möchten Sie Updates per WhatsApp? Antworten Sie mit JA.",
+        "message": "Hi, wir haben Ihren Anruf verpasst. Möchten Sie Updates per WhatsApp? Antworten Sie mit JA.",
         "options": {
           "maxTries": 3,
           "waitBetweenTries": 2000,
@@ -263,7 +269,13 @@
       "position": [
         1300,
         550
-      ]
+      ],
+      "credentials": {
+        "twilioApi": {
+          "id": "c6910f87-73ba-4094-acbd-7986707ac65d",
+          "name": "Twilio account"
+        }
+      }
     },
     {
       "parameters": {
@@ -291,7 +303,7 @@
       ],
       "credentials": {
         "googleApi": {
-          "id": "googleApi",
+          "id": "f2ad47cc-53fb-44c5-94e2-1c679a0456fd",
           "name": "Google Sheets account"
         }
       }

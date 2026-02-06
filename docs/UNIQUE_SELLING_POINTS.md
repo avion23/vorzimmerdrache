@@ -1,4 +1,4 @@
-# VorzimmerDrache - Unique Selling Points (USP)
+# MeisterAnruf - Unique Selling Points (USP)
 
 ## Was uns einzigartig macht
 
@@ -7,8 +7,8 @@
 ## 1. MADE IN GERMANY + DSGVO-KONFORM
 
 ### Der Unterschied
-| Andere Anbieter | VorzimmerDrache |
-|----------------|-----------------|
+| Andere Anbieter | MeisterAnruf |
+|----------------|--------------|
 | Callcenter in Osteuropa/Asien | Ansprechpartner in Deutschland |
 | Server in USA/China | Server in Frankfurt, Deutschland |
 | DSGVO-Compliance fragwürdig | 100% DSGVO-konform |
@@ -16,157 +16,117 @@
 
 ### Unser Versprechen
 - **Serverstandort:** Frankfurt am Main, deutsches Rechenzentrum
+- **SMS-Service:** Deutscher Telekommunikationsanbieter
 - **Datenschutz:** TLS-Verschlüsselung wie beim Online-Banking
-- **Keine Speicherung:** Wir leiten nur weiter (Name, Telefon, Grund)
 - **DSGVO:** Rechtlich wie eine Sekretärin mit Notizblock
 
-### Chris Voss Label
-"Sie machen sich Sorgen um Datenschutz. Das ist verständlich. Wir auch."
+### Warum das wichtig ist
+Deutsche Handwerker vertrauen deutschen Dienstleistern mehr. Bei sensiblen Kundendaten ist DSGVO-Konformität Pflicht, nicht optional.
 
 ---
 
-## 2. SPEZIALISIERT AUF PV - NICHT ALLES FÜR ALLE
+## 2. SMS + WHATSAPP - DUALER KANAL
 
 ### Der Unterschied
-| Andere Anbieter | VorzimmerDrache |
-|----------------|-----------------|
-| "Wir machen alles" (Dachdecker, Elektriker, Heizung) | Nur Photovoltaik |
-| Generische Scripts | Fachwissen: Fronius, SMA, Kostal |
-| Keine BAFA-Kenntnis | Wir kennen die Fristen |
-| Oberflächliche Qualifikation | Tiefe Qualifikation |
-
-### Unser Fachwissen
-- **Wechselrichter:** Fronius, SMA, Kostal, SolarEdge
-- **Speicher:** BYD, LG Chem, Sonnen
-- **Förderung:** BAFA, KfW, Landesförderung
-- **Technik:** Eigenverbrauch, Einspeisetarife, Notstrom
-
-### Das Ergebnis
-Ihre Kunden merken: "Die wissen, wovon sie reden."
-→ Höhere Conversion-Rate
-→ Weniger Zeitfresser-Anrufe
-→ Qualifizierte Termine
-
-### Chris Voss Label
-"Sie wollen Spezialisten. Generalisten helfen halb."
-
----
-
-## 3. WHATSAPP-INTEGRATION (BESTEHEND)
-
-### Der Unterschied
-| Andere Anbieter | VorzimmerDrache |
-|----------------|-----------------|
-| E-Mail-Zusammenfassungen | WhatsApp in Echtzeit |
-| Tägliche Reports | Sofort bei wichtigen Anrufen |
+| Andere Anbieter | MeisterAnruf |
+|----------------|--------------|
+| Nur E-Mail | SMS + WhatsApp |
+| Nur WhatsApp | Duale Benachrichtigung |
 | Komplexe Dashboards | Einfache Nachrichten |
 | Extra App nötig | WhatsApp ist bereits installiert |
 
-### Unsere WhatsApp-Features
-1. **Sofort-Weiterleitung:** BAFA-Frist, Störung = sofortige WhatsApp
-2. **Tageszusammenfassung:** Abends alle Anrufe in einer Nachricht
-3. **Gefilterte Anrufe:** Zeitfresser werden markiert
-4. **Komplett-Infos:** Dach, Strom, Budget - alles geprüft
+### Unser System
+1. **SMS an Sie:** Sofort bei verpasstem Anruf
+2. **SMS an Anrufer:** Mit WhatsApp-Option für Details
+3. **WhatsApp:** Kunde kann PLZ, Verbrauch, Fotos teilen
+4. **Google Sheets:** Alle Daten übersichtlich dokumentiert
 
 ### Das Ergebnis
-- **Reaktionszeit:** Sekunden statt Stunden
-- **Übersichtlich:** Keine E-Mail-Flut
-- **Mobil:** Überall erreichbar
-- **Gewohnt:** Kein neues Tool lernen
+- **Sofortige Info:** Keine verpassten Anrufe mehr
+- **Kunde bleibt dran:** Durch WhatsApp-Option
+- **Alle Infos da:** Bevor Sie zurückrufen
+- **DSGVO-sicher:** Keine Daten in fremden Apps
+
+---
+
+## 3. SPEZIALISIERT AUF PV - NICHT ALLES FÜR ALLE
+
+### Der Unterschied
+| Andere Anbieter | MeisterAnruf |
+|----------------|--------------|
+| "Wir machen alles" (Dachdecker, Elektriker, Heizung) | Nur Photovoltaik |
+| Generische Anrufbeantworter | PV-spezifische Ansprache |
+| Keine Branchenkenntnis | Wir sprechen PV-Sprache |
+
+### Unser Fokus
+- **Zielgruppe:** Nur PV-Installateure
+- **Sprache:** "Moin! Wir sind auf dem Dach."
+- **Verständnis:** BAFA, Wechselrichter, Speicher
+- **Netzwerk:** Wir kennen die Branche
+
+### Das Ergebnis
+Ihre Kunden merken: Das ist kein generischer Service. Das ist jemand, der PV versteht.
 
 ---
 
 ## 4. NUR BEI ERFOLG ZAHLEN
 
-### Der Unterschied
-| Andere Anbieter | VorzimmerDrache |
-|----------------|-----------------|
-| Grundgebühr €500-2000/Monat | Keine Grundgebühr |
-| Bindung 12-24 Monate | Monatlich kündbar |
-| Bezahlung pro Anruf | Bezahlung nur bei qualifiziertem Termin |
-| Hidden Costs | Transparent: €50/Termin |
+### Was das bedeutet
+- **1. Monat kostenlos:** Testen ohne Risiko
+- **Danach €249/Monat:** Nur wenn das System funktioniert
+- **Monatlich kündbar:** Jederzeit ohne Fragen
+- **Keine versteckten Kosten:** Transparente Preisgestaltung
 
-### Unser Preismodell
-- **€0** Grundgebühr
-- **€99** einmalige Einrichtung
-- **€50** nur pro qualifiziertem Termin
-- **Monatlich kündbar**
+### Der Unterschied
+| Andere Anbieter | MeisterAnruf |
+|----------------|--------------|
+| Grundgebühr €500-2000/Monat | €249/Monat (nach Testphase) |
+| Bindung 12-24 Monate | Monatlich kündbar |
+| Setup-Kosten €200-500 | Kostenlos |
 
 ### Das Ergebnis
-- **Risiko:** Bei uns tragen wir das Risiko
+- **Risiko:** Wir tragen das Risiko in der Testphase
 - **Fairness:** Sie zahlen nur, wenn es funktioniert
 - **Motivation:** Wir müssen uns jeden Monat neu beweisen
-
-### Chris Voss Label
-"Sie haben Angst festzustecken. Das wollen wir nicht."
 
 ---
 
 ## 5. 7-TAGE GO-LIVE GARANTIE
 
 ### Der Unterschied
-| Andere Anbieter | VorzimmerDrache |
-|----------------|-----------------|
+| Andere Anbieter | MeisterAnruf |
+|----------------|--------------|
 | 4-6 Wochen Einarbeitung | 7 Tage bis Go-Live |
 | Komplexes Onboarding | Einfache Einrichtung |
-| Schulung nötig | Wir lernen Ihre Projekte |
 | Keine Garantie | Go-Live Garantie |
 
 ### Unser Prozess
-- **Tag 1-2:** WhatsApp-Nummer, Anrufbeantworter-Text
-- **Tag 3-4:** Schulung, FAQ-Liste Ihrer Projekte
-- **Tag 5-7:** Testphase, erste Live-Anrufe
-- **Danach:** Läuft
+- **Tag 1-2:** Einrichtung Telefonnummer, SMS-Service
+- **Tag 3-4:** Anrufbeantworter-Text, WhatsApp-Integration
+- **Tag 5-7:** Testphase, erste verpasste Anrufe
+- **Danach:** Läuft automatisch
 
 ### Die Garantie
-"Wenn nicht in 7 Tagen alles läuft, zahlen Sie das Setup nicht."
+"Wenn nicht in 7 Tagen alles läuft, zahlen Sie nichts."
 
 ---
 
 ## 6. KEIN AZUBI-PROBLEM
 
 ### Der Vergleich
-| Azubi | VorzimmerDrache |
-|-------|-----------------|
-| €2.500/Monat + Sozialabgaben | €500/Monat (10 Termine) |
+| Azubi | MeisterAnruf |
+|-------|--------------|
+| €2.500/Monat + Sozialabgaben | €249/Monat |
 | 3-6 Monate Einarbeitung | 7 Tage |
-| Berufsschule, Krankheit, Urlaub | 100% Verfügbarkeit (Mo-Fr) |
-| Management-Aufwand (Kontrolle) | Null Management |
-| Schwankende Qualität | Experten-Standard |
-| Kein PV-Fachwissen | PV-Spezialist |
-| 12 Monate Kündigungsfrist | Monatlich kündbar |
+| Berufsschule, Krankheit, Urlaub | 24/7 automatisch |
+| Management-Aufwand | Null Management |
+| Schwankende Qualität | Konstante Qualität |
 
 ### Das Ergebnis
-- **Kosten:** 80% günstiger
-- **Qualität:** Konstant hoch
+- **Kosten:** 90% günstiger
+- **Verfügbarkeit:** Immer da, nie krank
 - **Zeit:** Sofort einsatzbereit
 - **Nerven:** Keine Einarbeitung, keine Kontrolle
-
-### Chris Voss Label
-"Ein Azubi kostet €2.500 und die Nerven. Wir kosten €500 und funktionieren sofort."
-
----
-
-## 7. HANDWERKER-Background
-
-### Der Unterschied
-| Andere Anbieter | VorzimmerDrache |
-|----------------|-----------------|
-| Akademiker ohne Praxis | Handwerker-Background |
-| Theoretisches Wissen | Praxiserfahrung |
-| Callcenter-Agenten | Branchenkenner |
-| Standard-Phrasen | Fachbegriffe |
-
-### Unser Background
-- **Gründer:** Ehemaliger Handwerker
-- **Team:** Branchenerfahrung
-- **Sprache:** "Wir sprechen Handwerker, nicht Marketing"
-
-### Das Ergebnis
-Ihre Kunden fühlen sich verstanden.
-→ Höhere Conversion
-→ Weniger Missverständnisse
-→ Bessere Termine
 
 ---
 
@@ -176,14 +136,17 @@ Ihre Kunden fühlen sich verstanden.
 - Made in Germany
 - Server in Deutschland
 - 100% DSGVO-konform
+- SMS-Service in Deutschland
 
-### Säule 2: FACHWISSEN
-- Nur Photovoltaik
-- Fronius, SMA, Kostal
-- BAFA-Fristen-Kenntnis
+### Säule 2: EINFACH & EFFEKTIV
+- SMS + WhatsApp
+- Keine komplexen Dashboards
+- Automatisch, keine Bedienung nötig
+- Sofortige Benachrichtigung
 
 ### Säule 3: FAIR & FLEXIBEL
-- Nur bei Erfolg zahlen
+- 1 Monat kostenlos testen
+- Nur €249/Monat danach
 - Monatlich kündbar
 - 7-Tage Go-Live
 
@@ -197,21 +160,20 @@ Ihre Kunden fühlen sich verstanden.
 | Made in Germany | ❌ | ⚠️ | ❌ | ✅ |
 | DSGVO-konform | ⚠️ | ⚠️ | ❌ | ✅ |
 | PV-Spezialisierung | ❌ | ❌ | ❌ | ✅ |
-| WhatsApp-Integration | ❌ | ❌ | ❌ | ✅ |
-| Nur bei Erfolg zahlen | ❌ | ❌ | ❌ | ✅ |
+| SMS + WhatsApp | ❌ | ❌ | ❌ | ✅ |
+| 1 Monat kostenlos | ❌ | ❌ | ❌ | ✅ |
 | Monatlich kündbar | ❌ | ❌ | ⚠️ | ✅ |
 | 7-Tage Go-Live | ❌ | ❌ | ❌ | ✅ |
-| Handwerker-Background | ❌ | ❌ | ❌ | ✅ |
 
-**Ergebnis:** Wir sind die EINZIGEN, die alle 8 Punkte erfüllen.
+**Ergebnis:** Wir sind die EINZIGEN, die alle 7 Punkte erfüllen.
 
 ---
 
 ## ELEVATOR PITCH
 
-> "Wir sind der einzige Anruf-Service für PV-Installateure, der zu 100% in Deutschland arbeitet, DSGVO-konform ist, und bei dem Sie nur zahlen, wenn wir Ihnen einen qualifizierten Termin besorgen. Keine Grundgebühr, monatlich kündbar, 7 Tage bis Go-Live."
+> "Wir sind der einzige Anruf-Service für PV-Installateure, der zu 100% in Deutschland arbeitet, DSGVO-konform ist, und über SMS + WhatsApp funktioniert. 1 Monat kostenlos testen, dann €249/Monat, monatlich kündbar."
 
 ---
 
 ## Dokument erstellt am: 02.02.2026
-## Nächste Aktualisierung: Quartalsweise oder bei Marktänderungen
+## Letzte Aktualisierung: 04.02.2026

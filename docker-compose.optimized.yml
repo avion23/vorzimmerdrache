@@ -1,0 +1,111 @@
+version: '3.8'
+
+services:
+  n8n:
+    image: n8nio/n8n:1.84.1  # PINNED: v1.x branch - v2.x task runners consume 300-600% CPU on 1GB RAM servers (security isolation feature cannot be disabled)
+    restart: unless-stopped
+    ports:
+      - 5678:5678
+    environment:
+      # Database
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: n8n
+      DB_POSTGRESDB_USER: n8n
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
+      
+      # Basic Auth
+      N8N_BASIC_AUTH_ACTIVE: "true"
+      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD}
+      
+      # Instance settings
+      N8N_HOST: ${N8N_HOST}
+      N8N_PORT: 5678
+      N8N_PROTOCOL: https
+      NODE_ENV: production
+      WEBHOOK_URL: https://${N8N_HOST}/
+      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE}
+      
+      # Performance (CRITICAL for 1GB RAM)
+      N8N_CONCURRENCY_PRODUCTION_LIMIT: "4"  # Single execution at a time
+      EXECUTIONS_TIMEOUT: "3600"              # 1 hour max
+      EXECUTIONS_TIMEOUT_MAX: "3600"          # 1 hour max
+      NODE_OPTIONS: "--max-old-space-size=768 --max-semi-space-size=128"  # 512MB max
+      
+      # Disable optional features to save CPU/memory
+      N8N_METRICS: "false"
+      N8N_DIAGNOSTICS_ENABLED: "false"
+      N8N_DISABLEDashboard_QUICK_RUNS: "true"
+      EXECUTIONS_DATA_SAVE_ON_ERROR: "all"
+      EXECUTIONS_DATA_SAVE_ON_SUCCESS: "all"
+      EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS: "true"
+      
+      # Logging
+      N8N_LOG_LEVEL: info
+      N8N_LOG_OUTPUT: console
+      
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+          cpus: '1.2'
+        reservations:
+          memory: 768M
+          cpus: '0.8'
+    
+    volumes:
+      - n8n_data:/home/node/.n8n
+    
+    depends_on:
+      - postgres
+    
+    healthcheck:
+      disable: true
+
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: n8n
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: n8n
+    
+    command: >
+      postgres
+      -c shared_buffers=128MB
+      -c effective_cache_size=256MB
+      -c maintenance_work_mem=32MB
+      -c checkpoint_completion_target=0.7
+      -c wal_buffers=4MB
+      -c default_statistics_target=50
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=50
+      -c work_mem=2048kB
+      -c min_wal_size=256MB
+      -c max_wal_size=512MB
+    
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
+    
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n8n"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  n8n_data:
+  postgres_data:
+
+networks:
+  default:
+    driver: bridge

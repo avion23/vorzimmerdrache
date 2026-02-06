@@ -13,9 +13,12 @@
     .faq-answer {
         font-size: 0.95rem; color: var(--dark-gray); line-height: 1.5;
     }
-    .faq-icon { font-size: 1.2rem; }
+    .faq-icon { font-size: 1.2rem; position: relative; }
     .faq-icon img {
         width: 28px; height: 28px; display: inline-block; vertical-align: middle;
+    }
+    .faq-fallback {
+        display: none; font-size: 1.5rem;
     }
 </style>
 
@@ -26,7 +29,7 @@
             {% for item in faq.items %}
             <div class="faq-item">
                 <div class="faq-question">
-                    <span class="faq-icon"><img src="{{ item.icon }}" alt="{{ item.question }}" width="32" height="32" loading="lazy" decoding="async" onerror="this.outerHTML='<span style=\'font-size: 1.5rem;\'>❓</span>';"></span>
+                    <span class="faq-icon"><img src="{{ item.icon }}" alt="{{ item.question }}" width="32" height="32" loading="lazy" decoding="async"><span class="faq-fallback">❓</span></span>
                     {{ item.question }}
                 </div>
                 <div class="faq-answer">

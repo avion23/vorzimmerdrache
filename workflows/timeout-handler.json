@@ -45,7 +45,7 @@
       ],
       "credentials": {
         "googleApi": {
-          "id": "",
+          "id": "f2ad47cc-53fb-44c5-94e2-1c679a0456fd",
           "name": "Google Sheets account"
         }
       }
@@ -92,7 +92,7 @@
       ],
       "credentials": {
         "googleApi": {
-          "id": "",
+          "id": "f2ad47cc-53fb-44c5-94e2-1c679a0456fd",
           "name": "Google Sheets account"
         }
       }

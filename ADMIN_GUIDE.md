@@ -6,7 +6,7 @@ This document provides complete instructions for remotely administering the Vorz
 **Instance Details:**
 - **URL:** https://instance1.duckdns.org
 - **Server:** GCP VPS (instance1.duckdns.org)
-- **SSH User:** ralf_waldukat
+- **SSH User:** $DEPLOY_USER (aus .env)
 - **n8n Version:** 2.4.6
 - **Database:** SQLite
 
