@@ -206,7 +206,14 @@
           "value": "${GOOGLE_SHEETS_SPREADSHEET_ID}"
         },
         "range": "={{ $env.GOOGLE_SHEETS_RANGE }}",
-        "options": {}
+        "options": {},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "last_message_sid": "={{ $json.messageSid }}",
+            "last_processed_at": "={{ $json.processingTimestamp }}"
+          }
+        }
       },
       "name": "Google Sheets - Update Opt-In",
       "type": "n8n-nodes-base.googleSheets",
@@ -367,7 +374,9 @@
           "mappingMode": "defineBelow",
           "value": {
             "OptIn_Status": "UNSUBSCRIBED",
-            "OptOut_Date": "={{ $now.toISO() }}"
+            "OptOut_Date": "={{ $now.toISO() }}",
+            "last_message_sid": "={{ $json.messageSid }}",
+            "last_processed_at": "={{ $json.processingTimestamp }}"
           }
         }
       },
@@ -709,7 +718,9 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "conversation_state": "awaiting_plz"
+            "conversation_state": "awaiting_plz",
+            "last_message_sid": "={{ $json.messageSid }}",
+            "last_processed_at": "={{ $json.processingTimestamp }}"
           }
         }
       },
@@ -737,7 +748,9 @@
           "mappingMode": "defineBelow",
           "value": {
             "conversation_state": "awaiting_kwh",
-            "plz": "={{ $('Code - Validate PLZ').first().json.response }}"
+            "plz": "={{ $('Code - Validate PLZ').first().json.response }}",
+            "last_message_sid": "={{ $json.messageSid }}",
+            "last_processed_at": "={{ $json.processingTimestamp }}"
           }
         }
       },
@@ -765,7 +778,9 @@
           "mappingMode": "defineBelow",
           "value": {
             "conversation_state": "awaiting_foto",
-            "kwh": "={{ $('Code - Validate kWh').first().json.response }}"
+            "kwh": "={{ $('Code - Validate kWh').first().json.response }}",
+            "last_message_sid": "={{ $json.messageSid }}",
+            "last_processed_at": "={{ $json.processingTimestamp }}"
           }
         }
       },
@@ -792,7 +807,9 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "conversation_state": "qualified_complete"
+            "conversation_state": "qualified_complete",
+            "last_message_sid": "={{ $json.messageSid }}",
+            "last_processed_at": "={{ $json.processingTimestamp }}"
           }
         }
       },
