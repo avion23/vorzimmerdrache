@@ -1,14 +1,15 @@
 # Vorzimmerdrache n8n Remote Administration Guide
 
 ## Overview
-This document provides complete instructions for remotely administering the Vorzimmerdrache n8n instance running on GCP.
+This document provides complete instructions for remotely administering the Vorzimmerdrache n8n instance running on Oracle Cloud.
 
 **Instance Details:**
-- **URL:** https://instance1.duckdns.org
-- **Server:** GCP VPS (instance1.duckdns.org)
-- **SSH User:** $DEPLOY_USER (aus .env)
-- **n8n Version:** 2.4.6
+- **URL:** https://instance2.duckdns.org
+- **Server:** Oracle Cloud ARM1 (4 Core, 24GB RAM)
+- **SSH User:** ubuntu
+- **n8n Version:** Latest (Docker)
 - **Database:** SQLite
+- **Status:** Active (Migrated from instance1.duckdns.org)
 
 ---
 
@@ -16,22 +17,22 @@ This document provides complete instructions for remotely administering the Vorz
 
 ### 1.1 SSH Access
 ```bash
-ssh ralf_waldukat@instance1.duckdns.org
+ssh ubuntu@instance2.duckdns.org
 ```
 
 ### 1.2 Check Container Status
 ```bash
-ssh ralf_waldukat@instance1.duckdns.org "docker ps"
+ssh ubuntu@instance2.duckdns.org "docker ps"
 ```
 
 ### 1.3 Check n8n Logs (Last 50 lines)
 ```bash
-ssh ralf_waldukat@instance1.duckdns.org "docker logs vorzimmerdrache-n8n-1 2>&1 | tail -50"
+ssh ubuntu@instance2.duckdns.org "docker logs vorzimmerdrache-n8n-1 2>&1 | tail -50"
 ```
 
 ### 1.4 Check Traefik Logs
 ```bash
-ssh ralf_waldukat@instance1.duckdns.org "docker logs vorzimmerdrache-traefik-1 2>&1 | tail -20"
+ssh ubuntu@instance2.duckdns.org "docker logs vorzimmerdrache-traefik-1 2>&1 | tail -20"
 ```
 
 ---

@@ -3,6 +3,15 @@
 ## Voraussetzungen
 
 ### Server-Anforderungen
+
+#### Option A: Oracle Cloud (Empfohlen - Kostenlos)
+- **Instanz**: ARM1 (Ampere A1) - 4 OCPUs, 24 GB RAM
+- **Storage**: 200 GB Boot Volume (inklusive)
+- **OS**: Ubuntu 22.04 LTS
+- **Kosten**: Kostenlos (Always Free Tier)
+- **Domain**: instance2.duckdns.org (aktiv)
+
+#### Option B: Hetzner/Andere VPS
 - **RAM**: Mindestens 1 GB (CX11 bei Hetzner empfohlen)
 - **Storage**: Mindestens 20 GB (Docker-Volumes + Logs)
 - **OS**: Ubuntu 22.04 LTS oder Debian 12
@@ -13,7 +22,8 @@
 - Domain oder Subdomain, die auf Ihre Server-IP zeigt
 - DNS A-Record erforderlich (AAAA für IPv6 optional)
 - Empfohlen: DuckDNS für kostenloses dynamisches DNS
-  - Beispiel: `instance1.duckdns.org`
+  - **Aktuell:** `instance2.duckdns.org` (Oracle Cloud)
+  - **Alt:** `instance1.duckdns.org` (Hetzner - deaktiviert)
 
 ### Erforderliche Konten
 
@@ -155,7 +165,7 @@ Standard-n8n-Login (falls konfiguriert):
 ```bash
 # SSL und Domain
 SSL_EMAIL=admin@example.com              # E-Mail für Let's Encrypt
-DOMAIN=instance1.duckdns.org             # Ihre Domain
+DOMAIN=instance2.duckdns.org             # Ihre Domain
 N8N_ENCRYPTION_KEY=...                   # Generieren: openssl rand -hex 16
 
 # n8n Konfiguration

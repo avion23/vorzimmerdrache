@@ -52,9 +52,11 @@ KUNDE ANTWORTET AUF SMS ("JA") <--------------+
 
 ### 1. VPS Vorbereitung
 
-- 1GB RAM Ubuntu VPS (Hetzner CX11 ~€4/Monat)
+- **Aktueller Server:** Oracle Cloud ARM1 (4 Core, 24GB RAM) - instance2.duckdns.org
+- **Alternative:** 1GB RAM Ubuntu VPS (Hetzner CX11 ~€4/Monat)
 - Docker & Docker Compose installiert
 - Domain zeigt auf Server-IP
+- **Firewall:** Ports 80 und 443 in Security Group öffnen (Oracle Cloud)
 
 ### 2. Google Sheets vorbereiten
 
@@ -113,8 +115,9 @@ Die gesamte Chat-Logik befindet sich im Workflow `sms-opt-in-v2.json`:
 - **Debug Logging:** Jede Interaktion wird in `Debug_Log` Tab geschrieben
 - **Timeout:** Nach 24h ohne Antwort wird der State automatisch auf `expired` gesetzt
 
-## Hardware-Optimierung (1GB VPS)
+## Hardware-Optimierung
 
+### Für 1GB VPS (Hetzner CX11 etc.)
 ```yaml
 # docker-compose.yml
 N8N_CONCURRENCY_PRODUCTION_LIMIT: "1"    # Single execution
@@ -125,6 +128,13 @@ NODE_OPTIONS: "--max-old-space-size=768"  # Heap-Limit
 **Warum diese Einstellungen?**
 - Ohne `N8N_EXECUTIONS_PROCESS=main`: n8n startet Worker-Prozesse → RAM-Überlastung bei 3+ gleichzeitigen Anrufen
 - Ohne Concurrency-Limit: Gleichzeitige Ausführungen konkurrieren um 1GB RAM
+
+### Für Oracle Cloud ARM (24GB RAM)
+Aktuell deployed auf Oracle Cloud ARM1 Instance (4 Core, 24GB RAM). 
+Die Ressourcenlimits im docker-compose können hier erhöht werden:
+```yaml
+memory: 2048M  # Statt 384M bei 1GB VPS
+```
 
 ## Warum Google Sheets?
 
@@ -155,6 +165,13 @@ Sheets dient als **Interface für den Handwerker** und **Debugging-Tool**:
 
 ## Kosten
 
+### Oracle Cloud (Aktuell)
+- VPS (ARM1, 24GB RAM): Kostenlos (Always Free Tier)
+- Twilio SMS: ~€0.05 pro Lead
+- Twilio Voice: ~€0.01 pro Anruf
+- **Gesamt:** ~€2-6/Monat bei moderater Nutzung
+
+### Alternative (Hetzner etc.)
 - VPS (1GB): ~€4/Monat
 - Twilio SMS: ~€0.05 pro Lead
 - Twilio Voice: ~€0.01 pro Anruf
